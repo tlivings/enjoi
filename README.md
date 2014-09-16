@@ -3,7 +3,8 @@
 Converts a JSON schema to a Joi schema.
 
 ```javascript
-var enjoi = require('enjoi');
+var Joi = require('joi'),
+    enjoi = require('enjoi');
 
 var schema = enjoi({
     "title": "Example Schema",
@@ -23,9 +24,11 @@ var schema = enjoi({
     },
     "required": ["firstName", "lastName"]
 });
-```
 
-Will now be a Joi schema.
+Joi.validate({ firstName: "John", lastName: "Doe", age: 45}, function (error, value) {
+    error && console.log(error);
+});
+```
 
 ### API
 
