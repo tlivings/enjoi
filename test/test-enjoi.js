@@ -53,7 +53,6 @@ test('enjoi', function (t) {
 
         joi.validate({name: 'Joe'}, schema,  function (error, value) {
             t.ok(!error, 'no error.');
-            console.log(error);
         });
     });
 
