@@ -1,0 +1,35 @@
+{
+  "name": "enjoi",
+  "version": "0.1.0",
+  "description": "Converts a JSON schema to a Joi schema.",
+  "main": "lib/enjoi.js",
+  "scripts": {
+    "test": "tape test/*.js",
+    "cover": "istanbul cover tape -- test/*.js",
+    "lint": "jshint -c .jshintrc lib/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/tlivings/enjoi.git"
+  },
+  "keywords": [
+    "swagger",
+    "schema",
+    "validation"
+  ],
+  "author": "Trevor Livingston",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/tlivings/enjoi/issues"
+  },
+  "homepage": "https://github.com/tlivings/enjoi",
+  "dependencies": {
+    "core-util-is": "^1.0.1",
+    "joi": "^4.6.2"
+  },
+  "devDependencies": {
+    "tape": "^2.14.0",
+    "istanbul": "^0.3.2",
+    "jshint": "^2.5.5"
+  }
+}

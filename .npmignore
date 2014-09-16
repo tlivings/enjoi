@@ -1,0 +1,65 @@
+# Automatically ignored per:
+# https://www.npmjs.org/doc/developers.html#Keeping-files-out-of-your-package
+#
+# .*.swp
+# ._*
+# .DS_Store
+# .git
+# .hg
+# .lock-wscript
+# .svn
+# .wafpickle-*
+# CVS
+# npm-debug.log
+# node_modules
+
+*.seed
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.gz
+*.orig
+
+work
+build
+test
+pids
+logs
+results
+coverage
+lib-cov
+html-report
+xunit.xml
+
+.project
+.idea
+.settings
+.iml
+*.sublime-workspace
+*.sublime-project
+
+ehthumbs.db
+Icon?
+Thumbs.db
+.AppleDouble
+.LSOverride
+.Spotlight-V100
+.Trashes
+
+lib/schema/swagger-spec/examples
+lib/schema/swagger-spec/fixtures
+lib/schema/swagger-spec/src
+lib/schema/swagger-spec/test
+lib/schema/swagger-spec/versions
+lib/schema/swagger-spec/.git
+lib/schema/swagger-spec/.gitignore
+lib/schema/swagger-spec/.travis.yml
+lib/schema/swagger-spec/build.sbt
+lib/schema/swagger-spec/gulpfile.js
+lib/schema/swagger-spec/LICENSE
+lib/schema/swagger-spec/package.json
+lib/schema/swagger-spec/README.md
+lib/schema/swagger-spec/swagger-logo.jpg
+lib/schema/swagger-spec/schemas/README.md
