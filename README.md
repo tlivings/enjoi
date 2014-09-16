@@ -26,3 +26,9 @@ var schema = enjoi({
 ```
 
 Will now be a Joi schema.
+
+### API
+
+- `enjoi` - function with arguments:
+    - `schema` - a JSON schema.
+    - `subSchemas` - an object with keys representing schema ids, and values representing schemas.

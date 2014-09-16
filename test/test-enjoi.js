@@ -56,4 +56,28 @@ test('enjoi', function (t) {
         });
     });
 
+    t.test('valid with external ref', function (t) {
+        t.plan(1);
+
+        var schema = enjoi({
+            "title": "Example Schema",
+            "type": "object",
+            "properties": {
+                "name": {
+                    "$ref": "definitions#/name"
+                }
+            }
+        }, {
+            "definitions": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        });
+
+        joi.validate({name: 'Joe'}, schema,  function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+    });
+
 });
