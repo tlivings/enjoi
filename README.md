@@ -2,6 +2,8 @@
 
 Converts a JSON schema to a Joi schema.
 
+**Stability:** `unstable`
+
 ```javascript
 var Joi = require('joi'),
     enjoi = require('enjoi');
