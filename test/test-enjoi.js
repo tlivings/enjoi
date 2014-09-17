@@ -68,7 +68,7 @@ test('enjoi', function (t) {
         });
 
         joi.validate({firstName: 'John', lastName: 'Doe', age: 45, tags: [1, 'human']}, schema, function (error, value) {
-            t.ok(error, 'no error.');
+            t.ok(error, 'error.');
         });
     });
 
@@ -123,7 +123,7 @@ test('enjoi', function (t) {
 
 test('types', function (t) {
 
-    t.test('numbers', function (t) {
+    t.test('arrays and numbers', function (t) {
         t.plan(1);
 
         var schema = enjoi({
@@ -134,6 +134,45 @@ test('types', function (t) {
         });
 
         joi.validate([1, 2], schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+    });
+
+    t.test('arrays and refs', function (t) {
+        t.plan(2);
+
+        var schema = enjoi({
+            'type': 'array',
+            'items': {
+                '$ref': 'definitions#/number'
+            }
+        }, {
+            'definitions': {
+                'number': {
+                    'type': 'number',
+                    'minimum': 0,
+                    'maximum': 2
+                }
+            }
+        });
+
+        joi.validate([1, 2], schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        joi.validate([1, 3], schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+    });
+
+    t.test('boolean', function (t) {
+        t.plan(1);
+
+        var schema = enjoi({
+            'type': 'boolean'
+        });
+
+        joi.validate(true, schema, function (error, value) {
             t.ok(!error, 'no error.');
         });
     });
