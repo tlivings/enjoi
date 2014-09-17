@@ -124,17 +124,23 @@ test('enjoi', function (t) {
 test('types', function (t) {
 
     t.test('arrays and numbers', function (t) {
-        t.plan(1);
+        t.plan(2);
 
         var schema = enjoi({
             'type': 'array',
             'items': {
                 'type': 'number'
-            }
+            },
+            'maxItems': 10,
+            'minItems': 0
         });
 
         joi.validate([1, 2], schema, function (error, value) {
             t.ok(!error, 'no error.');
+        });
+
+        joi.validate([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], schema, function (error, value) {
+            t.ok(error, 'error.');
         });
     });
 
@@ -173,6 +179,19 @@ test('types', function (t) {
         });
 
         joi.validate(true, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+    });
+
+    t.test('string regex', function (t) {
+        t.plan(1);
+
+        var schema = enjoi({
+            'type': 'string',
+            'pattern': /foobar/
+        });
+
+        joi.validate('foobar', schema, function (error, value) {
             t.ok(!error, 'no error.');
         });
     });
