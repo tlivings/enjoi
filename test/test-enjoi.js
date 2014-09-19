@@ -197,3 +197,38 @@ test('types', function (t) {
     });
 
 });
+
+test('assertions', function (t) {
+
+    t.test('needs type or ref', function (t) {
+        t.plan(2);
+
+        t.throws(function () {
+            enjoi({
+                'description': 'something'
+            });
+        });
+
+        t.throws(function () {
+            enjoi({
+                '$ref': '#/definitions/nothing',
+                'definitions': {
+                    'nothing': {
+                        'description': 'something'
+                    }
+                }
+            });
+        });
+    });
+
+    t.test('unknown type fails', function (t) {
+        t.plan(1);
+
+        t.throws(function () {
+            enjoi({
+                'type': 'something'
+            });
+        });
+    });
+
+});
