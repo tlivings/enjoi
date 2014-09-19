@@ -196,10 +196,6 @@ test('types', function (t) {
         });
     });
 
-});
-
-test('assertions', function (t) {
-
     t.test('needs type or ref', function (t) {
         t.plan(2);
 
@@ -230,5 +226,5 @@ test('assertions', function (t) {
             });
         });
     });
-
+    
 });
