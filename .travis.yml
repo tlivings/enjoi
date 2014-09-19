@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+  - 0.10.29
+branches:
+  only:
+    - master
+script:
+  - "npm run-script cover"
+  - "npm run-script lint"

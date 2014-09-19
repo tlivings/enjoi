@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/tlivings/enjoi.png)](https://travis-ci.org/tlivings/enjoi) [![NPM version](https://badge.fury.io/js/enjoi.png)](http://badge.fury.io/js/enjoi)
+
 # enjoi
 
 Converts a JSON schema to a Joi schema.
