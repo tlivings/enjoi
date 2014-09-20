@@ -1,12 +1,13 @@
 {
   "name": "enjoi",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Converts json-schema to Joi schema for validation.",
   "main": "lib/enjoi.js",
   "scripts": {
     "test": "tape test/*.js",
     "cover": "istanbul cover tape -- test/*.js",
-    "lint": "jshint -c .jshintrc lib/*.js"
+    "lint": "jshint -c .jshintrc lib/*.js",
+    "bench": "node test/bench/run.js"
   },
   "repository": {
     "type": "git",
@@ -34,6 +35,8 @@
   "devDependencies": {
     "tape": "^2.14.0",
     "istanbul": "^0.3.2",
-    "jshint": "^2.5.5"
+    "jshint": "^2.5.5",
+    "hammertime": "^0.1.2",
+    "tv4": "^1.1.0"
   }
 }
