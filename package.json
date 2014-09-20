@@ -1,6 +1,6 @@
 {
   "name": "enjoi",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Converts json-schema to Joi schema for validation.",
   "main": "lib/enjoi.js",
   "scripts": {

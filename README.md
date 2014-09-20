@@ -15,8 +15,7 @@ Converts a JSON schema to a Joi schema.
 Example:
 
 ```javascript
-var Joi = require('joi'),
-    enjoi = require('enjoi');
+var enjoi = require('enjoi');
 
 var schema = enjoi({
     'title': 'Example Schema',
@@ -37,7 +36,7 @@ var schema = enjoi({
     'required': ['firstName', 'lastName']
 });
 
-Joi.validate({ firstName: 'John', lastName: 'Doe', age: 45}, function (error, value) {
+schema.validate({ firstName: 'John', lastName: 'Doe', age: 45}, function (error, value) {
     error && console.log(error);
 });
 ```
