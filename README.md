@@ -9,7 +9,7 @@ Converts a JSON schema to a Joi schema for object validation.
 `enjoi` is built against json-schema v4, but does not support all json-schema properties
 (sometimes due to lack of support in Joi).
 
-Here is a list of some missing keyword support:
+Here is a list of some missing keyword support still being worked on:
 
 - enum
 - allOf
