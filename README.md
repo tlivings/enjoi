@@ -4,6 +4,26 @@
 
 Converts a JSON schema to a Joi schema for object validation.
 
+### Schema Support
+
+`enjoi` is built against json-schema v4, but does not support all json-schema properties
+(sometimes due to lack of support in Joi).
+
+Here is a list of some missing keyword support:
+
+- enum
+- allOf
+- anyOf
+- oneOf
+- not
+- format
+- `object:patternProperties`
+- `object:additionalProperties`
+- `object:maxProperties`
+- `object:minProperties`
+- `array:items` (supports as schema, not supported as array).
+- `array:additionalItems`
+
 ### API
 
 - `enjoi` - function with arguments:

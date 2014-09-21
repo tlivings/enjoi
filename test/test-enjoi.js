@@ -238,6 +238,28 @@ test('types', function (t) {
         });
     });
 
+    t.test('string length', function (t) {
+        t.plan(3);
+
+        var schema = enjoi({
+            'type': 'string',
+            'minLength': 2,
+            'maxLength': 4
+        });
+
+        joi.validate('f', schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+
+        joi.validate('foobar', schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+
+        joi.validate('foo', schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+    });
+
     t.test('needs type or ref', function (t) {
         t.plan(2);
 
