@@ -123,6 +123,28 @@ test('enjoi', function (t) {
 
 test('types', function (t) {
 
+    t.test('object min/max length', function (t) {
+        t.plan(3);
+
+        var schema = enjoi({
+            'type': 'object',
+            'maxProperties': 2,
+            'minProperties': 1
+        });
+
+        joi.validate({a: 'a', b: 'b'}, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        joi.validate({a: 'a', b: 'b', c: 'c'}, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+
+        joi.validate({}, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+    });
+
     t.test('arrays and numbers', function (t) {
         t.plan(2);
 
@@ -167,6 +189,26 @@ test('types', function (t) {
         });
 
         joi.validate([1, 3], schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+    });
+
+    t.test('arrays and unique', function (t) {
+        t.plan(2);
+
+        var schema = enjoi({
+            'type': 'array',
+            'items': {
+                'type': 'integer'
+            },
+            'uniqueItems': true
+        });
+
+        joi.validate([1, 2], schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        joi.validate([1, 1], schema, function (error, value) {
             t.ok(error, 'error.');
         });
     });
@@ -226,5 +268,5 @@ test('types', function (t) {
             });
         });
     });
-    
+
 });

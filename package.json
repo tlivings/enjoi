@@ -30,7 +30,7 @@
   "homepage": "https://github.com/tlivings/enjoi",
   "dependencies": {
     "core-util-is": "^1.0.1",
-    "joi": "^4.6.2"
+    "joi": "^4.7.0"
   },
   "devDependencies": {
     "tape": "^2.14.0",
