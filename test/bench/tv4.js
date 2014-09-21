@@ -3,14 +3,13 @@
 var hammer = require('hammertime'),
     tv4 = require('tv4');
 
-var tv4Validator, schema;
+var schema;
 
 schema = require('./schema.json');
 
 hammer({
     iterations: 5000,
     before: function (done) {
-        tv4Validator = tv4.freshApi();
         done();
     },
     after: function (results) {
@@ -18,5 +17,5 @@ hammer({
     }
 })
 .time(function () {
-    tv4Validator.validateResult({firstName: 'John', lastName: 'Doe', age: 45, tags: ['man', 'human']}, schema).valid;
+    tv4.validateResult({firstName: 'John', lastName: 'Doe', age: 45, tags: ['man', 'human']}, schema);
 });
