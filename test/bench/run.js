@@ -5,7 +5,7 @@ var spawn = require('child_process').spawn,
 
 var enjoi, tv4;
 
-console.log('tv4 vs enjoi benchmark:');
+console.log('tv4 vs joi benchmark:\n');
 
 tv4 = spawn('node', [path.resolve(__dirname, 'tv4.js')]);
 

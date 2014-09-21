@@ -14,7 +14,7 @@ hammer({
         done();
     },
     after: function (results) {
-        console.log('\ttv4: %d operations/second.', results.ops);
+        console.log('\ttv4:   %d operations/second.', results.ops);
     }
 })
 .time(function () {

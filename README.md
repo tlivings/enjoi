@@ -15,7 +15,8 @@ Converts a JSON schema to a Joi schema.
 Example:
 
 ```javascript
-var enjoi = require('enjoi');
+var Joi = require('joi'),
+    enjoi = require('enjoi');
 
 var schema = enjoi({
     'title': 'Example Schema',
@@ -36,6 +37,14 @@ var schema = enjoi({
     'required': ['firstName', 'lastName']
 });
 
+Joi.validate({ firstName: 'John', lastName: 'Doe', age: 45}, schema, function (error, value) {
+    error && console.log(error);
+});
+```
+
+Can also call `validate` directly on the created schema.
+
+```javascript
 schema.validate({ firstName: 'John', lastName: 'Doe', age: 45}, function (error, value) {
     error && console.log(error);
 });
@@ -61,4 +70,14 @@ var schema = enjoi({
         }
     }
 });
+```
+
+### Running Benchmarks
+
+```shell
+$ npm run bench
+$
+$ tv4 vs joi benchmark:
+$ 	tv4: 48744 operations/second.
+$ 	enjoi: 114419 operations/second.
 ```
