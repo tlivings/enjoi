@@ -26,7 +26,7 @@ Here is a list of some missing keyword support still being worked on:
 
 - `enjoi(schema [, subSchemas])`
     - `schema` - a JSON schema.
-    - `subSchemas` - an object with keys representing schema ids, and values representing schemas.
+    - `subSchemas` - an (optional) object with keys representing schema ids, and values representing schemas.
 
 Example:
 
