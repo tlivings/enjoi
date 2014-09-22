@@ -14,7 +14,7 @@ hammer({
         done();
     },
     after: function (results) {
-        console.log('\tenjoi: %d operations/second. (%d iterations in %dms)', results.ops, results.iterations, results.time / 1000000);
+        console.log('\tjoi: %d operations/second. (%d iterations in %dms)', results.ops, results.iterations, results.time / 1000000);
     }
 })
 .time(function () {

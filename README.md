@@ -6,8 +6,7 @@ Converts a JSON schema to a Joi schema for object validation.
 
 ### Schema Support
 
-`enjoi` is built against json-schema v4, but does not support all json-schema properties
-(sometimes due to lack of support in Joi).
+`enjoi` is built against json-schema v4, but does not support all of json-schema (yet).
 
 Here is a list of some missing keyword support still being worked on:
 
@@ -20,12 +19,12 @@ Here is a list of some missing keyword support still being worked on:
 - `object:additionalProperties`
 - `object:maxProperties`
 - `object:minProperties`
-- `array:items` (supports as schema, not supported as array).
+- `array:items` (supports as single schema, not supported as array of schemas).
 - `array:additionalItems`
 
 ### API
 
-- `enjoi` - function with arguments:
+- `enjoi(schema [, subSchemas])`
     - `schema` - a JSON schema.
     - `subSchemas` - an object with keys representing schema ids, and values representing schemas.
 
@@ -100,6 +99,6 @@ You can run a benchmark against `tv4` by running the following command.
 $ npm run bench
 $
 $ tv4 vs joi benchmark:
-$ 	tv4:   48744 operations/second.
-$ 	enjoi: 114419 operations/second.
+$	tv4: 45439 operations/second. (5000 iterations in 0.110037ms)
+$	joi: 115463 operations/second. (5000 iterations in 0.043304ms)
 ```
