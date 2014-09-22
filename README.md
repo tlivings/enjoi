@@ -99,6 +99,6 @@ You can run a benchmark against `tv4` by running the following command.
 $ npm run bench
 $
 $ tv4 vs joi benchmark:
-$	tv4: 45439 operations/second. (5000 iterations in 0.110037ms)
-$	joi: 115463 operations/second. (5000 iterations in 0.043304ms)
+$ 	 tv4: 44122 operations/second. (0.0226644ms)
+$	 joi: 111245 operations/second. (0.0089892ms)
 ```
