@@ -11,7 +11,6 @@ Converts a JSON schema to a Joi schema for object validation.
 
 Here is a list of some missing keyword support still being worked on:
 
-- `enum`
 - `allOf`
 - `anyOf`
 - `oneOf`

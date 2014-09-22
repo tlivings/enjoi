@@ -214,10 +214,14 @@ test('types', function (t) {
     });
 
     t.test('boolean', function (t) {
-        t.plan(1);
+        t.plan(2);
 
         var schema = enjoi({
             'type': 'boolean'
+        });
+
+        joi.validate('hello', schema, function (error, value) {
+            t.ok(error, 'error.');
         });
 
         joi.validate(true, schema, function (error, value) {
@@ -226,11 +230,15 @@ test('types', function (t) {
     });
 
     t.test('string regex', function (t) {
-        t.plan(1);
+        t.plan(2);
 
         var schema = enjoi({
             'type': 'string',
             'pattern': /foobar/
+        });
+
+        joi.validate('foo', schema, function (error, value) {
+            t.ok(error, 'error.');
         });
 
         joi.validate('foobar', schema, function (error, value) {
@@ -278,6 +286,26 @@ test('types', function (t) {
                     }
                 }
             });
+        });
+    });
+
+    t.test('enum', function (t) {
+        t.plan(3);
+
+        var schema = enjoi({
+            'enum': ['A', 'B']
+        });
+
+        joi.validate('A', schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        joi.validate('B', schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        joi.validate('C', schema, function (error, value) {
+            t.ok(error, 'error.');
         });
     });
 
