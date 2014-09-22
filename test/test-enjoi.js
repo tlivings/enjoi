@@ -7,7 +7,7 @@ var test = require('tape'),
 test('enjoi', function (t) {
 
     t.test('valid', function (t) {
-        t.plan(1);
+        t.plan(3);
 
         var schema = enjoi({
         	'title': 'Example Schema',
@@ -37,34 +37,9 @@ test('enjoi', function (t) {
         joi.validate({firstName: 'John', lastName: 'Doe', age: 45, tags: ['man', 'human']}, schema, function (error, value) {
             t.ok(!error, 'no error.');
         });
-    });
 
-    t.test('invalid', function (t) {
-        t.plan(1);
-
-        var schema = enjoi({
-            'title': 'Example Schema',
-            'type': 'object',
-            'properties': {
-                'firstName': {
-                    'type': 'string'
-                },
-                'lastName': {
-                    'type': 'string'
-                },
-                'tags': {
-                    'type': 'array',
-                    'items': {
-                        'type': 'string'
-                    }
-                },
-                'age': {
-                    'description': 'Age in years',
-                    'type': 'integer',
-                    'minimum': 0
-                }
-            },
-            'required': ['firstName', 'lastName']
+        joi.validate({firstName: 'John', age: 45, tags: ['man', 'human']}, schema, function (error, value) {
+            t.ok(error, 'error.');
         });
 
         joi.validate({firstName: 'John', lastName: 'Doe', age: 45, tags: [1, 'human']}, schema, function (error, value) {
