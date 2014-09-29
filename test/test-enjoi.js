@@ -243,24 +243,23 @@ test('types', function (t) {
         });
     });
 
-    t.test('needs type or ref', function (t) {
-        t.plan(2);
+    t.test('no type, ref, or enum validates anything.', function (t) {
+        t.plan(3);
 
-        t.throws(function () {
-            enjoi({
-                'description': 'something'
-            });
+        var schema = enjoi({
+            'description': 'something'
         });
 
-        t.throws(function () {
-            enjoi({
-                '$ref': '#/definitions/nothing',
-                'definitions': {
-                    'nothing': {
-                        'description': 'something'
-                    }
-                }
-            });
+        joi.validate('A', schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        joi.validate({'A': 'a'}, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        joi.validate([1, 2, 3], schema, function (error, value) {
+            t.ok(!error, 'no error.');
         });
     });
 
