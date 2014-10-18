@@ -17,8 +17,6 @@ Here is a list of some missing keyword support still being worked on:
 - `format`
 - `object:patternProperties`
 - `object:additionalProperties`
-- `object:maxProperties`
-- `object:minProperties`
 - `array:items` (supports as single schema, not supported as array of schemas).
 - `array:additionalItems`
 
@@ -93,12 +91,4 @@ var schema = enjoi({
 Joi's validation is very fast. `enjoi` is meant to be used to prepare a schema in advance of
 validation; not alongside validation.
 
-You can run a benchmark against `tv4` by running the following command.
-
-```shell
-$ npm run bench
-$
-$ tv4 vs joi benchmark:
-$     tv4: 44122 operations/second. (0.0226644ms)
-$     joi: 111245 operations/second. (0.0089892ms)
-```
+You can run a benchmark against `tv4` by running `npm run bench`.
