@@ -293,4 +293,25 @@ test('types', function (t) {
         });
     });
 
+
+    t.test('properties', function (t) {
+
+        t.test('required', function (t) {
+            t.plan(2);
+
+            var schema = enjoi({
+                'type': 'number',
+                'required': true
+            });
+
+            joi.validate(1, schema, function (error, value) {
+                t.ok(!error, 'no error.');
+            });
+
+            joi.validate(void 0, schema, function (error, value) {
+                t.ok(error, 'error.');
+            });
+        });
+    });
+
 });
