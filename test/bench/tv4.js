@@ -1,13 +1,13 @@
 'use strict';
 
-var hammer = require('hammertime'),
-    tv4 = require('tv4');
+var Hammer = require('hammertime');
+var Tv4 = require('tv4');
 
 var schema;
 
 schema = require('./schema.json');
 
-hammer({
+Hammer({
     iterations: 5000,
     before: function (done) {
         done();
@@ -17,5 +17,5 @@ hammer({
     }
 })
 .time(function () {
-    tv4.validateResult({firstName: 'John', lastName: 'Doe', age: 45, tags: ['man', 'human']}, schema);
+    Tv4.validateResult({firstName: 'John', lastName: 'Doe', age: 45, tags: ['man', 'human']}, schema);
 });

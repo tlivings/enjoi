@@ -1,16 +1,16 @@
 'use strict';
 
-var hammer = require('hammertime'),
-    enjoi = require('../../lib/enjoi');
+var Hammer = require('hammertime');
+var Enjoi = require('../../lib/enjoi');
 
-var enjoiValidator, schema;
+var validator, schema;
 
 schema = require('./schema.json');
 
-hammer({
+Hammer({
     iterations: 5000,
     before: function (done) {
-        enjoiValidator = enjoi(schema);
+        validator = Enjoi(schema);
         done();
     },
     after: function (results) {
@@ -18,5 +18,5 @@ hammer({
     }
 })
 .time(function () {
-    enjoiValidator.validate({firstName: 'John', lastName: 'Doe', age: 45, tags: ['man', 'human']});
+    validator.validate({firstName: 'John', lastName: 'Doe', age: 45, tags: ['man', 'human']});
 });

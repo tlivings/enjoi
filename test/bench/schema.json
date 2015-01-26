@@ -1,4 +1,5 @@
 {
+    "id": "testSchema",
     "title": "Example Schema",
     "type": "object",
     "properties": {

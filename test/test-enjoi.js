@@ -1,28 +1,31 @@
 'use strict';
 
-var test = require('tape'),
-    enjoi = require('../lib/enjoi'),
-    joi = require('joi');
+var Test = require('tape');
+var Enjoi = require('../lib/enjoi');
+var Joi = require('joi');
 
-test('enjoi', function (t) {
+Test('enjoi', function (t) {
 
     t.test('valid', function (t) {
-        t.plan(3);
+        t.plan(5);
 
-        var schema = enjoi({
+        var schema = Enjoi({
         	'title': 'Example Schema',
         	'type': 'object',
         	'properties': {
         		'firstName': {
-        			'type': 'string'
+        			'type': 'string',
+                    'minLength': 0
         		},
         		'lastName': {
-        			'type': 'string'
+        			'type': 'string',
+                    'minLength': 1
         		},
                 'tags': {
                     'type': 'array',
                     'items': {
-                        'type': 'string'
+                        'type': 'string',
+                        'minLength': 1
                     }
                 },
         		'age': {
@@ -34,15 +37,23 @@ test('enjoi', function (t) {
         	'required': ['firstName', 'lastName']
         });
 
-        joi.validate({firstName: 'John', lastName: 'Doe', age: 45, tags: ['man', 'human']}, schema, function (error, value) {
+        Joi.validate({firstName: 'John', lastName: 'Doe', age: 45, tags: ['man', 'human']}, schema, function (error, value) {
             t.ok(!error, 'no error.');
         });
 
-        joi.validate({firstName: 'John', age: 45, tags: ['man', 'human']}, schema, function (error, value) {
+        Joi.validate({firstName: '', lastName: 'Doe', age: 45, tags: ['man', 'human']}, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate({firstName: 'John', age: 45, tags: ['man', 'human']}, schema, function (error, value) {
             t.ok(error, 'error.');
         });
 
-        joi.validate({firstName: 'John', lastName: 'Doe', age: 45, tags: [1, 'human']}, schema, function (error, value) {
+        Joi.validate({firstName: 'John', lastName: 'Doe', age: 45, tags: [1, 'human']}, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+
+        Joi.validate({firstName: 'John', lastName: 'Doe', age: 45, tags: ['', 'human']}, schema, function (error, value) {
             t.ok(error, 'error.');
         });
     });
@@ -50,7 +61,7 @@ test('enjoi', function (t) {
     t.test('with ref', function (t) {
         t.plan(1);
 
-        var schema = enjoi({
+        var schema = Enjoi({
             'title': 'Example Schema',
             'type': 'object',
             'properties': {
@@ -65,7 +76,7 @@ test('enjoi', function (t) {
             }
         });
 
-        joi.validate({name: 'Joe'}, schema,  function (error, value) {
+        Joi.validate({name: 'Joe'}, schema,  function (error, value) {
             t.ok(!error, 'no error.');
         });
     });
@@ -73,7 +84,7 @@ test('enjoi', function (t) {
     t.test('with external ref', function (t) {
         t.plan(1);
 
-        var schema = enjoi({
+        var schema = Enjoi({
             'title': 'Example Schema',
             'type': 'object',
             'properties': {
@@ -89,33 +100,33 @@ test('enjoi', function (t) {
             }
         });
 
-        joi.validate({name: 'Joe'}, schema,  function (error, value) {
+        Joi.validate({name: 'Joe'}, schema,  function (error, value) {
             t.ok(!error, 'no error.');
         });
     });
 
 });
 
-test('types', function (t) {
+Test('types', function (t) {
 
     t.test('object min/max length', function (t) {
         t.plan(3);
 
-        var schema = enjoi({
+        var schema = Enjoi({
             'type': 'object',
             'maxProperties': 2,
             'minProperties': 1
         });
 
-        joi.validate({a: 'a', b: 'b'}, schema, function (error, value) {
+        Joi.validate({a: 'a', b: 'b'}, schema, function (error, value) {
             t.ok(!error, 'no error.');
         });
 
-        joi.validate({a: 'a', b: 'b', c: 'c'}, schema, function (error, value) {
+        Joi.validate({a: 'a', b: 'b', c: 'c'}, schema, function (error, value) {
             t.ok(error, 'error.');
         });
 
-        joi.validate({}, schema, function (error, value) {
+        Joi.validate({}, schema, function (error, value) {
             t.ok(error, 'error.');
         });
     });
@@ -123,7 +134,7 @@ test('types', function (t) {
     t.test('arrays and numbers', function (t) {
         t.plan(2);
 
-        var schema = enjoi({
+        var schema = Enjoi({
             'type': 'array',
             'items': {
                 'type': 'number'
@@ -132,11 +143,11 @@ test('types', function (t) {
             'minItems': 0
         });
 
-        joi.validate([1, 2], schema, function (error, value) {
+        Joi.validate([1, 2], schema, function (error, value) {
             t.ok(!error, 'no error.');
         });
 
-        joi.validate([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], schema, function (error, value) {
+        Joi.validate([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], schema, function (error, value) {
             t.ok(error, 'error.');
         });
     });
@@ -144,7 +155,7 @@ test('types', function (t) {
     t.test('arrays and refs', function (t) {
         t.plan(2);
 
-        var schema = enjoi({
+        var schema = Enjoi({
             'type': 'array',
             'items': {
                 '$ref': 'definitions#/number'
@@ -159,11 +170,11 @@ test('types', function (t) {
             }
         });
 
-        joi.validate([1, 2], schema, function (error, value) {
+        Joi.validate([1, 2], schema, function (error, value) {
             t.ok(!error, 'no error.');
         });
 
-        joi.validate([1, 3], schema, function (error, value) {
+        Joi.validate([1, 3], schema, function (error, value) {
             t.ok(error, 'error.');
         });
     });
@@ -171,7 +182,7 @@ test('types', function (t) {
     t.test('arrays and unique', function (t) {
         t.plan(2);
 
-        var schema = enjoi({
+        var schema = Enjoi({
             'type': 'array',
             'items': {
                 'type': 'integer'
@@ -179,11 +190,11 @@ test('types', function (t) {
             'uniqueItems': true
         });
 
-        joi.validate([1, 2], schema, function (error, value) {
+        Joi.validate([1, 2], schema, function (error, value) {
             t.ok(!error, 'no error.');
         });
 
-        joi.validate([1, 1], schema, function (error, value) {
+        Joi.validate([1, 1], schema, function (error, value) {
             t.ok(error, 'error.');
         });
     });
@@ -191,15 +202,15 @@ test('types', function (t) {
     t.test('boolean', function (t) {
         t.plan(2);
 
-        var schema = enjoi({
+        var schema = Enjoi({
             'type': 'boolean'
         });
 
-        joi.validate('hello', schema, function (error, value) {
+        Joi.validate('hello', schema, function (error, value) {
             t.ok(error, 'error.');
         });
 
-        joi.validate(true, schema, function (error, value) {
+        Joi.validate(true, schema, function (error, value) {
             t.ok(!error, 'no error.');
         });
     });
@@ -207,16 +218,16 @@ test('types', function (t) {
     t.test('string regex', function (t) {
         t.plan(2);
 
-        var schema = enjoi({
+        var schema = Enjoi({
             'type': 'string',
             'pattern': /foobar/
         });
 
-        joi.validate('foo', schema, function (error, value) {
+        Joi.validate('foo', schema, function (error, value) {
             t.ok(error, 'error.');
         });
 
-        joi.validate('foobar', schema, function (error, value) {
+        Joi.validate('foobar', schema, function (error, value) {
             t.ok(!error, 'no error.');
         });
     });
@@ -224,21 +235,21 @@ test('types', function (t) {
     t.test('string length', function (t) {
         t.plan(3);
 
-        var schema = enjoi({
+        var schema = Enjoi({
             'type': 'string',
             'minLength': 2,
             'maxLength': 4
         });
 
-        joi.validate('f', schema, function (error, value) {
+        Joi.validate('f', schema, function (error, value) {
             t.ok(error, 'error.');
         });
 
-        joi.validate('foobar', schema, function (error, value) {
+        Joi.validate('foobar', schema, function (error, value) {
             t.ok(error, 'error.');
         });
 
-        joi.validate('foo', schema, function (error, value) {
+        Joi.validate('foo', schema, function (error, value) {
             t.ok(!error, 'no error.');
         });
     });
@@ -246,19 +257,19 @@ test('types', function (t) {
     t.test('no type, ref, or enum validates anything.', function (t) {
         t.plan(3);
 
-        var schema = enjoi({
+        var schema = Enjoi({
             'description': 'something'
         });
 
-        joi.validate('A', schema, function (error, value) {
+        Joi.validate('A', schema, function (error, value) {
             t.ok(!error, 'no error.');
         });
 
-        joi.validate({'A': 'a'}, schema, function (error, value) {
+        Joi.validate({'A': 'a'}, schema, function (error, value) {
             t.ok(!error, 'no error.');
         });
 
-        joi.validate([1, 2, 3], schema, function (error, value) {
+        Joi.validate([1, 2, 3], schema, function (error, value) {
             t.ok(!error, 'no error.');
         });
     });
@@ -266,19 +277,19 @@ test('types', function (t) {
     t.test('enum', function (t) {
         t.plan(3);
 
-        var schema = enjoi({
+        var schema = Enjoi({
             'enum': ['A', 'B']
         });
 
-        joi.validate('A', schema, function (error, value) {
+        Joi.validate('A', schema, function (error, value) {
             t.ok(!error, 'no error.');
         });
 
-        joi.validate('B', schema, function (error, value) {
+        Joi.validate('B', schema, function (error, value) {
             t.ok(!error, 'no error.');
         });
 
-        joi.validate('C', schema, function (error, value) {
+        Joi.validate('C', schema, function (error, value) {
             t.ok(error, 'error.');
         });
     });
@@ -287,7 +298,7 @@ test('types', function (t) {
         t.plan(1);
 
         t.throws(function () {
-            enjoi({
+            Enjoi({
                 'type': 'something'
             });
         });
