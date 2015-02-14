@@ -34,6 +34,7 @@
   },
   "devDependencies": {
     "hammertime": "^0.1.2",
+    "is-my-json-valid": "^2.7.0",
     "istanbul": "^0.3.2",
     "jshint": "^2.5.5",
     "tape": "^2.14.0",
