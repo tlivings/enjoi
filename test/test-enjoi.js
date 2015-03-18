@@ -105,6 +105,38 @@ Test('enjoi', function (t) {
         });
     });
 
+    t.test('with both inline and external refs', function (t) {
+        t.plan(1);
+
+        var schema = Enjoi({
+            'title': 'Example Schema',
+            'type': 'object',
+            'properties': {
+                'firstname': {
+                    '$ref': '#/definitions/firstname'
+                },
+		'surname': {
+                    '$ref': 'definitions#/surname'
+                }
+            },
+	    'definitions': {
+                'firstname': {
+		    'type': 'string'
+		}
+	    }
+        }, {
+            'definitions': {
+                'surname': {
+                    'type': 'string'
+                }
+            }
+        });
+
+        Joi.validate({firstname: 'Joe', surname: 'Doe'}, schema,  function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+    });
+
 });
 
 Test('types', function (t) {
