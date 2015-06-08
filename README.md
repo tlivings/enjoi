@@ -83,10 +83,3 @@ var schema = enjoi({
     }
 });
 ```
-
-### Performance
-
-Joi's validation is very fast. `enjoi` is meant to be used to prepare a schema in advance of
-validation; not alongside validation.
-
-You can run a benchmark against `tv4` by running `npm run bench`.
