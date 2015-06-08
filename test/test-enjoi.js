@@ -336,4 +336,32 @@ Test('types', function (t) {
         });
     });
 
+    t.test('anyOf', function (t) {
+        t.plan(3);
+
+        var schema = Enjoi({
+            'anyOf': [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'number'
+                }
+            ]
+        });
+
+        Joi.validate('string', schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate(10, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate({}, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+    });
+
+
 });
