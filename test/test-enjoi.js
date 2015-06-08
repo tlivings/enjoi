@@ -363,5 +363,37 @@ Test('types', function (t) {
         });
     });
 
+    t.test('allOf', function (t) {
+        t.plan(2);
+
+        var schema = Enjoi({
+            'allOf': [
+                {
+                    type: 'object',
+                    properties: {
+                        a: {
+                            type: 'string'
+                        }
+                    }
+                },
+                {
+                    type: 'object',
+                    properties: {
+                        b: {
+                            type: 'number'
+                        }
+                    }
+                }
+            ]
+        });
+
+        Joi.validate({a: 'string', b: 10}, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate({a: 'string', b: 'string'}, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+    });
 
 });
