@@ -93,10 +93,12 @@ Test('enjoi', function (t) {
                 }
             }
         }, {
-            'definitions': {
-                'name': {
-                    'type': 'string'
-                }
+            subSchemas: {
+                'definitions': {
+                    'name': {
+                        'type': 'string'
+                    }
+               }
             }
         });
 
@@ -125,9 +127,11 @@ Test('enjoi', function (t) {
 		}
 	    }
         }, {
-            'definitions': {
-                'surname': {
-                    'type': 'string'
+            subSchemas: {
+                'definitions': {
+                    'surname': {
+                        'type': 'string'
+                    }
                 }
             }
         });
@@ -193,11 +197,13 @@ Test('types', function (t) {
                 '$ref': 'definitions#/number'
             }
         }, {
-            'definitions': {
-                'number': {
-                    'type': 'number',
-                    'minimum': 0,
-                    'maximum': 2
+            subSchemas: {
+                'definitions': {
+                    'number': {
+                        'type': 'number',
+                        'minimum': 0,
+                        'maximum': 2
+                    }
                 }
             }
         });
@@ -392,6 +398,57 @@ Test('types', function (t) {
         });
 
         Joi.validate({a: 'string', b: 'string'}, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+    });
+
+    t.test('custom type', function (t) {
+        t.plan(2);
+
+        var schema = Enjoi({
+            type: 'custom'
+        }, {
+            types: {
+                custom: Joi.string()
+            }
+        });
+
+        Joi.validate('string', schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate(10, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+    });
+
+    t.test('custom complex type', function (t) {
+        t.plan(2);
+
+        var schema = Enjoi({
+            type: 'file'
+        }, {
+            types: {
+                file: Enjoi({
+                    type: 'object',
+                    properties: {
+                        file: {
+                            type: 'string'
+                        },
+                        consumes: {
+                            type: 'string',
+                            pattern: /multipart\/form-data/
+                        }
+                    }
+                })
+            }
+        });
+
+        schema.validate({file: 'data', consumes: 'multipart/form-data'}, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        schema.validate({file: 'data', consumes: 'application/json'}, function (error, value) {
             t.ok(error, 'error.');
         });
     });
