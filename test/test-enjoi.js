@@ -292,6 +292,26 @@ Test('types', function (t) {
         });
     });
 
+    t.test('string email', function (t) {
+        t.plan(2);
+
+        var schema = Enjoi({
+            'type': 'string',
+            'format': 'email',
+            'maxLength': '20'
+        });
+
+        Joi.validate('wrongemail', schema, function (error, value) {
+            t.ok(error, "wrong email error.");
+        });
+
+        Joi.validate('right@email.com', schema, function (error, value) {
+            t.ok(!error,  "good email.");
+        });
+
+       
+    });
+
     t.test('no type, ref, or enum validates anything.', function (t) {
         t.plan(3);
 
