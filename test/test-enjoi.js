@@ -311,6 +311,40 @@ Test('types', function (t) {
 
        
     });
+    
+     t.test('string date ISO 8601', function (t) {
+        t.plan(5);
+
+        var schema = Enjoi({
+            'type': 'string',
+            'format': 'date',
+            'min': '1-1-2000 UTC',
+            'max': Date.now()
+        });
+
+        Joi.validate('1akd2536', schema, function (error, value) {
+            t.ok(error, "wrong date format.");
+        });
+        
+        Joi.validate('12-10-1900 UTC', schema, function (error, value) {
+            t.ok(error, "minimum date.");
+        });
+        
+       
+        
+        Joi.validate(Date.now() + 1000000, schema, function (error, value) {
+            t.ok(error, "maximum date.");
+        });
+        
+        Joi.validate('1-2-2015 UTC', schema, function (error, value) {
+            t.ok(!error,  "good date.");
+        });
+        
+         Joi.validate('2005-01-01', schema, function (error, value) {
+            t.ok(!error, "good date 2");
+        });
+
+    });
 
     t.test('no type, ref, or enum validates anything.', function (t) {
         t.plan(3);
