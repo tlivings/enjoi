@@ -367,7 +367,7 @@ Test('types', function (t) {
     });
 
     t.test('enum', function (t) {
-        t.plan(3);
+        t.plan(5);
 
         var schema = Enjoi({
             'enum': ['A', 'B']
@@ -377,6 +377,19 @@ Test('types', function (t) {
             t.ok(!error, 'no error.');
         });
 
+        Joi.validate('B', schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate('C', schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+        
+        schema = Enjoi({
+            type: 'string',
+            'enum': ['A', 'B']
+        });
+        
         Joi.validate('B', schema, function (error, value) {
             t.ok(!error, 'no error.');
         });
