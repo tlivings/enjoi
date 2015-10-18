@@ -1,3 +1,7 @@
+### v1.0.1
+
+* Support for `format` in string types.
+
 ### v1.0.0
 
 * [BREAKING] `subSchemas` is now passed as a property in `options`.
