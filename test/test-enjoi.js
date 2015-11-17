@@ -309,9 +309,9 @@ Test('types', function (t) {
             t.ok(!error,  "good email.");
         });
 
-       
+
     });
-    
+
      t.test('string date ISO 8601', function (t) {
         t.plan(5);
 
@@ -325,21 +325,21 @@ Test('types', function (t) {
         Joi.validate('1akd2536', schema, function (error, value) {
             t.ok(error, "wrong date format.");
         });
-        
+
         Joi.validate('12-10-1900 UTC', schema, function (error, value) {
             t.ok(error, "minimum date.");
         });
-        
-       
-        
+
+
+
         Joi.validate(Date.now() + 1000000, schema, function (error, value) {
             t.ok(error, "maximum date.");
         });
-        
+
         Joi.validate('1-2-2015 UTC', schema, function (error, value) {
             t.ok(!error,  "good date.");
         });
-        
+
          Joi.validate('2005-01-01', schema, function (error, value) {
             t.ok(!error, "good date 2");
         });
@@ -384,12 +384,12 @@ Test('types', function (t) {
         Joi.validate('C', schema, function (error, value) {
             t.ok(error, 'error.');
         });
-        
+
         schema = Enjoi({
             type: 'string',
             'enum': ['A', 'B']
         });
-        
+
         Joi.validate('B', schema, function (error, value) {
             t.ok(!error, 'no error.');
         });
@@ -462,6 +462,63 @@ Test('types', function (t) {
 
         Joi.validate({a: 'string', b: 10}, schema, function (error, value) {
             t.ok(!error, 'no error.');
+        });
+
+        Joi.validate({a: 'string', b: 'string'}, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+    });
+
+    t.test('oneOf', function(t) {
+      t.plan(8);
+
+        var schema = Enjoi({
+            'oneOf': [
+                {
+                    type: 'object',
+                    properties: {
+                        a: {
+                            type: 'string'
+                        }
+                    }
+                },
+                {
+                    type: 'object',
+                    properties: {
+                        b: {
+                            type: 'number'
+                        }
+                    }
+                }
+            ]
+        });
+
+        Joi.validate({a: 'string'}, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate({}, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate({b: 10}, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate({a: 'string', b: 10}, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+
+        Joi.validate({a: 'string', b: null}, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+
+        Joi.validate({a: null, b: 10}, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+
+        Joi.validate({a: null, b: null}, schema, function (error, value) {
+            t.ok(error, 'error.');
         });
 
         Joi.validate({a: 'string', b: 'string'}, schema, function (error, value) {
