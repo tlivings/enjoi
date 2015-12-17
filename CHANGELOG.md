@@ -1,3 +1,7 @@
+### v1.0.2
+
+* Support for `oneOf`.
+
 ### v1.0.1
 
 * Support for `format` in string types.
