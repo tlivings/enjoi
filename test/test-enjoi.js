@@ -577,4 +577,166 @@ Test('types', function (t) {
         });
     });
 
+    t.test('additionalProperties false should not allow additional properties', function(t) {
+      t.plan(1);
+
+      var schema = Enjoi({
+          type: 'file'
+        },
+        {
+          types: {
+              file: Enjoi({
+                  type: 'object',
+                  additionalProperties: false,
+                  properties: {
+                      file: {
+                          type: 'string'
+                      }
+                  }
+              })
+          }
+      });
+
+      schema.validate({file: 'data', consumes: 'application/json'}, function (error, value) {
+        t.ok(error);
+      });
+    });
+
+    t.test('additionalProperties true should allow additional properties', function(t) {
+      t.plan(1);
+
+      var schema = Enjoi({
+          type: 'file'
+        },
+        {
+          types: {
+              file: Enjoi({
+                  type: 'object',
+                  additionalProperties: true,
+                  properties: {
+                      file: {
+                          type: 'string'
+                      }
+                  }
+              })
+          }
+      });
+
+      schema.validate({file: 'data', consumes: 'application/json'}, function (error, value) {
+        t.ok(!error);
+      });
+    });
+
+    t.test('additionalProperties true should not affect validation of properties', function(t) {
+      t.plan(1);
+
+      var schema = Enjoi({
+          type: 'file'
+        },
+        {
+          types: {
+              file: Enjoi({
+                  type: 'object',
+                  additionalProperties: true,
+                  properties: {
+                      file: {
+                          type: 'string'
+                      }
+                  }
+              })
+          }
+      });
+
+      schema.validate({file: 5, consumes: 'application/json'}, function (error, value) {
+        t.ok(error);
+      });
+    });
+
+    t.test('additionalProperties object should not affect validation of properties', function(t) {
+      t.plan(1);
+
+      var schema = Enjoi({
+          type: 'file'
+        },
+        {
+          types: {
+              file: Enjoi({
+                  type: 'object',
+                  additionalProperties: {
+                      consumes: {
+                          type: 'string'
+                      }
+                  },
+                  properties: {
+                      file: {
+                          type: 'string'
+                      }
+                  }
+              })
+          }
+      });
+
+      schema.validate({file: 'asdf', consumes: 'application/json'}, function (error, value) {
+        t.ok(!error);
+      });
+    });
+
+    t.test('additionalProperties object should add to validated properties', function(t) {
+      t.plan(1);
+
+      var schema = Enjoi({
+          type: 'file'
+        },
+        {
+          types: {
+              file: Enjoi({
+                  type: 'object',
+                  additionalProperties: {
+                      consumes: {
+                          type: 'string'
+                      }
+                  },
+                  properties: {
+                      file: {
+                          type: 'string'
+                      }
+                  }
+              })
+          }
+      });
+
+      schema.validate({file: 'asdf', consumes: 5}, function (error, value) {
+        t.ok(error);
+      });
+    });
+
+    t.test('additionalProperties object should also allow unkown properties', function(t) {
+      t.plan(1);
+
+      var schema = Enjoi({
+          type: 'file'
+        },
+        {
+          types: {
+              file: Enjoi({
+                  type: 'object',
+                  additionalProperties: {
+                      consumes: {
+                          type: 'string'
+                      }
+                  },
+                  properties: {
+                      file: {
+                          type: 'string'
+                      }
+                  }
+              })
+          }
+      });
+
+      schema.validate({file: 'asdf', consumes: 'application/json', test: 5}, function (error, value) {
+        t.ok(!error);
+      });
+    });
+
 });

@@ -13,7 +13,6 @@ Here is a list of some missing keyword support still being worked on:
 - `not`
 - `format`
 - `object:patternProperties`
-- `object:additionalProperties`
 - `array:items` (supports as single schema, not supported as array of schemas).
 - `array:additionalItems`
 
