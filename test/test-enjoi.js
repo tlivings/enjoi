@@ -577,4 +577,35 @@ Test('types', function (t) {
         });
     });
 
+    t.test('additionalProperties boolean', function (t) {
+        t.plan(4);
+
+        var schema = {
+            type: 'object',
+            properties: {
+                file: {
+                    type: 'string'
+                }
+            }
+        };
+
+        Enjoi(schema).validate({ file: 'data', consumes: 'application/json' }, function (error, value) {
+            t.ok(error, 'error.');
+        });
+
+        schema.additionalProperties = false;
+        Enjoi(schema).validate({ file: 'data', consumes: 'application/json' }, function (error, value) {
+            t.ok(error, 'error.');
+        });
+
+        schema.additionalProperties = true;
+        Enjoi(schema).validate({ file: 'data', consumes: 'application/json' }, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Enjoi(schema).validate({ file: 5, consumes: 'application/json' }, function (error, value) {
+            t.ok(error, 'error.');
+        });
+    });
+
 });
