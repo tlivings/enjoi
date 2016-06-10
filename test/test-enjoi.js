@@ -3,6 +3,7 @@
 var Test = require('tape');
 var Enjoi = require('../lib/enjoi');
 var Joi = require('joi');
+var dirname = __dirname;
 
 Test('enjoi', function (t) {
 
@@ -58,21 +59,24 @@ Test('enjoi', function (t) {
         });
     });
 
-    t.test('with ref', function (t) {
+    t.test('with external (URI) ref', function (t) {
         t.plan(1);
 
         var schema = Enjoi({
             'title': 'Example Schema',
             'type': 'object',
             'properties': {
-                'name': {
-                    '$ref': '#/definitions/name'
+                'age': {
+                    '$ref': 'fixtures/age#/age'
                 }
-            },
-            'definitions': {
-                'name': {
-                    'type': 'string'
-                }
+            }
+        }, {
+            subSchemas: {
+                'definitions': {
+                    'name': {
+                        'type': 'string'
+                    }
+               }
             }
         });
 
@@ -80,6 +84,7 @@ Test('enjoi', function (t) {
             t.ok(!error, 'no error.');
         });
     });
+
 
     t.test('with external ref', function (t) {
         t.plan(1);
