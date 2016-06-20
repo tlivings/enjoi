@@ -254,20 +254,41 @@ Test('types', function (t) {
     });
 
     t.test('string regex', function (t) {
-        t.plan(2);
+        t.plan(5);
 
         var schema = Enjoi({
             'type': 'string',
-            'pattern': /foobar/
+            'regex': {
+                pattern: 'foobar',
+                patternName: 'X#X'
+            }
         });
 
         Joi.validate('foo', schema, function (error, value) {
             t.ok(error, 'error.');
+            t.equal(error.message, '"value" with value "foo" fails to match the X#X pattern');
         });
 
         Joi.validate('foobar', schema, function (error, value) {
             t.ok(!error, 'no error.');
         });
+
+        Joi.validate('FOOBAR', schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+
+        var schemaInsensitive = Enjoi({
+            'type': 'string',
+            'regex': {
+                pattern: 'foobar',
+                options: 'i'
+            }
+        });
+
+        Joi.validate('FOOBAR', schemaInsensitive, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+    });
     });
 
     t.test('string length', function (t) {
