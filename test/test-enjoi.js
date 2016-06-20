@@ -289,6 +289,82 @@ Test('types', function (t) {
             t.ok(!error, 'no error.');
         });
     });
+
+    t.test('custom messages', function (t) {
+        t.plan(8);
+
+        var schema = Enjoi({
+            'type': 'string',
+            'minLength': 1
+        });
+
+        Joi.validate('', schema, function (error, value) {
+            t.equal(error.message, '"value" is not allowed to be empty');
+        });
+
+        var schema = Enjoi({
+            'type': 'string',
+            'message': 'Not a string',
+            'minLength': 1
+        });
+
+        Joi.validate('', schema, function (error, value) {
+            t.equal(error.message, '"value" Not a string');
+        });
+
+        var schema = Enjoi({
+            'type': 'number'
+        });
+
+        Joi.validate('', schema, function (error, value) {
+            t.equal(error.message, '"value" must be a number');
+        });
+
+        var schema = Enjoi({
+            'type': 'number',
+            'message': 'Not a number'
+        });
+
+        Joi.validate('', schema, function (error, value) {
+            t.equal(error.message, '"value" Not a number');
+        });
+
+        var schema = Enjoi({
+            'type': 'string',
+            'format': 'email'
+        });
+
+        Joi.validate('', schema, function (error, value) {
+            t.equal(error.message, '"value" is not allowed to be empty');
+        });
+
+        var schema = Enjoi({
+            'type': 'string',
+            'format': 'email',
+            'message': 'Not an email'
+        });
+
+        Joi.validate('', schema, function (error, value) {
+            t.equal(error.message, '"value" Not an email');
+        });
+        var schema = Enjoi({
+            'type': 'string',
+            'format': 'date'
+        });
+
+        Joi.validate('', schema, function (error, value) {
+            t.equal(error.message, '"value" must be a number of milliseconds or valid date string');
+        });
+
+        var schema = Enjoi({
+            'type': 'string',
+            'format': 'date',
+            'message': 'Not an date'
+        });
+
+        Joi.validate('', schema, function (error, value) {
+            t.equal(error.message, '"value" Not an date');
+        });
     });
 
     t.test('string length', function (t) {
@@ -582,7 +658,9 @@ Test('types', function (t) {
                         },
                         consumes: {
                             type: 'string',
-                            pattern: /multipart\/form-data/
+                            regex: {
+                                pattern: /multipart\/form-data/
+                            }
                         }
                     }
                 })
