@@ -28,14 +28,15 @@
     "url": "https://github.com/tlivings/enjoi/issues"
   },
   "homepage": "https://github.com/tlivings/enjoi",
-  "dependencies": {
+  "peerDependencies": {
     "core-util-is": "^1.0.1",
-    "joi": "^6.4.3"
+    "joi": "^8.0.0"
   },
   "devDependencies": {
     "hammertime": "^0.1.2",
     "is-my-json-valid": "^2.7.0",
     "istanbul": "^0.3.2",
+    "joi": "^8.0.0",
     "jshint": "^2.5.5",
     "tape": "^2.14.0",
     "themis": "^1.0.0",
