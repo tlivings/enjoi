@@ -50,6 +50,7 @@ Test('enjoi', function (t) {
         });
 
         Joi.validate({firstName: 'John', lastName: 'Doe', age: 45, tags: [1, 'human']}, schema, function (error, value) {
+            console.log(value);
             t.ok(error, 'error.');
         });
 
@@ -304,20 +305,22 @@ Test('types', function (t) {
 
         var schema = Enjoi({
             'type': 'string',
+            'label': 'Field',
             'message': 'Not a string',
             'minLength': 1
         });
 
         Joi.validate('', schema, function (error, value) {
-            t.equal(error.message, '"value" Not a string');
+            t.equal(error.message, '"Field" Not a string');
         });
 
         var schema = Enjoi({
+            'label': 'price',
             'type': 'number'
         });
 
         Joi.validate('', schema, function (error, value) {
-            t.equal(error.message, '"value" must be a number');
+            t.equal(error.message, '"price" must be a number');
         });
 
         var schema = Enjoi({
@@ -331,11 +334,12 @@ Test('types', function (t) {
 
         var schema = Enjoi({
             'type': 'string',
+            'label': 'email',
             'format': 'email'
         });
 
         Joi.validate('', schema, function (error, value) {
-            t.equal(error.message, '"value" is not allowed to be empty');
+            t.equal(error.message, '"email" is not allowed to be empty');
         });
 
         var schema = Enjoi({
@@ -349,11 +353,12 @@ Test('types', function (t) {
         });
         var schema = Enjoi({
             'type': 'string',
+            'label': 'sale date',
             'format': 'date'
         });
 
         Joi.validate('', schema, function (error, value) {
-            t.equal(error.message, '"value" must be a number of milliseconds or valid date string');
+            t.equal(error.message, '"sale date" must be a number of milliseconds or valid date string');
         });
 
         var schema = Enjoi({
