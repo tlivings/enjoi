@@ -1,6 +1,7 @@
-### v1.0.5
+### v2.0.0
 
 * updated `joi` to ^9.
+* requires node 4 minimum.
 
 ### v1.0.4
 
