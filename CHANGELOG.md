@@ -1,3 +1,7 @@
+### v1.0.5
+
+* updated `joi` to ^9.
+
 ### v1.0.4
 
 * when undefined `minLength` should default to 0.
