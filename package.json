@@ -35,13 +35,12 @@
     "core-util-is": "^1.0.1",
     "joi": "^9.2.0"
   },
+  "optionalDependencies": {
+    "hammertime": "^0.1.4"
+  },
   "devDependencies": {
-    "hammertime": "^0.1.4",
-    "is-my-json-valid": "^2.7.0",
     "istanbul": "^0.3.2",
     "jshint": "^2.5.5",
-    "tape": "^2.14.0",
-    "themis": "^1.0.0",
-    "tv4": "^1.1.0"
+    "tape": "^2.14.0"
   }
 }
