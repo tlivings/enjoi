@@ -7,9 +7,10 @@ var Joi = require('joi');
 Test('enjoi', function (t) {
 
     t.test('valid', function (t) {
-        t.plan(8);
+        t.plan(9);
 
         var schema = Enjoi({
+            'title': 'Example Schema',
             'description': 'An example to test against.',
         	'type': 'object',
         	'properties': {
@@ -37,6 +38,7 @@ Test('enjoi', function (t) {
         });
 
         t.equal(schema._type, 'object', 'defined object.');
+        t.equal(schema._flags.label, 'Example Schema');
         t.equal(schema._description, 'An example to test against.', 'description set.');
         t.equal(schema._inner.children.length, 4, '4 properties defined.');
 
