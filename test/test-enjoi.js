@@ -7,10 +7,10 @@ var Joi = require('joi');
 Test('enjoi', function (t) {
 
     t.test('valid', function (t) {
-        t.plan(5);
+        t.plan(8);
 
         var schema = Enjoi({
-        	'title': 'Example Schema',
+            'description': 'An example to test against.',
         	'type': 'object',
         	'properties': {
         		'firstName': {
@@ -29,13 +29,16 @@ Test('enjoi', function (t) {
                     }
                 },
         		'age': {
-        			'description': 'Age in years',
         			'type': 'integer',
         			'minimum': 0
         		}
         	},
         	'required': ['firstName', 'lastName']
         });
+
+        t.equal(schema._type, 'object', 'defined object.');
+        t.equal(schema._description, 'An example to test against.', 'description set.');
+        t.equal(schema._inner.children.length, 4, '4 properties defined.');
 
         Joi.validate({firstName: 'John', lastName: 'Doe', age: 45, tags: ['man', 'human']}, schema, function (error, value) {
             t.ok(!error, 'no error.');
