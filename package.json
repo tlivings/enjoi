@@ -14,7 +14,7 @@
     "url": "git://github.com/tlivings/enjoi.git"
   },
   "engines": {
-    "node": "4.x"
+    "node": ">=4.x"
   },
   "keywords": [
     "joi",
