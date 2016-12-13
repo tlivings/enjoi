@@ -1,3 +1,10 @@
+
+### v2.1.0
+
+* added support for mapping title (to label in joi).
+* added support for mapping description.
+* fixed engine version.
+
 ### v2.0.0
 
 * updated `joi` to ^9.
