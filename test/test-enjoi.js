@@ -371,6 +371,31 @@ Test('types', function (t) {
         });
     });
 
+    t.test('shorthand type', function (t) {
+        t.plan(1);
+
+        var schema = Enjoi('string');
+        Joi.validate('A', schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+    });
+
+
+    t.test('shorthand property type', function (t) {
+        t.plan(1);
+
+        var schema = Enjoi({
+            'type': 'object',
+            'properties': {
+                'name': 'string'
+            }
+        });
+
+        Joi.validate({ name: 'test' }, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+    });
+
     t.test('enum', function (t) {
         t.plan(5);
 
