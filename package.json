@@ -35,9 +35,6 @@
     "core-util-is": "^1.0.1",
     "joi": "^9.2.0"
   },
-  "optionalDependencies": {
-    "hammertime": "^0.1.4"
-  },
   "devDependencies": {
     "istanbul": "^0.3.2",
     "jshint": "^2.5.5",
