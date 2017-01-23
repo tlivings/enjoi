@@ -1,4 +1,8 @@
 
+### v2.2.0
+
+* Added support for directly passing a `string` instead of a schema to indicate type.
+
 ### v2.1.0
 
 * added support for mapping title (to label in joi).

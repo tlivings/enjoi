@@ -20,7 +20,7 @@ Here is a list of some missing keyword support still being worked on:
 ### API
 
 - `enjoi(schema [, options])`
-    - `schema` - a JSON schema.
+    - `schema` - a JSON schema or a string type representation (such as `'integer'`).
     - `options` - an (optional) object of additional options such as `subSchemas` and custom `types`.
         - `subSchemas` - an (optional) object with keys representing schema ids, and values representing schemas.
         - `types` - an (optional) object  with keys representing type names and values representing a Joi schema.
