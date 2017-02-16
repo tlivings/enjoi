@@ -429,6 +429,42 @@ Test('types', function (t) {
         });
     });
 
+    t.test('any', function (t) {
+        t.plan(7);
+
+        var schema = Enjoi({
+            'type': 'any'
+        });
+
+        Joi.validate('A', schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate(1, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate(true, schema, function (error, value) {
+            t.ok(!error, 'error.');
+        });
+
+        Joi.validate({}, schema, function (error, value) {
+            t.ok(!error, 'error.');
+        });
+
+        Joi.validate([], schema, function (error, value) {
+            t.ok(!error, 'error.');
+        });
+
+        Joi.validate(null, schema, function (error, value) {
+            t.ok(!error, 'error.');
+        });
+
+        Joi.validate(undefined, schema, function (error, value) {
+            t.ok(!error, 'error.');
+        });
+    });
+
     t.test('unknown type fails', function (t) {
         t.plan(1);
 

@@ -86,6 +86,14 @@ var schema = Enjoi({
     }
 });
 ```
+### Default Types
+- `'array'`
+- `'boolean'`
+- `'integer'`
+- `'number'`
+- `'object'`
+- `'string'`
+- `'any'`
 
 ### Custom Types
 
