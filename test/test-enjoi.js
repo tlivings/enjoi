@@ -638,4 +638,27 @@ Test('types', function (t) {
         });
     });
 
+    t.test('default values', function (t) {
+        t.plan(2);
+
+        var schema = {
+            type: 'object',
+            properties: {
+                user: {
+                    type: 'string',
+                    format: 'email'
+                },
+                locale: {
+                    type: 'string',
+                    default: 'en-US'
+                }
+            },
+            required: ['user']
+        };
+
+        Enjoi(schema).validate({user: 'test@domain.tld'}, function (error, value) {
+            t.ok(!error, 'error');
+            t.equal(value.locale, 'en-US');
+        });
+    });
 });
