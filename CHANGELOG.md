@@ -1,3 +1,6 @@
+### v2.2.1
+
+* Add default value (#30).
 
 ### v2.2.0
 
