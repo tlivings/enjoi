@@ -314,7 +314,6 @@ Test('types', function (t) {
             t.ok(!error,  "good email.");
         });
 
-
     });
 
      t.test('string date ISO 8601', function (t) {
@@ -347,6 +346,78 @@ Test('types', function (t) {
 
          Joi.validate('2005-01-01', schema, function (error, value) {
             t.ok(!error, "good date 2");
+        });
+
+    });
+
+    t.test('string hostname', function (t) {
+        t.plan(2);
+
+        var schema = Enjoi({
+            'type': 'string',
+            'format': 'hostname'
+        });
+
+        Joi.validate('not@host', schema, function (error, value) {
+            t.ok(error, "bad host error.");
+        });
+
+        Joi.validate('isahost.com', schema, function (error, value) {
+            t.ok(!error,  "good host.");
+        });
+
+    });
+
+    t.test('string ipv4', function (t) {
+        t.plan(2);
+
+        var schema = Enjoi({
+            'type': 'string',
+            'format': 'ipv4'
+        });
+
+        Joi.validate('asdf', schema, function (error, value) {
+            t.ok(error, "bad ipv4 error.");
+        });
+
+        Joi.validate('127.0.0.1', schema, function (error, value) {
+            t.ok(!error,  "good ipv4.");
+        });
+
+    });
+
+    t.test('string ipv6', function (t) {
+        t.plan(2);
+
+        var schema = Enjoi({
+            'type': 'string',
+            'format': 'ipv6'
+        });
+
+        Joi.validate('asdf', schema, function (error, value) {
+            t.ok(error, "bad ipv6 error.");
+        });
+
+        Joi.validate('::1', schema, function (error, value) {
+            t.ok(!error,  "good ipv6.");
+        });
+
+    });
+
+    t.test('string uri', function (t) {
+        t.plan(2);
+
+        var schema = Enjoi({
+            'type': 'string',
+            'format': 'uri'
+        });
+
+        Joi.validate('asdf', schema, function (error, value) {
+            t.ok(error, "bad uri error.");
+        });
+
+        Joi.validate('http://example.com', schema, function (error, value) {
+            t.ok(!error,  "good uri.");
         });
 
     });
