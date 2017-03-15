@@ -1,3 +1,7 @@
+### v2.2.2
+
+* Added @jsdevel's additionalProperties (#14) fixes (thanks!)
+
 ### v2.2.1
 
 * Add default value (#30).
