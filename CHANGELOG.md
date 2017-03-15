@@ -1,4 +1,7 @@
 
+### v2.2.3
+
+* Fix #25 by supporting array for type (e.g. ['string', 'null']).
 * Additional formats: hostname, uri, ipv4, ipv6.
 
 ### v2.2.2
