@@ -1,3 +1,6 @@
+
+* Additional formats: hostname, uri, ipv4, ipv6.
+
 ### v2.2.2
 
 * Added @jsdevel's additionalProperties (#14) fixes (thanks!)
