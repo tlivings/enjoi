@@ -895,4 +895,44 @@ Test('types', function (t) {
      });
    });
 
+   t.test('array for type', function (t) {
+       t.plan(3);
+
+       var schema = Enjoi({
+           'type': ['boolean', 'string']
+       });
+
+       Joi.validate(10, schema, function (error, value) {
+           t.ok(error, 'error.');
+       });
+
+       Joi.validate(true, schema, function (error, value) {
+           t.ok(!error, 'no error.');
+       });
+
+       Joi.validate('true', schema, function (error, value) {
+           t.ok(!error, 'no error.');
+       });
+   });
+
+   t.test('array for type with null support', function (t) {
+       t.plan(3);
+
+       var schema = Enjoi({
+           'type': ['string', 'null']
+       });
+
+       Joi.validate('test', schema, function (error, value) {
+           t.ok(!error, 'no error.');
+       });
+
+       Joi.validate(null, schema, function (error, value) {
+           t.ok(!error, 'no error.');
+       });
+
+       Joi.validate(false, schema, function (error, value) {
+           t.ok(error, 'error.');
+       });
+   });
+
 });
