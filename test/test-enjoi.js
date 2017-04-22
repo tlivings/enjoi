@@ -63,6 +63,30 @@ Test('enjoi', function (t) {
         });
     });
 
+    t.test('property can be required', function (t) {
+        t.plan(2);
+
+        var schema = Enjoi({
+            'title': 'Example Schema',
+            'description': 'An example to test against.',
+            'type': 'object',
+            'properties': {
+                'firstName': {
+                    'type': 'string',
+                    'required': true
+                }
+            }
+        });
+
+        Joi.validate({ firstName: 'John' }, schema, function (error, value) {
+            t.ok(!error, 'no error');
+        });
+
+        Joi.validate({ }, schema, function (error, value) {
+            t.ok(error, 'error');
+        });
+    });
+
     t.test('with ref', function (t) {
         t.plan(1);
 
