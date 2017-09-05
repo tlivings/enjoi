@@ -169,7 +169,7 @@ Test('types', function (t) {
     });
 
     t.test('arrays and numbers', function (t) {
-        t.plan(2);
+        t.plan(4);
 
         var schema = Enjoi({
             'type': 'array',
@@ -187,6 +187,20 @@ Test('types', function (t) {
         Joi.validate([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], schema, function (error, value) {
             t.ok(error, 'error.');
         });
+
+        var numberSchema = Enjoi({
+          'type': 'number',
+          'greater': 0
+        });
+
+      Joi.validate(0, numberSchema, function (error) {
+          console.log(error);
+        t.ok(error, 'error.');
+      });
+
+	    Joi.validate(1, numberSchema, function (error) {
+		    t.ok(!error, 'no error.');
+	    });
     });
 
     t.test('arrays and refs', function (t) {
