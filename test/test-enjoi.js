@@ -306,7 +306,7 @@ Test('types', function (t) {
     });
 
     t.test('custom messages', function (t) {
-        t.plan(8);
+        t.plan(9);
 
         var schema = Enjoi({
             'type': 'string',
@@ -320,7 +320,7 @@ Test('types', function (t) {
         var schema = Enjoi({
             'type': 'string',
             'label': 'Field',
-            'message': 'Not a string',
+            'messages': { empty: 'Not a string' },
             'minLength': 1
         });
 
@@ -339,12 +339,17 @@ Test('types', function (t) {
 
         var schema = Enjoi({
             'type': 'number',
-            'message': 'Not a number'
+            'greater': 0,
+            'messages': { base: 'Not a number', greater: '{{limit}} is too low' }
         });
 
         Joi.validate('', schema, function (error, value) {
             t.equal(error.message, '"value" Not a number');
         });
+
+	    Joi.validate(0, schema, function (error, value) {
+		    t.equal(error.message, '"value" 0 is too low');
+	    });
 
         var schema = Enjoi({
             'type': 'string',
@@ -359,7 +364,7 @@ Test('types', function (t) {
         var schema = Enjoi({
             'type': 'string',
             'format': 'email',
-            'message': 'Not an email'
+            'messages': { empty: 'Not an email' }
         });
 
         Joi.validate('', schema, function (error, value) {
@@ -378,7 +383,7 @@ Test('types', function (t) {
         var schema = Enjoi({
             'type': 'string',
             'format': 'date',
-            'message': 'Not an date'
+            'messages': { base: 'Not an date' }
         });
 
         Joi.validate('', schema, function (error, value) {
