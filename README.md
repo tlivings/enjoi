@@ -113,3 +113,76 @@ schema.validate({file: 'data', consumes: 'multipart/form-data'}, function (error
     error && console.log(error);
 });
 ```
+
+### Custom error messages
+
+to add a custom error message use the message object and overide the language key with yout message
+
+```
+messages: {
+  base: the number must exist
+}
+```
+
+## Language keys
+```
+date: {
+    base: 'must be a number of milliseconds or valid date string',
+    format: 'must be a string with one of the following formats {{format}}',
+    strict: 'must be a valid date',
+    min: 'must be larger than or equal to "{{limit}}"',
+    max: 'must be less than or equal to "{{limit}}"',
+    isoDate: 'must be a valid ISO 8601 date',
+    timestamp: {
+        javascript: 'must be a valid timestamp or number of milliseconds',
+        unix: 'must be a valid timestamp or number of seconds'
+    },
+    ref: 'references "{{ref}}" which is not a date'
+},
+number: {
+    base: 'must be a number',
+    min: 'must be larger than or equal to {{limit}}',
+    max: 'must be less than or equal to {{limit}}',
+    less: 'must be less than {{limit}}',
+    greater: 'must be greater than {{limit}}',
+    float: 'must be a float or double',
+    integer: 'must be an integer',
+    negative: 'must be a negative number',
+    positive: 'must be a positive number',
+    precision: 'must have no more than {{limit}} decimal places',
+    ref: 'references "{{ref}}" which is not a number',
+    multiple: 'must be a multiple of {{multiple}}'
+},
+string: {
+    base: 'must be a string',
+    min: 'length must be at least {{limit}} characters long',
+    max: 'length must be less than or equal to {{limit}} characters long',
+    length: 'length must be {{limit}} characters long',
+    alphanum: 'must only contain alpha-numeric characters',
+    token: 'must only contain alpha-numeric and underscore characters',
+    regex: {
+        base: 'with value "{{!value}}" fails to match the required pattern: {{pattern}}',
+        name: 'with value "{{!value}}" fails to match the {{name}} pattern',
+        invert: {
+            base: 'with value "{{!value}}" matches the inverted pattern: {{pattern}}',
+            name: 'with value "{{!value}}" matches the inverted {{name}} pattern'
+        }
+    },
+    email: 'must be a valid email',
+    uri: 'must be a valid uri',
+    uriRelativeOnly: 'must be a valid relative uri',
+    uriCustomScheme: 'must be a valid uri with a scheme matching the {{scheme}} pattern',
+    isoDate: 'must be a valid ISO 8601 date',
+    guid: 'must be a valid GUID',
+    hex: 'must only contain hexadecimal characters',
+    base64: 'must be a valid base64 string',
+    hostname: 'must be a valid hostname',
+    lowercase: 'must only contain lowercase characters',
+    uppercase: 'must only contain uppercase characters',
+    trim: 'must not have leading or trailing whitespace',
+    creditCard: 'must be a credit card',
+    ref: 'references "{{ref}}" which is not a number',
+    ip: 'must be a valid ip address with a {{cidr}} CIDR',
+    ipVersion: 'must be a valid ip address of one of the following versions {{version}} with a {{cidr}} CIDR'
+}
+```
