@@ -1,7 +1,7 @@
 {
   "name": "enjoi",
-  "version": "2.2.3",
-  "license": "MIT",
+  "version": "2.2.4",
+  "license": "Apache 2.0",
   "description": "Converts json-schema to Joi schema for validation.",
   "main": "lib/enjoi.js",
   "scripts": {
@@ -27,7 +27,6 @@
     "hapijs"
   ],
   "author": "Trevor Livingston",
-  "license": "Apache 2.0",
   "bugs": {
     "url": "https://github.com/tlivings/enjoi/issues"
   },
