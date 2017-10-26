@@ -1,4 +1,8 @@
 
+### v2.2.4
+
+* Fixes mutating `options` to add `stripUnknown`.
+
 ### v2.2.3
 
 * Fix #25 by supporting array for type (e.g. ['string', 'null']).
