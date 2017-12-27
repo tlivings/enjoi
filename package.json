@@ -1,6 +1,6 @@
 {
   "name": "enjoi",
-  "version": "2.2.4",
+  "version": "3.0.0",
   "license": "Apache 2.0",
   "description": "Converts json-schema to Joi schema for validation.",
   "main": "lib/enjoi.js",
@@ -15,7 +15,7 @@
     "url": "git://github.com/tlivings/enjoi.git"
   },
   "engines": {
-    "node": ">=4.x"
+    "node": ">=6.x"
   },
   "keywords": [
     "joi",
@@ -33,7 +33,7 @@
   "homepage": "https://github.com/tlivings/enjoi",
   "dependencies": {
     "core-util-is": "^1.0.1",
-    "joi": "^9.2.0"
+    "joi": "^13.0.2"
   },
   "devDependencies": {
     "istanbul": "^0.3.2",

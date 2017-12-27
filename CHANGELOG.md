@@ -1,4 +1,10 @@
 
+### v3.0.0
+
+* [BREAKING] supports Joi 13.x (required Node 6+)
+* Fixed additional properties https://github.com/tlivings/enjoi/pull/31
+* Adds support for ordered and items https://github.com/tlivings/enjoi/pull/38
+
 ### v2.2.4
 
 * Fixes mutating `options` to add `stripUnknown`.
