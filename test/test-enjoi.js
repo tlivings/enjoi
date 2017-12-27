@@ -819,9 +819,7 @@ Test('types', function (t) {
              file: Enjoi({
                  type: 'object',
                  additionalProperties: {
-                     consumes: {
-                         type: 'string'
-                     }
+                     type: 'string'
                  },
                  properties: {
                      file: {
@@ -848,9 +846,7 @@ Test('types', function (t) {
              file: Enjoi({
                  type: 'object',
                  additionalProperties: {
-                     consumes: {
-                         type: 'string'
-                     }
+                     type: 'string'
                  },
                  properties: {
                      file: {
@@ -863,35 +859,6 @@ Test('types', function (t) {
 
      schema.validate({file: 'asdf', consumes: 5}, function (error, value) {
        t.ok(error);
-     });
-   });
-
-   t.test('additionalProperties object should also allow unkown properties', function(t) {
-     t.plan(1);
-
-     var schema = Enjoi({
-         type: 'file'
-       },
-       {
-         types: {
-             file: Enjoi({
-                 type: 'object',
-                 additionalProperties: {
-                     consumes: {
-                         type: 'string'
-                     }
-                 },
-                 properties: {
-                     file: {
-                         type: 'string'
-                     }
-                 }
-             })
-         }
-     });
-
-     schema.validate({file: 'asdf', consumes: 'application/json', test: 5}, function (error, value) {
-       t.ok(!error);
      });
    });
 
