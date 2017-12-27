@@ -193,6 +193,96 @@ Test('types', function (t) {
         });
     });
 
+    t.test('arrays with specific item type assignment', function (t) {
+        t.plan(7);
+
+        var schema = Enjoi({
+          'type': 'array',
+          'items': [
+              {
+                'type': 'number'
+              }, {
+                'type': 'string'
+              }
+          ],
+        });
+
+        Joi.validate([1, 'abc'], schema, function (error) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate([0, 1], schema, function (error) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate(['abc', 'def'], schema, function (error) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate([1], schema, function (error) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate(['abc'], schema, function (error) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate([], schema, function (error) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate([{ foo: 'bar' }], schema, function (error) {
+            t.ok(error, 'error.');
+        });
+    });
+
+    t.test('arrays with ordered item assignment', function (t) {
+        t.plan(8);
+
+        var schema = Enjoi({
+          'type': 'array',
+          'ordered': [
+            {
+              'type': 'number'
+            }, {
+              'type': 'string'
+            }
+          ],
+        });
+
+        Joi.validate([1, 'abc'], schema, function (error) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate([], schema, function (error) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate([0, 1], schema, function (error) {
+            t.ok(error, 'error.');
+        });
+
+        Joi.validate(['abc', 'def'], schema, function (error) {
+            t.ok(error, 'error.');
+        });
+
+        Joi.validate([1], schema, function (error) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate(['abc'], schema, function (error) {
+            t.ok(error, 'error.');
+        });
+
+        Joi.validate([{ foo: 'bar' }], schema, function (error) {
+            t.ok(error, 'error.');
+        });
+
+        Joi.validate([1, 'abc', 'def'], schema, function (error) {
+            t.ok(error, 'error.');
+        });
+    });
+
     t.test('arrays and refs', function (t) {
         t.plan(2);
 
