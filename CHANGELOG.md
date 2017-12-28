@@ -1,7 +1,7 @@
 
 ### v3.1.0
 
-* Added a normalizeType function option.
+* Added a refineType function option.
 
 ### v3.0.0
 
