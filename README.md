@@ -23,6 +23,7 @@ Here is a list of some missing keyword support still being worked on:
     - `options` - an (optional) object of additional options such as `subSchemas` and custom `types`.
         - `subSchemas` - an (optional) object with keys representing schema ids, and values representing schemas.
         - `types` - an (optional) object  with keys representing type names and values representing a Joi schema.
+        - `refineType(type, format)` - an (optional) function to call to apply to type based on the type and format of the JSON schema.
 
 Example:
 

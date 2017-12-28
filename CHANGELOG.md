@@ -1,4 +1,8 @@
 
+### v3.1.0
+
+* Added a normalizeType function option.
+
 ### v3.0.0
 
 * [BREAKING] supports Joi 13.x (required Node 6+)

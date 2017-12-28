@@ -824,28 +824,28 @@ Test('types', function (t) {
     });
 
     t.test('additionalProperties false should not allow additional properties', function(t) {
-     t.plan(1);
+        t.plan(1);
 
-     var schema = Enjoi({
-         type: 'file'
-       },
-       {
-         types: {
-             file: Enjoi({
-                 type: 'object',
-                 additionalProperties: false,
-                 properties: {
-                     file: {
-                         type: 'string'
-                     }
-                 }
-             })
-         }
-     });
+        var schema = Enjoi({
+            type: 'file'
+           },
+           {
+               types: {
+                   file: Enjoi({
+                       type: 'object',
+                       additionalProperties: false,
+                       properties: {
+                       file: {
+                          type: 'string'
+                       }
+                    }
+                })
+            }
+        });
 
-     schema.validate({file: 'data', consumes: 'application/json'}, function (error, value) {
-       t.ok(error);
-     });
+        schema.validate({file: 'data', consumes: 'application/json'}, function (error, value) {
+          t.ok(error);
+        });
    });
 
    t.test('additionalProperties true should allow additional properties', function(t) {
@@ -989,6 +989,35 @@ Test('types', function (t) {
 
        Joi.validate(false, schema, function (error, value) {
            t.ok(error, 'error.');
+       });
+   });
+
+   t.test('refineType', function (t) {
+       t.plan(2);
+
+       var schema = Enjoi({
+           type: 'string',
+           format: 'binary'
+       }, {
+           refineType(type, format) {
+               switch (type) {
+                   case 'string': {
+                       if (format === 'binary') {
+                           return 'binary'
+                       }
+                   }
+                   default:
+                    return type;
+               }
+           },
+           types: {
+               binary: Joi.binary().encoding('base64')
+           }
+       });
+
+       Joi.validate('aGVsbG8=', schema, function (error, value) {
+           t.ok(!error, 'no error.');
+           t.equal(value.toString(), 'hello');
        });
    });
 
