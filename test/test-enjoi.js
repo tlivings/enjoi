@@ -1018,6 +1018,36 @@ Test('types', function (t) {
         });
     });
 
+    t.test('array additionalItems', function (t) {
+        t.plan(3);
+
+        const schema = Enjoi({
+            type: 'array',
+            items: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'number'
+                }
+            ],
+            additionalItems: false
+        });
+
+        Joi.validate(['test'], schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate(['test', 123], schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate(['test', 123, 'foo'], schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+
+    });
+
     t.test('refineType', function (t) {
         t.plan(2);
 

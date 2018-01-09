@@ -1,4 +1,8 @@
 
+### v3.2.1
+
+* Support array:additionalItems false setting.
+
 ### v3.2.0
 
 * Added `strictMode` support and resolves #34.
