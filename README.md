@@ -25,23 +25,22 @@ Here is a list of some missing keyword support still being worked on:
 Example:
 
 ```javascript
-var Joi = require('joi');
-var Enjoi = require('enjoi');
+const Joi = require('joi');
+const Enjoi = require('enjoi');
 
-var schema = Enjoi({
-    'title': 'Example Schema',
-    'type': 'object',
-    'properties': {
-        'firstName': {
-            'type': 'string'
+const schema = Enjoi({
+    type: 'object',
+    properties: {
+        firstName: {
+            type: 'string'
         },
-        'lastName': {
-            'type': 'string'
+        lastName: {
+            type: 'string'
         },
-        'age': {
-            'description': 'Age in years',
-            'type': 'integer',
-            'minimum': 0
+        age: {
+            description: 'Age in years',
+            type: 'integer',
+            minimum: 0
         }
     },
     'required': ['firstName', 'lastName']
@@ -62,20 +61,21 @@ schema.validate({firstName: 'John', lastName: 'Doe', age: 45}, function (error, 
 
 ### Sub Schemas
 
+Sub-schemas can be provided through the `subSchemas` option for `$ref` values to lookup against.
+
 Example:
 
 ```javascript
-var schema = Enjoi({
-    'title': 'Example Schema',
-    'type': 'object',
-    'properties': {
-        'A': {
-            '$ref': 'sub#/something'
+const schema = Enjoi({
+    type: 'object',
+    properties: {
+        A: {
+            $ref: 'sub#/something'
         }
     }
 }, {
     subSchemas: {
-        'sub': {
+        sub: {
             'something': {
                 'type': 'string'
             }
@@ -86,27 +86,35 @@ var schema = Enjoi({
 
 ### Custom Types
 
+Custom types can be provided through the `types` option.
+
 ```javascript
-var schema = Enjoi({
-    type: 'file'
+const schema = Enjoi({
+    type: 'thing'
 }, {
     types: {
-        file: Enjoi({
-            type: 'object',
-            properties: {
-                file: {
-                    type: 'string'
-                },
-                consumes: {
-                    type: 'string',
-                    pattern: /multipart\/form-data/
-                }
-            }
-        })
+        thing: Joi.any()
     }
 });
 
-schema.validate({file: 'data', consumes: 'multipart/form-data'}, function (error, value) {
+schema.validate(something, function (error, value) {
     error && console.log(error);
+});
+```
+
+### Refine Type
+
+You can use the refine type function to help refine types based on `type` and `format`.
+
+```javascript
+const schema = Enjoi({
+    type: 'string',
+    format: 'email'
+}, {
+    refineType(type, format) {
+        if (type === 'string' && format === 'email') {
+            return Joi.string().email();
+        }
+    }
 });
 ```
