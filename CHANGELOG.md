@@ -1,4 +1,8 @@
 
+### v3.2.0
+
+* Added `strictMode` support and resolves #34.
+
 ### v3.1.0
 
 * Added a refineType function option.
