@@ -104,16 +104,19 @@ schema.validate(something, function (error, value) {
 
 ### Refine Type
 
-You can use the refine type function to help refine types based on `type` and `format`.
+You can use the refine type function to help refine types based on `type` and `format`. This will allow transforming a type for lookup against the custom `types`.
 
 ```javascript
 const schema = Enjoi({
     type: 'string',
     format: 'email'
 }, {
+    types: {
+        email: Joi.string().email()
+    },
     refineType(type, format) {
         if (type === 'string' && format === 'email') {
-            return Joi.string().email();
+            return 'email';
         }
     }
 });
