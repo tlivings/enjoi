@@ -32,15 +32,17 @@ const schema = Enjoi({
     type: 'object',
     properties: {
         firstName: {
+            description: 'First name.',
             type: 'string'
         },
         lastName: {
+            description: 'Last name.',
             type: 'string'
         },
         age: {
             description: 'Age in years',
             type: 'integer',
-            minimum: 0
+            minimum: 1
         }
     },
     'required': ['firstName', 'lastName']
@@ -69,14 +71,20 @@ Example:
 const schema = Enjoi({
     type: 'object',
     properties: {
-        A: {
-            $ref: 'sub#/something'
+        a: {
+            $ref: '#/b' // # is root schema
+        },
+        b: {
+            type: 'string'
+        },
+        c: {
+            $ref: '#sub/d' // #sub is 'sub' under subSchemas.
         }
     }
 }, {
     subSchemas: {
         sub: {
-            'something': {
+            d: {
                 'type': 'string'
             }
         }
@@ -95,10 +103,6 @@ const schema = Enjoi({
     types: {
         thing: Joi.any()
     }
-});
-
-schema.validate(something, function (error, value) {
-    error && console.log(error);
 });
 ```
 
