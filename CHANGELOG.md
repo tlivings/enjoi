@@ -1,3 +1,6 @@
+### v3.2.2
+
+* Documentation fixes.
 
 ### v3.2.1
 
