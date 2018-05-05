@@ -35,6 +35,7 @@
     "joi": "^13.0.2"
   },
   "devDependencies": {
+    "@logoran/joi": "^13.2.0",
     "eslint": "^4.15.0",
     "istanbul": "^0.4.5",
     "tape": "^4.8.0"
