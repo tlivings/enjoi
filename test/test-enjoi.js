@@ -69,7 +69,6 @@ Test('enjoi', function (t) {
         t.plan(9);
 
         const schema = Enjoi({
-            Joi: logoranJoi,
             'title': 'Example Schema',
             'description': 'An example to test against.',
             'type': 'object',
@@ -713,7 +712,7 @@ Test('types', function (t) {
         });
     });
 
-    t.test('allOf', function (t) {
+    t.test('allOf object', function (t) {
         t.plan(2);
 
         const schema = Enjoi({
@@ -742,6 +741,39 @@ Test('types', function (t) {
         });
 
         Joi.validate({ a: 'string', b: 'string' }, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+    });
+
+    t.test('allOf array', function (t) {
+        t.plan(2);
+
+        const schema = Enjoi({
+            'allOf': [
+                {
+                    type: 'array',
+                    items: [
+                        {
+                            type: 'string'
+                        }
+                    ]
+                },
+                {
+                    type: 'array',
+                    items: [
+                        {
+                            type: 'number'
+                        }
+                    ]
+                }
+            ]
+        });
+
+        Joi.validate([ 'string', 10 ], schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate([ 'string', { foo: 'bar' } ], schema, function (error, value) {
             t.ok(error, 'error.');
         });
     });
