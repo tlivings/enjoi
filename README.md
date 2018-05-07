@@ -21,6 +21,8 @@ Here is a list of some missing keyword support still being worked on:
         - `types` - an (optional) object  with keys representing type names and values representing a Joi schema.
         - `refineType(type, format)` - an (optional) function to call to apply to type based on the type and format of the JSON schema.
         - `strictMode` - make schemas `strict(value)` with a default value of `false`.
+        - `extensions` - an (optional) object with keys representing schema ids, and values extending schemas.
+        - `Joi` - an (optional) Joi which will be used. default hapijs/joi.
 
 Example:
 
@@ -121,6 +123,32 @@ const schema = Enjoi({
     refineType(type, format) {
         if (type === 'string' && format === 'email') {
             return 'email';
+        }
+    }
+});
+```
+
+### Extensions Joi
+
+Use defined Extensions can be provided through the `extensions` option. Sometimes it's used along with Joi option.
+
+```javascript
+const joiEnum = require('joi-enum-extensions');
+const joi = Joi.extend(joiEnum);
+const schema = Enjoi({
+    title: 'sex',
+    type: 'integer',
+    'x-enum': {
+        'male': 0,
+        'female': 1
+    },
+}, {
+    Joi: joi,
+    extensions: {
+        integer: function (schema, current) {
+            if (current['x-enum']) {
+                return schema.map(current['x-enum']);
+            }
         }
     }
 });
