@@ -3,7 +3,7 @@
 const Test = require('tape');
 const Enjoi = require('../lib/enjoi');
 const Joi = require('joi');
-
+const joiEnum = require('joi-enum-extensions');
 const logoranJoi = require('@logoran/joi');
 
 Test('enjoi', function (t) {
@@ -65,7 +65,7 @@ Test('enjoi', function (t) {
         });
     });
 
-    t.test('valid', function (t) {
+    t.test('valid self Joi', function (t) {
         t.plan(9);
 
         const schema = Enjoi({
@@ -106,6 +106,78 @@ Test('enjoi', function (t) {
         });
 
         Joi.validate({ firstName: '', lastName: 'Doe', age: 45, tags: ['man', 'human'] }, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate({ firstName: 'John', age: 45, tags: ['man', 'human'] }, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+
+        Joi.validate({ firstName: 'John', lastName: 'Doe', age: 45, tags: [1, 'human'] }, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+
+        Joi.validate({ firstName: 'John', lastName: 'Doe', age: 45, tags: ['', 'human'] }, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+    });
+
+    t.test('valid with extensions', function (t) {
+        t.plan(10);
+
+        const joi = Joi.extend(joiEnum);
+
+        const schema = Enjoi({
+            'title': 'Example Schema',
+            'description': 'An example to test against.',
+            'type': 'object',
+            'properties': {
+                'firstName': {
+                    'type': 'string',
+                    'minLength': 0
+                },
+                'lastName': {
+                    'type': 'string',
+                    'minLength': 1
+                },
+                'tags': {
+                    'type': 'array',
+                    'items': {
+                        'type': 'string',
+                        'minLength': 1
+                    }
+                },
+                'age': {
+                    'type': 'integer',
+                    'x-enum': {
+                        'hundred': 100
+                    },
+                    'minimum': 0
+                }
+            },
+            'required': ['firstName', 'lastName']
+        }, {Joi: joi, extensions: {
+            integer: function (schema, current) {
+                if (current['x-enum']) {
+                    return schema.map(current['x-enum']);
+                }
+            }
+        }});
+
+        t.equal(schema._type, 'object', 'defined object.');
+        t.equal(schema._flags.label, 'Example Schema');
+        t.equal(schema._description, 'An example to test against.', 'description set.');
+        t.equal(schema._inner.children.length, 4, '4 properties defined.');
+
+        Joi.validate({ firstName: 'John', lastName: 'Doe', age: 45, tags: ['man', 'human'] }, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate({ firstName: '', lastName: 'Doe', age: 45, tags: ['man', 'human'] }, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate({ firstName: '', lastName: 'Doe', age: 'hundred', tags: ['man', 'human'] }, schema, function (error, value) {
             t.ok(!error, 'no error.');
         });
 
