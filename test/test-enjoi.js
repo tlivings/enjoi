@@ -569,8 +569,8 @@ Test('types', function (t) {
         const schema = Enjoi({
             'type': 'string',
             'format': 'date',
-            'min': '1-1-2000 UTC',
-            'max': Date.now()
+            'minimum': '1-1-2000 UTC',
+            'maximum': Date.now()
         });
 
         Joi.validate('1akd2536', schema, function (error, value) {
