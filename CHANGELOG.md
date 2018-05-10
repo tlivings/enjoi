@@ -1,3 +1,7 @@
+### v3.2.3
+
+* Security fix to resolve https://nodesecurity.io/advisories/566
+
 ### v3.2.2
 
 * Documentation fixes.
