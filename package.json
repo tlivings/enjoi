@@ -32,7 +32,7 @@
   "homepage": "https://github.com/tlivings/enjoi",
   "dependencies": {
     "hoek": "^5.0.3",
-    "joi": "^13.0.2"
+    "joi": "^13.3.0"
   },
   "devDependencies": {
     "eslint": "^4.15.0",
