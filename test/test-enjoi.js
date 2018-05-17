@@ -444,6 +444,49 @@ Test('types', function (t) {
         });
     });
 
+    t.test('number exclusiveMinimum exclusiveMaximum', function (t) {
+        t.plan(3);
+
+        const schema = Enjoi({
+            'type': 'number',
+            'exclusiveMinimum': 0,
+            'exclusiveMaximum': 2,
+        });
+
+        Joi.validate(0, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+
+        Joi.validate(1, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate(2, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+    });
+
+    t.test('number multipleOf', function (t) {
+        t.plan(3);
+
+        const schema = Enjoi({
+            'type': 'number',
+            'multipleOf': 1.5,
+        });
+
+        Joi.validate(4, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+
+        Joi.validate(4.5, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate(0, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+    });
+
     t.test('arrays and unique', function (t) {
         t.plan(2);
 
