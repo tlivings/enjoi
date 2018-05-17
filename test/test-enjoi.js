@@ -819,6 +819,63 @@ Test('types', function (t) {
         });
     });
 
+    t.test('not', function (t) {
+        t.plan(8);
+
+        const schema = Enjoi({
+            'not': [
+                {
+                    type: 'object',
+                    properties: {
+                        a: {
+                            type: 'string'
+                        }
+                    }
+                },
+                {
+                    type: 'object',
+                    properties: {
+                        b: {
+                            type: 'number'
+                        }
+                    }
+                }
+            ]
+        });
+
+        Joi.validate({ a: 'string' }, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+
+        Joi.validate({}, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+
+        Joi.validate({ b: 10 }, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+
+        Joi.validate({ a: 'string', b: 10 }, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate({ a: 'string', b: null }, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate({ a: null, b: 10 }, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate({ a: null, b: null }, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate({ a: 'string', b: 'string' }, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+    });
+
     t.test('custom type', function (t) {
         t.plan(2);
 
