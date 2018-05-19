@@ -3,6 +3,8 @@
 const Test = require('tape');
 const Enjoi = require('../lib/enjoi');
 const Joi = require('joi');
+const joiEnum = require('joi-enum-extensions');
+const logoranJoi = require('@logoran/joi');
 
 Test('enjoi', function (t) {
 
@@ -47,6 +49,135 @@ Test('enjoi', function (t) {
         });
 
         Joi.validate({ firstName: '', lastName: 'Doe', age: 45, tags: ['man', 'human'] }, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate({ firstName: 'John', age: 45, tags: ['man', 'human'] }, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+
+        Joi.validate({ firstName: 'John', lastName: 'Doe', age: 45, tags: [1, 'human'] }, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+
+        Joi.validate({ firstName: 'John', lastName: 'Doe', age: 45, tags: ['', 'human'] }, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+    });
+
+    t.test('valid self Joi', function (t) {
+        t.plan(9);
+
+        const schema = Enjoi({
+            'title': 'Example Schema',
+            'description': 'An example to test against.',
+            'type': 'object',
+            'properties': {
+                'firstName': {
+                    'type': 'string',
+                    'minLength': 0
+                },
+                'lastName': {
+                    'type': 'string',
+                    'minLength': 1
+                },
+                'tags': {
+                    'type': 'array',
+                    'items': {
+                        'type': 'string',
+                        'minLength': 1
+                    }
+                },
+                'age': {
+                    'type': 'integer',
+                    'minimum': 0
+                }
+            },
+            'required': ['firstName', 'lastName']
+        }, {Joi: logoranJoi});
+
+        t.equal(schema._type, 'object', 'defined object.');
+        t.equal(schema._flags.label, 'Example Schema');
+        t.equal(schema._description, 'An example to test against.', 'description set.');
+        t.equal(schema._inner.children.length, 4, '4 properties defined.');
+
+        Joi.validate({ firstName: 'John', lastName: 'Doe', age: 45, tags: ['man', 'human'] }, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate({ firstName: '', lastName: 'Doe', age: 45, tags: ['man', 'human'] }, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate({ firstName: 'John', age: 45, tags: ['man', 'human'] }, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+
+        Joi.validate({ firstName: 'John', lastName: 'Doe', age: 45, tags: [1, 'human'] }, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+
+        Joi.validate({ firstName: 'John', lastName: 'Doe', age: 45, tags: ['', 'human'] }, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+    });
+
+    t.test('valid with extensions', function (t) {
+        t.plan(10);
+
+        const joi = Joi.extend(joiEnum);
+
+        const schema = Enjoi({
+            'title': 'Example Schema',
+            'description': 'An example to test against.',
+            'type': 'object',
+            'properties': {
+                'firstName': {
+                    'type': 'string',
+                    'minLength': 0
+                },
+                'lastName': {
+                    'type': 'string',
+                    'minLength': 1
+                },
+                'tags': {
+                    'type': 'array',
+                    'items': {
+                        'type': 'string',
+                        'minLength': 1
+                    }
+                },
+                'age': {
+                    'type': 'integer',
+                    'x-enum': {
+                        'hundred': 100
+                    },
+                    'minimum': 0
+                }
+            },
+            'required': ['firstName', 'lastName']
+        }, {Joi: joi, extensions: {
+            integer: function (schema, current) {
+                if (current['x-enum']) {
+                    return schema.map(current['x-enum']);
+                }
+            }
+        }});
+
+        t.equal(schema._type, 'object', 'defined object.');
+        t.equal(schema._flags.label, 'Example Schema');
+        t.equal(schema._description, 'An example to test against.', 'description set.');
+        t.equal(schema._inner.children.length, 4, '4 properties defined.');
+
+        Joi.validate({ firstName: 'John', lastName: 'Doe', age: 45, tags: ['man', 'human'] }, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate({ firstName: '', lastName: 'Doe', age: 45, tags: ['man', 'human'] }, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate({ firstName: '', lastName: 'Doe', age: 'hundred', tags: ['man', 'human'] }, schema, function (error, value) {
             t.ok(!error, 'no error.');
         });
 
@@ -312,6 +443,49 @@ Test('types', function (t) {
         });
     });
 
+    t.test('number exclusiveMinimum exclusiveMaximum', function (t) {
+        t.plan(3);
+
+        const schema = Enjoi({
+            'type': 'number',
+            'exclusiveMinimum': 0,
+            'exclusiveMaximum': 2,
+        });
+
+        Joi.validate(0, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+
+        Joi.validate(1, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate(2, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+    });
+
+    t.test('number multipleOf', function (t) {
+        t.plan(3);
+
+        const schema = Enjoi({
+            'type': 'number',
+            'multipleOf': 1.5,
+        });
+
+        Joi.validate(4, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+
+        Joi.validate(4.5, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate(0, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+    });
+
     t.test('arrays and unique', function (t) {
         t.plan(2);
 
@@ -438,8 +612,8 @@ Test('types', function (t) {
         const schema = Enjoi({
             'type': 'string',
             'format': 'date',
-            'min': '1-1-2000 UTC',
-            'max': Date.now()
+            'minimum': '1-1-2000 UTC',
+            'maximum': Date.now()
         });
 
         Joi.validate('1akd2536', schema, function (error, value) {
@@ -653,7 +827,7 @@ Test('types', function (t) {
         });
     });
 
-    t.test('allOf', function (t) {
+    t.test('allOf object', function (t) {
         t.plan(2);
 
         const schema = Enjoi({
@@ -682,6 +856,39 @@ Test('types', function (t) {
         });
 
         Joi.validate({ a: 'string', b: 'string' }, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+    });
+
+    t.test('allOf array', function (t) {
+        t.plan(2);
+
+        const schema = Enjoi({
+            'allOf': [
+                {
+                    type: 'array',
+                    items: [
+                        {
+                            type: 'string'
+                        }
+                    ]
+                },
+                {
+                    type: 'array',
+                    items: [
+                        {
+                            type: 'number'
+                        }
+                    ]
+                }
+            ]
+        });
+
+        Joi.validate([ 'string', 10 ], schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate([ 'string', { foo: 'bar' } ], schema, function (error, value) {
             t.ok(error, 'error.');
         });
     });
@@ -740,6 +947,63 @@ Test('types', function (t) {
 
         Joi.validate({ a: 'string', b: 'string' }, schema, function (error, value) {
             t.ok(error, 'error.');
+        });
+    });
+
+    t.test('not', function (t) {
+        t.plan(8);
+
+        const schema = Enjoi({
+            'not': [
+                {
+                    type: 'object',
+                    properties: {
+                        a: {
+                            type: 'string'
+                        }
+                    }
+                },
+                {
+                    type: 'object',
+                    properties: {
+                        b: {
+                            type: 'number'
+                        }
+                    }
+                }
+            ]
+        });
+
+        Joi.validate({ a: 'string' }, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+
+        Joi.validate({}, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+
+        Joi.validate({ b: 10 }, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+
+        Joi.validate({ a: 'string', b: 10 }, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate({ a: 'string', b: null }, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate({ a: null, b: 10 }, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate({ a: null, b: null }, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate({ a: 'string', b: 'string' }, schema, function (error, value) {
+            t.ok(!error, 'no error.');
         });
     });
 
