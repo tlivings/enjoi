@@ -69,7 +69,6 @@ Test('enjoi', function (t) {
         t.plan(9);
 
         const schema = Enjoi({
-            Joi: logoranJoi,
             'title': 'Example Schema',
             'description': 'An example to test against.',
             'type': 'object',
