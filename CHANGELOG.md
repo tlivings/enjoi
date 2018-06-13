@@ -1,3 +1,8 @@
+### v3.2.4
+
+* Support for allOf
+* Bug fixes
+
 ### v3.2.3
 
 * Security fix to resolve https://nodesecurity.io/advisories/566
