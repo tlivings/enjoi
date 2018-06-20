@@ -63,3 +63,5 @@ lib/schema/swagger-spec/package.json
 lib/schema/swagger-spec/README.md
 lib/schema/swagger-spec/swagger-logo.jpg
 lib/schema/swagger-spec/schemas/README.md
+
+package-lock.json
