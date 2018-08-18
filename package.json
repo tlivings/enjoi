@@ -25,7 +25,7 @@
     "hapi",
     "hapijs"
   ],
-  "author": "Trevor Livingston",
+  "author": "Trevor Livingston <tlivings@gmail.com>",
   "bugs": {
     "url": "https://github.com/tlivings/enjoi/issues"
   },

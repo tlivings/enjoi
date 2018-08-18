@@ -696,6 +696,29 @@ Test('types', function (t) {
         });
     });
 
+    t.test('allOf', function (t) {
+        t.plan(2);
+
+        const schema = Enjoi({
+            allOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    maxLength: 3
+                }
+            ]
+        });
+
+        Joi.validate('abc', schema, function (error) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate('abcd', schema, function (error) {
+            t.ok(error, 'error.');
+        });
+    });
+
     t.test('allOf object', function (t) {
         t.plan(2);
 
@@ -760,6 +783,37 @@ Test('types', function (t) {
         Joi.validate([ 'string', { foo: 'bar' } ], schema, function (error, value) {
             t.ok(error, 'error.');
         });
+    });
+
+    t.test('allOf nested', function (t) {
+        t.plan(1);
+
+        const schema = Enjoi({
+            title: "Organization Input",
+            allOf: [
+                {
+                    title: "Organization Common",
+                    allOf: [
+                        {
+                            type: "object",
+                            properties: {
+                                name: { type: "string", maxLength: 40 },
+                                billingAddress: { type: "string", maxLength: 100 }
+                            },
+                            required: ["name"]
+                        },
+                        {
+                            type: "object",
+                            title: "Phone Number",
+                            properties: { phoneCountryCode: { type: "string", minLength: 1 } },
+                            required: ["phoneCountryCode"]
+                        }
+                    ]
+                }
+            ]
+        });
+
+        t.pass();
     });
 
     t.test('oneOf', function (t) {
