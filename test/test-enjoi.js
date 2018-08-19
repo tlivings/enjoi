@@ -696,72 +696,6 @@ Test('types', function (t) {
         });
     });
 
-    t.test('allOf object', function (t) {
-        t.plan(2);
-
-        const schema = Enjoi({
-            'allOf': [
-                {
-                    type: 'object',
-                    properties: {
-                        a: {
-                            type: 'string'
-                        }
-                    }
-                },
-                {
-                    type: 'object',
-                    properties: {
-                        b: {
-                            type: 'number'
-                        }
-                    }
-                }
-            ]
-        });
-
-        Joi.validate({ a: 'string', b: 10 }, schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate({ a: 'string', b: 'string' }, schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
-    });
-
-    t.test('allOf array', function (t) {
-        t.plan(2);
-
-        const schema = Enjoi({
-            'allOf': [
-                {
-                    type: 'array',
-                    items: [
-                        {
-                            type: 'string'
-                        }
-                    ]
-                },
-                {
-                    type: 'array',
-                    items: [
-                        {
-                            type: 'number'
-                        }
-                    ]
-                }
-            ]
-        });
-
-        Joi.validate([ 'string', 10 ], schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate([ 'string', { foo: 'bar' } ], schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
-    });
-
     t.test('oneOf', function (t) {
         t.plan(8);
 
@@ -1211,3 +1145,130 @@ Test('types', function (t) {
     });
 
 });
+
+Test.only('allOf', function (t) {
+
+    t.test('allOf simple types', function (t) {
+        t.plan(2);
+
+        const schema = Enjoi({
+            allOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'string',
+                    maxLength: 3
+                }
+            ]
+        });
+
+        Joi.validate('abc', schema, function (error) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate('abcd', schema, function (error) {
+            t.ok(error, 'error.');
+        });
+    });
+
+    t.test('allOf object', function (t) {
+        t.plan(2);
+
+        const schema = Enjoi({
+            'allOf': [
+                {
+                    type: 'object',
+                    properties: {
+                        a: {
+                            type: 'string'
+                        }
+                    }
+                },
+                {
+                    type: 'object',
+                    properties: {
+                        b: {
+                            type: 'number'
+                        }
+                    }
+                }
+            ]
+        });
+
+        Joi.validate({ a: 'string', b: 10 }, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate({ a: 'string', b: 'string' }, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+    });
+
+    t.test('allOf array with conflicting needs', function (t) {
+        t.plan(1);
+
+        //This should never validate due to all criteria being required to pass
+        const schema = Enjoi({
+            'allOf': [
+                {
+                    type: 'array',
+                    items: [
+                        {
+                            type: 'string'
+                        }
+                    ]
+                },
+                {
+                    type: 'array',
+                    items: [
+                        {
+                            type: 'number'
+                        }
+                    ]
+                }
+            ]
+        });
+
+        Joi.validate([ 'string', 10 ], schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+    });
+
+    t.test('allOf nested', function (t) {
+        t.plan(2);
+
+        const schema = Enjoi({
+            title: "Organization Input",
+            allOf: [
+                {
+                    title: "Organization Common",
+                    allOf: [
+                        {
+                            type: "object",
+                            properties: {
+                                name: { type: "string", maxLength: 40 },
+                                billingAddress: { type: "string", maxLength: 100 }
+                            },
+                            required: ["name"]
+                        },
+                        {
+                            type: "object",
+                            title: "Phone Number",
+                            properties: { phoneCountryCode: { type: "string", minLength: 1 } },
+                            required: ["phoneCountryCode"]
+                        }
+                    ]
+                }
+            ]
+        });
+
+        Joi.validate({ name: 'test', phoneCountryCode: 'US' }, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate({ name: 'test' }, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+    });
+})
