@@ -10,7 +10,7 @@ Converts a JSON schema to a Joi schema for object validation.
 
 Here is a list of some missing keyword support still being worked on:
 
-- `object:patternProperties` - Joi limitation.
+- `object:patternProperties` - TBD.
 
 ### API
 

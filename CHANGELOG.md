@@ -1,3 +1,7 @@
+### v3.2.5
+
+* Fixed allOf support (#53)
+
 ### v3.2.4
 
 * Support for allOf
