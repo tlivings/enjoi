@@ -1146,7 +1146,7 @@ Test('types', function (t) {
 
 });
 
-Test.only('allOf', function (t) {
+Test('allOf', function (t) {
 
     t.test('allOf simple types', function (t) {
         t.plan(2);
