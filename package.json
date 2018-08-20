@@ -1,12 +1,12 @@
 {
   "name": "enjoi",
-  "version": "3.2.5",
+  "version": "4.0.0",
   "license": "Apache 2.0",
-  "description": "Converts json-schema to Joi schema for validation.",
-  "main": "lib/enjoi.js",
+  "description": "Converts json-schema to Joi schema.",
+  "main": "./index.js",
   "scripts": {
     "test": "tape test/*.js",
-    "cover": "istanbul cover tape -- test/*.js",
+    "cover": "nyc npm test",
     "lint": "eslint lib"
   },
   "repository": {
@@ -14,7 +14,7 @@
     "url": "git://github.com/tlivings/enjoi.git"
   },
   "engines": {
-    "node": ">=6.x"
+    "node": ">=8"
   },
   "keywords": [
     "joi",
@@ -31,12 +31,12 @@
   },
   "homepage": "https://github.com/tlivings/enjoi",
   "dependencies": {
-    "hoek": "^5.0.3",
-    "joi": "^13.3.0"
+    "hoek": "^5.0.4",
+    "joi": "^13.6.0"
   },
   "devDependencies": {
-    "eslint": "^4.15.0",
-    "istanbul": "^0.4.5",
-    "tape": "^4.8.0"
+    "eslint": "^4.19.1",
+    "nyc": "^11.6.0",
+    "tape": "^4.9.0"
   }
 }

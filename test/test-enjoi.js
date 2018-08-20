@@ -1,7 +1,7 @@
 'use strict';
 
 const Test = require('tape');
-const Enjoi = require('../lib/enjoi');
+const Enjoi = require('../index');
 const Joi = require('joi');
 
 Test('enjoi', function (t) {
@@ -9,7 +9,7 @@ Test('enjoi', function (t) {
     t.test('valid', function (t) {
         t.plan(9);
 
-        const schema = Enjoi({
+        const schema = Enjoi.schema({
             'title': 'Example Schema',
             'description': 'An example to test against.',
             'type': 'object',
@@ -66,7 +66,7 @@ Test('enjoi', function (t) {
     t.test('with ref', function (t) {
         t.plan(1);
 
-        const schema = Enjoi({
+        const schema = Enjoi.schema({
             'title': 'Example Schema',
             'type': 'object',
             'properties': {
@@ -86,66 +86,6 @@ Test('enjoi', function (t) {
         });
     });
 
-    t.test('with external ref', function (t) {
-        t.plan(1);
-
-        const schema = Enjoi({
-            'title': 'Example Schema',
-            'type': 'object',
-            'properties': {
-                'name': {
-                    '$ref': 'definitions#/name'
-                }
-            }
-        }, {
-            subSchemas: {
-                'definitions': {
-                    'name': {
-                        'type': 'string'
-                    }
-                }
-            }
-        });
-
-        Joi.validate({ name: 'Joe' }, schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-    });
-
-    t.test('with both inline and external refs', function (t) {
-        t.plan(1);
-
-        const schema = Enjoi({
-            'title': 'Example Schema',
-            'type': 'object',
-            'properties': {
-                'firstname': {
-                    '$ref': '#/definitions/firstname'
-                },
-                'surname': {
-                    '$ref': 'definitions#/surname'
-                }
-            },
-            'definitions': {
-                'firstname': {
-                    'type': 'string'
-                }
-            }
-        }, {
-            subSchemas: {
-                'definitions': {
-                    'surname': {
-                        'type': 'string'
-                    }
-                }
-            }
-        });
-
-        Joi.validate({ firstname: 'Joe', surname: 'Doe' }, schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-    });
-
 });
 
 Test('types', function (t) {
@@ -153,7 +93,7 @@ Test('types', function (t) {
     t.test('object min/max length', function (t) {
         t.plan(3);
 
-        const schema = Enjoi({
+        const schema = Enjoi.schema({
             'type': 'object',
             'maxProperties': 2,
             'minProperties': 1
@@ -175,7 +115,7 @@ Test('types', function (t) {
     t.test('arrays and numbers', function (t) {
         t.plan(2);
 
-        const schema = Enjoi({
+        const schema = Enjoi.schema({
             'type': 'array',
             'items': {
                 'type': 'number'
@@ -196,7 +136,7 @@ Test('types', function (t) {
     t.test('arrays with specific item type assignment', function (t) {
         t.plan(7);
 
-        const schema = Enjoi({
+        const schema = Enjoi.schema({
             'type': 'array',
             'items': [
                 {
@@ -239,7 +179,7 @@ Test('types', function (t) {
     t.test('arrays with ordered item assignment', function (t) {
         t.plan(8);
 
-        const schema = Enjoi({
+        const schema = Enjoi.schema({
             'type': 'array',
             'ordered': [
                 {
@@ -286,7 +226,7 @@ Test('types', function (t) {
     t.test('arrays and refs', function (t) {
         t.plan(2);
 
-        const schema = Enjoi({
+        const schema = Enjoi.schema({
             'type': 'array',
             'items': {
                 '$ref': 'definitions#/number'
@@ -315,7 +255,7 @@ Test('types', function (t) {
     t.test('number exclusiveMinimum exclusiveMaximum', function (t) {
         t.plan(3);
 
-        const schema = Enjoi({
+        const schema = Enjoi.schema({
             'type': 'number',
             'exclusiveMinimum': 0,
             'exclusiveMaximum': 2,
@@ -337,7 +277,7 @@ Test('types', function (t) {
     t.test('number multipleOf', function (t) {
         t.plan(3);
 
-        const schema = Enjoi({
+        const schema = Enjoi.schema({
             'type': 'number',
             'multipleOf': 1.5,
         });
@@ -358,7 +298,7 @@ Test('types', function (t) {
     t.test('arrays and unique', function (t) {
         t.plan(2);
 
-        const schema = Enjoi({
+        const schema = Enjoi.schema({
             'type': 'array',
             'items': {
                 'type': 'integer'
@@ -378,7 +318,7 @@ Test('types', function (t) {
     t.test('boolean', function (t) {
         t.plan(3);
 
-        const schema = Enjoi({
+        const schema = Enjoi.schema({
             'type': 'boolean'
         });
 
@@ -398,7 +338,7 @@ Test('types', function (t) {
     t.test('boolean strictMode', function (t) {
         t.plan(3);
 
-        const schema = Enjoi({
+        const schema = Enjoi.schema({
             'type': 'boolean'
         }, {
             strictMode: true
@@ -420,7 +360,7 @@ Test('types', function (t) {
     t.test('string regex', function (t) {
         t.plan(2);
 
-        const schema = Enjoi({
+        const schema = Enjoi.schema({
             'type': 'string',
             'pattern': /foobar/
         });
@@ -437,7 +377,7 @@ Test('types', function (t) {
     t.test('string length', function (t) {
         t.plan(3);
 
-        const schema = Enjoi({
+        const schema = Enjoi.schema({
             'type': 'string',
             'minLength': 2,
             'maxLength': 4
@@ -459,10 +399,10 @@ Test('types', function (t) {
     t.test('string email', function (t) {
         t.plan(2);
 
-        const schema = Enjoi({
+        const schema = Enjoi.schema({
             'type': 'string',
             'format': 'email',
-            'maxLength': '20'
+            'maxLength': 20
         });
 
         Joi.validate('wrongemail', schema, function (error, value) {
@@ -478,7 +418,7 @@ Test('types', function (t) {
     t.test('string date ISO 8601', function (t) {
         t.plan(5);
 
-        const schema = Enjoi({
+        const schema = Enjoi.schema({
             'type': 'string',
             'format': 'date',
             'minimum': '1-1-2000 UTC',
@@ -492,8 +432,6 @@ Test('types', function (t) {
         Joi.validate('12-10-1900 UTC', schema, function (error, value) {
             t.ok(error, "minimum date.");
         });
-
-
 
         Joi.validate(Date.now() + 1000000, schema, function (error, value) {
             t.ok(error, "maximum date.");
@@ -512,7 +450,7 @@ Test('types', function (t) {
     t.test('string hostname', function (t) {
         t.plan(2);
 
-        const schema = Enjoi({
+        const schema = Enjoi.schema({
             'type': 'string',
             'format': 'hostname'
         });
@@ -530,7 +468,7 @@ Test('types', function (t) {
     t.test('string ipv4', function (t) {
         t.plan(2);
 
-        const schema = Enjoi({
+        const schema = Enjoi.schema({
             'type': 'string',
             'format': 'ipv4'
         });
@@ -548,7 +486,7 @@ Test('types', function (t) {
     t.test('string ipv6', function (t) {
         t.plan(2);
 
-        const schema = Enjoi({
+        const schema = Enjoi.schema({
             'type': 'string',
             'format': 'ipv6'
         });
@@ -566,7 +504,7 @@ Test('types', function (t) {
     t.test('string uri', function (t) {
         t.plan(2);
 
-        const schema = Enjoi({
+        const schema = Enjoi.schema({
             'type': 'string',
             'format': 'uri'
         });
@@ -581,10 +519,67 @@ Test('types', function (t) {
 
     });
 
+    t.test('string binary', function (t) {
+        t.plan(2);
+
+        const schema = Enjoi.schema({
+            type: 'string',
+            format: 'binary'
+        });
+
+        Joi.validate(new Buffer('hello'), schema, function (error) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate([1, 2, 3, 4], schema, function (error) {
+            t.ok(error, 'error.');
+        });
+    });
+
+    t.test('string binary min/max', function (t) {
+        t.plan(3);
+
+        const schema = Enjoi.schema({
+            type: 'string',
+            format: 'binary',
+            minLength: 2,
+            maxLength: 4
+        });
+
+        Joi.validate(new Buffer('hello'), schema, function (error) {
+            t.ok(error, 'error.');
+        });
+
+        Joi.validate(new Buffer('h'), schema, function (error) {
+            t.ok(error, 'error.');
+        });
+
+        Joi.validate(new Buffer('hell'), schema, function (error) {
+            t.ok(!error, 'no error.');
+        });
+    });
+
+    t.test('string byte', function (t) {
+        t.plan(2);
+
+        const schema = Enjoi.schema({
+            type: 'string',
+            format: 'byte'
+        });
+
+        Joi.validate('U3dhZ2dlciByb2Nrcw==', schema, function (error) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate('hello', schema, function (error) {
+            t.ok(error, 'error.');
+        });
+    });
+
     t.test('no type, ref, or enum validates anything.', function (t) {
         t.plan(3);
 
-        const schema = Enjoi({
+        const schema = Enjoi.schema({
             'description': 'something'
         });
 
@@ -604,7 +599,7 @@ Test('types', function (t) {
     t.test('shorthand type', function (t) {
         t.plan(1);
 
-        const schema = Enjoi('string');
+        const schema = Enjoi.schema('string');
         Joi.validate('A', schema, function (error, value) {
             t.ok(!error, 'no error.');
         });
@@ -614,7 +609,7 @@ Test('types', function (t) {
     t.test('shorthand property type', function (t) {
         t.plan(1);
 
-        const schema = Enjoi({
+        const schema = Enjoi.schema({
             'type': 'object',
             'properties': {
                 'name': 'string'
@@ -629,7 +624,7 @@ Test('types', function (t) {
     t.test('enum', function (t) {
         t.plan(5);
 
-        let schema = Enjoi({
+        let schema = Enjoi.schema({
             'enum': ['A', 'B']
         });
 
@@ -645,7 +640,7 @@ Test('types', function (t) {
             t.ok(error, 'error.');
         });
 
-        schema = Enjoi({
+        schema = Enjoi.schema({
             type: 'string',
             'enum': ['A', 'B']
         });
@@ -663,16 +658,59 @@ Test('types', function (t) {
         t.plan(1);
 
         t.throws(function () {
-            Enjoi({
+            Enjoi.schema({
                 'type': 'something'
             });
         });
     });
 
+    t.test('array for type', function (t) {
+        t.plan(3);
+
+        const schema = Enjoi.schema({
+            'type': ['boolean', 'string']
+        });
+
+        Joi.validate(10, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+
+        Joi.validate(true, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate('true', schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+    });
+
+    t.test('array for type with null support', function (t) {
+        t.plan(3);
+
+        const schema = Enjoi.schema({
+            'type': ['string', 'null']
+        });
+
+        Joi.validate('test', schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate(null, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate(false, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+    });
+
+});
+
+Test('directives', function (t) {
     t.test('anyOf', function (t) {
         t.plan(3);
 
-        const schema = Enjoi({
+        const schema = Enjoi.schema({
             'anyOf': [
                 {
                     type: 'string'
@@ -699,7 +737,7 @@ Test('types', function (t) {
     t.test('oneOf', function (t) {
         t.plan(8);
 
-        const schema = Enjoi({
+        const schema = Enjoi.schema({
             'oneOf': [
                 {
                     type: 'object',
@@ -756,7 +794,7 @@ Test('types', function (t) {
     t.test('not', function (t) {
         t.plan(8);
 
-        const schema = Enjoi({
+        const schema = Enjoi.schema({
             'not': [
                 {
                     type: 'object',
@@ -810,57 +848,6 @@ Test('types', function (t) {
         });
     });
 
-    t.test('custom type', function (t) {
-        t.plan(2);
-
-        const schema = Enjoi({
-            type: 'custom'
-        }, {
-                types: {
-                    custom: Joi.string()
-                }
-            });
-
-        Joi.validate('string', schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate(10, schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
-    });
-
-    t.test('custom complex type', function (t) {
-        t.plan(2);
-
-        const schema = Enjoi({
-            type: 'file'
-        }, {
-            types: {
-                file: Enjoi({
-                    type: 'object',
-                    properties: {
-                        file: {
-                            type: 'string'
-                        },
-                        consumes: {
-                            type: 'string',
-                            pattern: /multipart\/form-data/
-                        }
-                    }
-                })
-            }
-        });
-
-        schema.validate({ file: 'data', consumes: 'multipart/form-data' }, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-
-        schema.validate({ file: 'data', consumes: 'application/json' }, function (error, value) {
-            t.ok(error, 'error.');
-        });
-    });
-
     t.test('additionalProperties boolean', function (t) {
         t.plan(4);
 
@@ -873,21 +860,21 @@ Test('types', function (t) {
             }
         };
 
-        Enjoi(schema).validate({ file: 'data', consumes: 'application/json' }, function (error, value) {
+        Enjoi.schema(schema).validate({ file: 'data', consumes: 'application/json' }, function (error, value) {
             t.ok(error, 'error.');
         });
 
         schema.additionalProperties = false;
-        Enjoi(schema).validate({ file: 'data', consumes: 'application/json' }, function (error, value) {
+        Enjoi.schema(schema).validate({ file: 'data', consumes: 'application/json' }, function (error, value) {
             t.ok(error, 'error.');
         });
 
         schema.additionalProperties = true;
-        Enjoi(schema).validate({ file: 'data', consumes: 'application/json' }, function (error, value) {
+        Enjoi.schema(schema).validate({ file: 'data', consumes: 'application/json' }, function (error, value) {
             t.ok(!error, 'no error.');
         });
 
-        Enjoi(schema).validate({ file: 5, consumes: 'application/json' }, function (error, value) {
+        Enjoi.schema(schema).validate({ file: 5, consumes: 'application/json' }, function (error, value) {
             t.ok(error, 'error.');
         });
     });
@@ -910,7 +897,7 @@ Test('types', function (t) {
             required: ['user']
         };
 
-        Enjoi(schema).validate({ user: 'test@domain.tld' }, function (error, value) {
+        Enjoi.schema(schema).validate({ user: 'test@domain.tld' }, function (error, value) {
             t.ok(!error, 'error');
             t.equal(value.locale, 'en-US');
         });
@@ -919,12 +906,12 @@ Test('types', function (t) {
     t.test('additionalProperties false should not allow additional properties', function (t) {
         t.plan(1);
 
-        const schema = Enjoi({
+        const schema = Enjoi.schema({
             type: 'file'
         },
         {
             types: {
-                file: Enjoi({
+                file: Enjoi.schema({
                     type: 'object',
                     additionalProperties: false,
                     properties: {
@@ -944,12 +931,12 @@ Test('types', function (t) {
     t.test('additionalProperties true should allow additional properties', function (t) {
         t.plan(1);
 
-        const schema = Enjoi({
+        const schema = Enjoi.schema({
             type: 'file'
         },
         {
             types: {
-                file: Enjoi({
+                file: Enjoi.schema({
                     type: 'object',
                     additionalProperties: true,
                     properties: {
@@ -969,12 +956,12 @@ Test('types', function (t) {
     t.test('additionalProperties true should not affect validation of properties', function (t) {
         t.plan(1);
 
-        const schema = Enjoi({
+        const schema = Enjoi.schema({
             type: 'file'
         },
         {
             types: {
-                file: Enjoi({
+                file: Enjoi.schema({
                     type: 'object',
                     additionalProperties: true,
                     properties: {
@@ -994,12 +981,12 @@ Test('types', function (t) {
     t.test('additionalProperties object should not affect validation of properties', function (t) {
         t.plan(1);
 
-        const schema = Enjoi({
+        const schema = Enjoi.schema({
             type: 'file'
         },
         {
             types: {
-                file: Enjoi({
+                file: Enjoi.schema({
                     type: 'object',
                     additionalProperties: {
                         type: 'string'
@@ -1021,12 +1008,12 @@ Test('types', function (t) {
     t.test('additionalProperties object should add to validated properties', function (t) {
         t.plan(1);
 
-        const schema = Enjoi({
+        const schema = Enjoi.schema({
             type: 'file'
         },
         {
             types: {
-                file: Enjoi({
+                file: Enjoi.schema({
                     type: 'object',
                     additionalProperties: {
                         type: 'string'
@@ -1044,106 +1031,6 @@ Test('types', function (t) {
             t.ok(error);
         });
     });
-
-    t.test('array for type', function (t) {
-        t.plan(3);
-
-        const schema = Enjoi({
-            'type': ['boolean', 'string']
-        });
-
-        Joi.validate(10, schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
-
-        Joi.validate(true, schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate('true', schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-    });
-
-    t.test('array for type with null support', function (t) {
-        t.plan(3);
-
-        const schema = Enjoi({
-            'type': ['string', 'null']
-        });
-
-        Joi.validate('test', schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate(null, schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate(false, schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
-    });
-
-    t.test('array additionalItems', function (t) {
-        t.plan(3);
-
-        const schema = Enjoi({
-            type: 'array',
-            items: [
-                {
-                    type: 'string'
-                },
-                {
-                    type: 'number'
-                }
-            ],
-            additionalItems: false
-        });
-
-        Joi.validate(['test'], schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate(['test', 123], schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate(['test', 123, 'foo'], schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
-
-    });
-
-    t.test('refineType', function (t) {
-        t.plan(2);
-
-        const schema = Enjoi({
-            type: 'string',
-            format: 'binary'
-        }, {
-            refineType(type, format) {
-                switch (type) {
-                    case 'string': {
-                        if (format === 'binary') {
-                            return 'binary'
-                        }
-                    }
-                    default:
-                        return type;
-                }
-            },
-            types: {
-                binary: Joi.binary().encoding('base64')
-            }
-        });
-
-        Joi.validate('aGVsbG8=', schema, function (error, value) {
-            t.ok(!error, 'no error.');
-            t.equal(value.toString(), 'hello');
-        });
-    });
-
 });
 
 Test('allOf', function (t) {
@@ -1151,7 +1038,7 @@ Test('allOf', function (t) {
     t.test('allOf simple types', function (t) {
         t.plan(2);
 
-        const schema = Enjoi({
+        const schema = Enjoi.schema({
             allOf: [
                 {
                     type: 'string'
@@ -1175,7 +1062,7 @@ Test('allOf', function (t) {
     t.test('allOf object', function (t) {
         t.plan(2);
 
-        const schema = Enjoi({
+        const schema = Enjoi.schema({
             'allOf': [
                 {
                     type: 'object',
@@ -1209,7 +1096,7 @@ Test('allOf', function (t) {
         t.plan(1);
 
         //This should never validate due to all criteria being required to pass
-        const schema = Enjoi({
+        const schema = Enjoi.schema({
             'allOf': [
                 {
                     type: 'array',
@@ -1238,7 +1125,7 @@ Test('allOf', function (t) {
     t.test('allOf nested', function (t) {
         t.plan(2);
 
-        const schema = Enjoi({
+        const schema = Enjoi.schema({
             title: "Organization Input",
             allOf: [
                 {
@@ -1271,4 +1158,178 @@ Test('allOf', function (t) {
             t.ok(error, 'error.');
         });
     });
+
+    t.test('array additionalItems', function (t) {
+        t.plan(3);
+
+        const schema = Enjoi.schema({
+            type: 'array',
+            items: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'number'
+                }
+            ],
+            additionalItems: false
+        });
+
+        Joi.validate(['test'], schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate(['test', 123], schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate(['test', 123, 'foo'], schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+
+    });
 })
+
+Test('options features', function (t) {
+
+    t.test('refineType', function (t) {
+        t.plan(2);
+
+        const schema = Enjoi.schema({
+            type: 'string',
+            format: 'binary'
+        }, {
+            refineType(type, format) {
+                switch (type) {
+                    case 'string': {
+                        if (format === 'binary') {
+                            return 'binary'
+                        }
+                    }
+                    default:
+                        return type;
+                }
+            },
+            types: {
+                binary: Joi.binary().encoding('base64')
+            }
+        });
+
+        Joi.validate('aGVsbG8=', schema, function (error, value) {
+            t.ok(!error, 'no error.');
+            t.equal(value.toString(), 'hello');
+        });
+    });
+
+    t.test('custom type', function (t) {
+        t.plan(2);
+
+        const schema = Enjoi.schema({
+            type: 'custom'
+        }, {
+                types: {
+                    custom: Joi.string()
+                }
+            });
+
+        Joi.validate('string', schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate(10, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+    });
+
+    t.test('custom complex type', function (t) {
+        t.plan(2);
+
+        const schema = Enjoi.schema({
+            type: 'file'
+        }, {
+            types: {
+                file: Enjoi.schema({
+                    type: 'object',
+                    properties: {
+                        file: {
+                            type: 'string'
+                        },
+                        consumes: {
+                            type: 'string',
+                            pattern: /multipart\/form-data/
+                        }
+                    }
+                })
+            }
+        });
+
+        schema.validate({ file: 'data', consumes: 'multipart/form-data' }, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        schema.validate({ file: 'data', consumes: 'application/json' }, function (error, value) {
+            t.ok(error, 'error.');
+        });
+    });
+
+    t.test('with external ref', function (t) {
+        t.plan(1);
+
+        const schema = Enjoi.schema({
+            'title': 'Example Schema',
+            'type': 'object',
+            'properties': {
+                'name': {
+                    '$ref': 'definitions#/name'
+                }
+            }
+        }, {
+            subSchemas: {
+                'definitions': {
+                    'name': {
+                        'type': 'string'
+                    }
+                }
+            }
+        });
+
+        Joi.validate({ name: 'Joe' }, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+    });
+
+    t.test('with both inline and external refs', function (t) {
+        t.plan(1);
+
+        const schema = Enjoi.schema({
+            'title': 'Example Schema',
+            'type': 'object',
+            'properties': {
+                'firstname': {
+                    '$ref': '#/definitions/firstname'
+                },
+                'surname': {
+                    '$ref': 'definitions#/surname'
+                }
+            },
+            'definitions': {
+                'firstname': {
+                    'type': 'string'
+                }
+            }
+        }, {
+            subSchemas: {
+                'definitions': {
+                    'surname': {
+                        'type': 'string'
+                    }
+                }
+            }
+        });
+
+        Joi.validate({ firstname: 'Joe', surname: 'Doe' }, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+    });
+
+});
