@@ -4,16 +4,17 @@ const Util = require('util');
 const Hoek = require('hoek');
 
 class SchemaResolver {
-    constructor(root, { subSchemas, types, refineType, strictMode }) {
+    constructor(root, { subSchemas, types, refineType, strictMode, extensions = [] }) {
         this.root = root;
         this.types = types;
         this.subSchemas = subSchemas;
         this.refineType = refineType;
         this.strictMode = strictMode;
-        this.joi = Joi.extend({
-            name: 'any',
+        
+        extensions.push({
+            name: 'allOf',
             rules: [{
-                name: 'allOf',
+                name: 'items',
                 params: {
                     items: Joi.array().items(Joi.object()).required()  
                 },
@@ -35,6 +36,8 @@ class SchemaResolver {
                 }
             }]
         });
+
+        this.joi = Joi.extend(extensions);
     }
     
     resolve(schema = this.root) {
@@ -142,7 +145,13 @@ class SchemaResolver {
                     break;
                 default:
                     if (this.types) {
-                        joischema = this.types[type];
+                        const customType = this.types[type];
+                        if (Util.isFunction(customType)) {
+                            joischema = customType.call(this.joi);
+                        }
+                        else {
+                            joischema = customType;
+                        }
                     }
             }
 
@@ -192,13 +201,7 @@ class SchemaResolver {
     resolveAllOf(items) {
         Hoek.assert(Util.isArray(items), 'Expected allOf to be an array.');
 
-        const allOf = [];
-
-        for (const item of items) {
-            allOf.push(this.resolve(item));
-        }
-
-        return this.joi.any().allOf(allOf);
+        return this.joi.allOf().items(items.map((item) => this.resolve(item)));
     }
 
     resolveNot(schema) {

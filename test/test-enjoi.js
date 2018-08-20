@@ -1333,3 +1333,35 @@ Test('options features', function (t) {
     });
 
 });
+
+Test('extensions', function (t) {
+    t.plan(1);
+
+    const schema = Enjoi.schema({
+        'type': 'foo'
+    }, {
+        extensions: [
+            {
+                name: 'string',
+                language: {
+                    foo: 'needs to be \'foobar\''
+                },
+                rules: [{
+                    name: 'foo',
+                    validate(params, value, state, options) {
+                        return value === 'foobar' || this.createError('any.foo', null, state, options);
+                    }
+                }]
+            }
+        ],
+        types: {
+            foo() {
+                return this.string().foo();
+            }
+        }
+    });
+
+    Joi.validate('foobar', schema, function (error, value) {
+        t.ok(!error, 'no error.');
+    });
+});

@@ -10,7 +10,8 @@ const optionsSchema = Joi.object({
     types: Joi.object().unknown(true).allow(null),
     extensions: Joi.object().unknown(true).allow(null),
     refineType: Joi.func().allow(null),
-    strictMode: Joi.boolean().default(false)
+    strictMode: Joi.boolean().default(false),
+    extensions: Joi.array().items(Joi.object()).default([])
 });
 
 exports.schema = function (schema, options = {}) {

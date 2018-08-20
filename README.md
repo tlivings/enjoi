@@ -18,9 +18,10 @@ Here is a list of some missing keyword support still being worked on:
     - `schema` - a JSON schema or a string type representation (such as `'integer'`).
     - `options` - an (optional) object of additional options such as `subSchemas` and custom `types`.
         - `subSchemas` - an (optional) object with keys representing schema ids, and values representing schemas.
-        - `types` - an (optional) object  with keys representing type names and values representing a Joi schema.
+        - `types` - an (optional) object  with keys representing type names and values representing a Joi type. Values can also be functions that are expected to return Joi types.
         - `refineType(type, format)` - an (optional) function to call to apply to type based on the type and format of the JSON schema.
         - `strictMode` - make schemas `strict(value)` with a default value of `false`.
+        - `extensions` - an array of extensions to pass [joi.extend](https://github.com/hapijs/joi/blob/master/API.md#extendextension).
 
 Example:
 
