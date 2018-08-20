@@ -4,7 +4,7 @@ const Util = require('util');
 const Hoek = require('hoek');
 
 class SchemaResolver {
-    constructor(root, { subSchemas, types, refineType, strictMode, extensions = {} }) {
+    constructor(root, { subSchemas, types, refineType, strictMode }) {
         this.root = root;
         this.types = types;
         this.subSchemas = subSchemas;
@@ -247,7 +247,7 @@ class SchemaResolver {
         Util.isNumber(schema.maxProperties) && (joischema = joischema.max(schema.maxProperties));
     
         return joischema;
-    };
+    }
     
     array(schema) {
         let joischema = this.joi.array();
@@ -284,7 +284,7 @@ class SchemaResolver {
         }
     
         return joischema;
-    };
+    }
     
     number(schema) {
         let joischema = this.joi.number();

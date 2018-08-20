@@ -7,7 +7,7 @@
   "scripts": {
     "test": "tape test/*.js",
     "cover": "nyc npm test",
-    "lint": "eslint lib"
+    "lint": "eslint index.js resolver.js"
   },
   "repository": {
     "type": "git",
