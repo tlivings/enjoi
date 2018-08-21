@@ -147,7 +147,7 @@ class SchemaResolver {
                     if (this.types) {
                         const customType = this.types[type];
                         if (Util.isFunction(customType)) {
-                            joischema = customType.call(this.joi);
+                            joischema = customType.call(this.joi, schema);
                         }
                         else {
                             joischema = customType;

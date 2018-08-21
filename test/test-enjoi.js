@@ -1241,6 +1241,25 @@ Test('options features', function (t) {
         });
     });
 
+    t.test('type function', function (t) {
+        t.plan(1);
+
+        const schema = Enjoi.schema({
+            type: 'test',
+            'x-value': 'example'
+        }, {
+            types: {
+                test(schema) {
+                    return this.string().allow(schema['x-value']);
+                }
+            }
+        });
+
+        Joi.validate('example', schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+    });
+
     t.test('custom complex type', function (t) {
         t.plan(2);
 

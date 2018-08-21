@@ -21,7 +21,7 @@ Here is a list of some missing keyword support still being worked on:
 ### Options
         
 - `subSchemas` - an (optional) object with keys representing schema ids, and values representing schemas.
-- `types` - an (optional) object  with keys representing type names and values representing a Joi type. Values can also be functions that are expected to return Joi types. These functions have a context bound to the Joi being used by Enjoi.
+- `types` - an (optional) object  with keys representing type names and values representing a Joi type. Values can also be functions that are expected to return Joi types. These functions have a context bound to the Joi being used by Enjoi and a single argument, `schema`, which represents the current schema being evaluated.
 - `refineType(type, format)` - an (optional) function to call to apply to type based on the type and format of the JSON schema.
 - `extensions` - an array of extensions to pass [joi.extend](https://github.com/hapijs/joi/blob/master/API.md#extendextension).
 - `strictMode` - make schemas `strict(value)` with a default value of `false`.
@@ -117,7 +117,7 @@ const schema = Enjoi({
     type: 'thing'
 }, {
     types: {
-        thing() {
+        thing(/* schema */) {
             return this.any();
         }
     }
@@ -135,6 +135,27 @@ const schema = Enjoi({
 }, {
     types: {
         email: Joi.string().email()
+    },
+    refineType(type, format) {
+        if (type === 'string' && format === 'email') {
+            return 'email';
+        }
+    }
+});
+```
+
+This can be used in conjunction with function based `type` definitions for additional logic:
+
+```javascript
+const schema = Enjoi({
+    type: 'string',
+    format: 'email',
+    'x-test': true
+}, {
+    types: {
+        email(schema) {
+            return schema['x-test'] ? : Joi.string().email().allow('test@example.com') : Joi.string().email()
+        }
     },
     refineType(type, format) {
         if (type === 'string' && format === 'email') {
