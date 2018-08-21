@@ -14,7 +14,7 @@ Here is a list of some missing keyword support still being worked on:
 
 ### API
 
-- `enjoi(schema [, options])`
+- `enjoi.schema(schema [, options])`
     - `schema` - a JSON schema or a string type representation (such as `'integer'`).
     - `options` - an (optional) object of additional options such as `subSchemas` and custom `types`.
        
@@ -32,7 +32,7 @@ Example:
 const Joi = require('joi');
 const Enjoi = require('enjoi');
 
-const schema = Enjoi({
+const schema = Enjoi.schema({
     type: 'object',
     properties: {
         firstName: {
@@ -72,7 +72,7 @@ Sub-schemas can be provided through the `subSchemas` option for `$ref` values to
 Example:
 
 ```javascript
-const schema = Enjoi({
+const schema = Enjoi.schema({
     type: 'object',
     properties: {
         a: {
@@ -101,7 +101,7 @@ const schema = Enjoi({
 Custom types can be provided through the `types` option.
 
 ```javascript
-const schema = Enjoi({
+const schema = Enjoi.schema({
     type: 'thing'
 }, {
     types: {
@@ -113,7 +113,7 @@ const schema = Enjoi({
 Also with functions.
 
 ```javascript
-const schema = Enjoi({
+const schema = Enjoi.schema({
     type: 'thing'
 }, {
     types: {
@@ -129,7 +129,7 @@ const schema = Enjoi({
 You can use the refine type function to help refine types based on `type` and `format`. This will allow transforming a type for lookup against the custom `types`.
 
 ```javascript
-const schema = Enjoi({
+const schema = Enjoi.schema({
     type: 'string',
     format: 'email'
 }, {
@@ -147,7 +147,7 @@ const schema = Enjoi({
 This can be used in conjunction with function based `type` definitions for additional logic:
 
 ```javascript
-const schema = Enjoi({
+const schema = Enjoi.schema({
     type: 'string',
     format: 'email',
     'x-test': true
