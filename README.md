@@ -17,11 +17,14 @@ Here is a list of some missing keyword support still being worked on:
 - `enjoi(schema [, options])`
     - `schema` - a JSON schema or a string type representation (such as `'integer'`).
     - `options` - an (optional) object of additional options such as `subSchemas` and custom `types`.
-        - `subSchemas` - an (optional) object with keys representing schema ids, and values representing schemas.
-        - `types` - an (optional) object  with keys representing type names and values representing a Joi type. Values can also be functions that are expected to return Joi types.
-        - `refineType(type, format)` - an (optional) function to call to apply to type based on the type and format of the JSON schema.
-        - `strictMode` - make schemas `strict(value)` with a default value of `false`.
-        - `extensions` - an array of extensions to pass [joi.extend](https://github.com/hapijs/joi/blob/master/API.md#extendextension).
+       
+### Options
+        
+- `subSchemas` - an (optional) object with keys representing schema ids, and values representing schemas.
+- `types` - an (optional) object  with keys representing type names and values representing a Joi type. Values can also be functions that are expected to return Joi types. These functions have a context bound to the Joi being used by Enjoi.
+- `refineType(type, format)` - an (optional) function to call to apply to type based on the type and format of the JSON schema.
+- `extensions` - an array of extensions to pass [joi.extend](https://github.com/hapijs/joi/blob/master/API.md#extendextension).
+- `strictMode` - make schemas `strict(value)` with a default value of `false`.
 
 Example:
 
@@ -107,6 +110,20 @@ const schema = Enjoi({
 });
 ```
 
+Also with functions.
+
+```javascript
+const schema = Enjoi({
+    type: 'thing'
+}, {
+    types: {
+        thing() {
+            return this.any();
+        }
+    }
+});
+```
+
 ### Refine Type
 
 You can use the refine type function to help refine types based on `type` and `format`. This will allow transforming a type for lookup against the custom `types`.
@@ -124,5 +141,30 @@ const schema = Enjoi({
             return 'email';
         }
     }
+});
+```
+
+### Extensions
+
+Example:
+
+```javascript
+const schema = Enjoi.schema({
+    type: 'foo'
+}, {
+    extensions: [
+        {
+            name: 'string',
+            language: {
+                foobar: 'needs to be \'foobar\''
+            },
+            rules: [{
+                name: 'foobar',
+                validate(params, value, state, options) {
+                    return value === 'foobar' || this.createError('string.foobar', null, state, options);
+                }
+            }]
+        }
+    ]
 });
 ```

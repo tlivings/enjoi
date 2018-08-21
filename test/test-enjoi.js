@@ -1335,7 +1335,7 @@ Test('options features', function (t) {
 });
 
 Test('extensions', function (t) {
-    t.plan(1);
+    t.plan(2);
 
     const schema = Enjoi.schema({
         'type': 'foo'
@@ -1349,7 +1349,7 @@ Test('extensions', function (t) {
                 rules: [{
                     name: 'foo',
                     validate(params, value, state, options) {
-                        return value === 'foobar' || this.createError('any.foo', null, state, options);
+                        return value === 'foobar' || this.createError('string.foo', null, state, options);
                     }
                 }]
             }
@@ -1363,5 +1363,9 @@ Test('extensions', function (t) {
 
     Joi.validate('foobar', schema, function (error, value) {
         t.ok(!error, 'no error.');
+    });
+
+    Joi.validate('foo', schema, function (error, value) {
+        t.ok(error, 'error.');
     });
 });

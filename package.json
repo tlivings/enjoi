@@ -31,10 +31,13 @@
   },
   "homepage": "https://github.com/tlivings/enjoi",
   "dependencies": {
-    "hoek": "^5.0.4",
+    "hoek": "^5.0.4"
+  },
+  "peerDependencies": {
     "joi": "^13.6.0"
   },
   "devDependencies": {
+    "joi": "^13.6.0",
     "eslint": "^4.19.1",
     "nyc": "^11.6.0",
     "tape": "^4.9.0"

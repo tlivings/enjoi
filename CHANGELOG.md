@@ -1,3 +1,9 @@
+### v4.0.0
+
+* [BREAKING] `joi` is a peer.
+* Added `extensions` support.
+* `types` can also contain function values to do complex resolving of custom types.
+
 ### v3.2.5
 
 * Fixed allOf support (#53)
