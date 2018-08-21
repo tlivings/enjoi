@@ -6,7 +6,7 @@
   "main": "./index.js",
   "scripts": {
     "test": "tape test/*.js",
-    "cover": "nyc npm test",
+    "cover": "nyc --reporter=lcov --lines 100 npm test && nyc report",
     "lint": "eslint index.js resolver.js"
   },
   "repository": {

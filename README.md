@@ -17,6 +17,7 @@ Here is a list of some missing keyword support still being worked on:
 - `enjoi.schema(schema [, options])`
     - `schema` - a JSON schema or a string type representation (such as `'integer'`).
     - `options` - an (optional) object of additional options such as `subSchemas` and custom `types`.
+- `enjoi.defaults(options)` - configure defaults `options` to be used with all `enjoi.schema` calls. `enjoi.schema` options passed will always override defaults.
        
 ### Options
         
@@ -57,14 +58,6 @@ Joi.validate({firstName: 'John', lastName: 'Doe', age: 45}, schema, function (er
 });
 ```
 
-Can also call `validate` directly on the created schema.
-
-```javascript
-schema.validate({firstName: 'John', lastName: 'Doe', age: 45}, function (error, value) {
-    error && console.log(error);
-});
-```
-
 ### Sub Schemas
 
 Sub-schemas can be provided through the `subSchemas` option for `$ref` values to lookup against.
@@ -91,6 +84,38 @@ const schema = Enjoi.schema({
             d: {
                 'type': 'string'
             }
+        }
+    }
+});
+```
+
+### Defaults
+
+The above example `subSchemas` can be added instead via defaults:
+
+```javascript
+
+const enjoi = Enjoi.defaults({
+    subSchemas: {
+        sub: {
+            d: {
+                'type': 'string'
+            }
+        }
+    }
+});
+
+const schema = enjoi.schema({
+    type: 'object',
+    properties: {
+        a: {
+            $ref: '#/b' // # is root schema
+        },
+        b: {
+            type: 'string'
+        },
+        c: {
+            $ref: '#sub/d' // #sub is 'sub' under subSchemas.
         }
     }
 });
