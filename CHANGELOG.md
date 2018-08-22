@@ -1,3 +1,11 @@
+### v4.0.0
+
+* [BREAKING] export interface changed. Call `Enjoi.schema` instead of `Enjoi`.
+* [BREAKING] `joi` is a peer.
+* Added `extensions` support.
+* `types` can also contain function values to do complex resolving of custom types.
+* Added support for `Enjoi.defaults` which returns a new Enjoi with default options.
+
 ### v3.2.5
 
 * Fixed allOf support (#53)
