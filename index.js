@@ -2,7 +2,7 @@
 const Joi = require('joi');
 const Hoek = require('hoek');
 const Util = require('util');
-const SchemaResolver = require('./resolver');
+const SchemaResolver = require('./lib/resolver');
 
 const schemaSchema = Joi.alternatives(Joi.object().unknown(true), Joi.string()).required();
 

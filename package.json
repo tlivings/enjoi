@@ -7,7 +7,7 @@
   "scripts": {
     "test": "tape test/*.js",
     "cover": "nyc --reporter=lcov --lines 100 npm test && nyc report",
-    "lint": "eslint index.js resolver.js"
+    "lint": "eslint index.js lib/resolver.js"
   },
   "repository": {
     "type": "git",
