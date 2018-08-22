@@ -10,14 +10,14 @@ Converts a JSON schema to a Joi schema for object validation.
 
 Here is a list of some missing keyword support still being worked on:
 
-- `object:patternProperties` - TBD.
+- `object:patternProperties` - unsupported due to Joi limitations.
 
 ### API
 
 - `enjoi.schema(schema [, options])`
     - `schema` - a JSON schema or a string type representation (such as `'integer'`).
     - `options` - an (optional) object of additional options such as `subSchemas` and custom `types`.
-- `enjoi.defaults(options)` - configure defaults `options` to be used with all `enjoi.schema` calls. `enjoi.schema` options passed will always override defaults.
+- `enjoi.defaults(options)` - configure defaults `options` to be used with all `enjoi.schema` calls. `enjoi.schema` options passed will always override defaults set here.
        
 ### Options
         
