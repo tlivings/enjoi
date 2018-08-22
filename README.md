@@ -6,11 +6,13 @@ Converts a JSON schema to a Joi schema for object validation.
 
 ### Schema Support
 
-`enjoi` is built against json-schema v4, but does not support all of json-schema.
+`enjoi` does not support all of json-schema.
 
-Here is a list of some missing keyword support still being worked on:
+Here is a list of some known missing keyword support still being worked on:
 
 - `object:patternProperties` - unsupported due to Joi limitations.
+
+Please file issues for other unsupported features.
 
 ### API
 
