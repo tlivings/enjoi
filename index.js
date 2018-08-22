@@ -24,7 +24,7 @@ const validate = function (schema, options = {}) {
     Hoek.assert(!validateSchema.error, validateSchema.error);
 
     return validateOptions.value;
-}
+};
 
 exports.defaults = function (defaults = {}) {
     return {
