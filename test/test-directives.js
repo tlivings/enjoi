@@ -387,7 +387,7 @@ Test('allOf', function (t) {
     });
 
     t.test('allOf object', function (t) {
-        t.plan(2);
+        t.plan(3);
 
         const schema = Enjoi.schema({
             'allOf': [
@@ -416,6 +416,7 @@ Test('allOf', function (t) {
 
         Joi.validate({ a: 'string', b: 'string' }, schema, function (error, value) {
             t.ok(error, 'error.');
+            t.equal(error.details[0].message, '\"b\" must be a number');
         });
     });
 
