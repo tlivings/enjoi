@@ -1,3 +1,7 @@
+### v4.1.0
+
+* Added support for string formats `uuid` (v4) and `guid`.
+
 ### v4.0.0
 
 * [BREAKING] export interface changed. Call `Enjoi.schema` instead of `Enjoi`.

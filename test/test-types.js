@@ -491,6 +491,40 @@ Test('types', function (t) {
         });
     });
 
+    t.test('string uuid', function (t) {
+        t.plan(2);
+
+        const schema = Enjoi.schema({
+            type: 'string',
+            format: 'uuid'
+        });
+
+        Joi.validate('36c6e954-3c0a-4fbf-a4cd-6993ffe3bdd2', schema, function (error) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate('not a uuid', schema, function (error) {
+            t.ok(error, 'error.');
+        });
+    });
+
+    t.test('string guid', function (t) {
+        t.plan(2);
+
+        const schema = Enjoi.schema({
+            type: 'string',
+            format: 'guid'
+        });
+
+        Joi.validate('36c6e954-3c0a-4fbf-a4cd-6993ffe3bdd2', schema, function (error) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate('not a uuid', schema, function (error) {
+            t.ok(error, 'error.');
+        });
+    });
+
     t.test('no type, ref, or enum validates anything.', function (t) {
         t.plan(3);
 
