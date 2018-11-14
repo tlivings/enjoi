@@ -32,7 +32,7 @@ Test('directives', function (t) {
     });
 
     t.test('oneOf', function (t) {
-        t.plan(8);
+        t.plan(9);
 
         const schema = Enjoi.schema({
             'oneOf': [
@@ -60,6 +60,10 @@ Test('directives', function (t) {
         });
 
         Joi.validate({}, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate(undefined, schema, function (error, value) {
             t.ok(!error, 'no error.');
         });
 
