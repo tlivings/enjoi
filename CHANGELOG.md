@@ -1,3 +1,7 @@
+### v4.1.1
+
+* Fixes `oneOf` requiring (#61).
+
 ### v4.1.0
 
 * Added support for string formats `uuid` (v4) and `guid`.
