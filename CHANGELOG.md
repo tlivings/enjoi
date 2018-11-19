@@ -1,3 +1,7 @@
+### v5.0.0
+
+* [BREAKING] Addresses #63 : date format to follow RFC3339 as per JSON-Schema.
+
 ### v4.1.1
 
 * Fixes `oneOf` requiring (#61).
