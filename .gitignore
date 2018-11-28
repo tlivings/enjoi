@@ -68,3 +68,6 @@ typings/
 
 # Trash
 .DS_Store
+
+# IntelliJ IDEA
+.idea
