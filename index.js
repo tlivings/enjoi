@@ -12,7 +12,7 @@ const optionsSchema = Joi.object({
     extensions: Joi.array().items(Joi.object().unknown(true)).allow(null),
     refineType: Joi.func().allow(null),
     strictMode: Joi.boolean().default(false),
-    extendValidation: Joi.object().pattern(/^#(\/\S*)*$/, Joi.object().schema()),
+    extendValidation: Joi.object().pattern(/^\S*#(\/\S*)*$/, Joi.object().schema()),
     warnOnEmpty: Joi.boolean(),
 });
 
