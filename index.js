@@ -13,6 +13,7 @@ const optionsSchema = Joi.object({
     refineType: Joi.func().allow(null),
     strictMode: Joi.boolean().default(false),
     extendValidation: Joi.object().pattern(/^#(\/\S*)*$/, Joi.object().schema()),
+    warnOnEmpty: Joi.boolean(),
 });
 
 const validate = function (schema, options = {}) {
@@ -37,6 +38,7 @@ exports.defaults = function (defaults = {}) {
                 refineType: options.refineType || defaults.refineType,
                 strictMode: options.strictMode || defaults.strictMode,
                 extendValidation: options.extendValidation || {},
+                warnOnEmpty: options.warnOnEmpty || true,
             };
             if (Util.isArray(options.extensions)) {
                 merged.extensions = merged.extensions.concat(options.extensions);
