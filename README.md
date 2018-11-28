@@ -28,6 +28,8 @@ Please file issues for other unsupported features.
 - `refineType(type, format)` - an (optional) function to call to apply to type based on the type and format of the JSON schema.
 - `extensions` - an array of extensions to pass [joi.extend](https://github.com/hapijs/joi/blob/master/API.md#extendextension).
 - `strictMode` - make schemas `strict(value)` with a default value of `false`.
+- `warnOnEmpty` - outputs a warning message on console if a schema is empty or considered empty - https://json-schema.org/latest/json-schema-core.html#rfc.section.4.3.1
+- `extendValidation` - gives the ability to extend the default joi validation schema produced by `enjoi`. Works for the root schema and for references.
 
 Example:
 
@@ -216,3 +218,55 @@ const schema = Enjoi.schema({
     ]
 });
 ```
+
+### Extend Joi validation
+
+Example with root schema:
+```javascript
+const schema = Enjoi.schema({
+    type: 'object',
+    properties: {
+        title: {type: 'string'},
+    },
+    definitions: {
+        Name: {
+            type: 'string'
+        }
+    }
+}, {
+    extendValidation: {
+        '#': Joi.object().keys({title: Joi.string().max(3)}),
+    }
+});
+```
+
+Example with root schema and references:
+```javascript
+const schema = Enjoi.schema({
+    type: 'object',
+    properties: {
+        title: {type: 'string'},
+        name: {$ref: '#/definitions/Name'},
+        address: {$ref: 'definitions#/Address'}
+    },
+    definitions: {
+        Name: {
+            type: 'string'
+        }
+    }
+}, {
+    subSchemas: {
+        'definitions': {
+            'Address': {
+                'type': 'string'
+            }
+        }
+    },
+    extendValidation: {
+        '#': Joi.object().keys({title: Joi.string().max(3)}),
+        '#/definitions/Name': Joi.string().max(8),
+        'definitions#/Address': Joi.string().max(7)
+    }
+});
+```
+
