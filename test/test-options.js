@@ -201,3 +201,57 @@ Test('extensions', function (t) {
         t.ok(error, 'error.');
     });
 });
+
+Test('extending the Joi validation', function (t) {
+    t.test('extend root, inline and external refs', function(t) {
+        t.plan(4);
+        
+        const schema = Enjoi.schema({
+            type: 'object',
+            properties: {
+                title: {type: 'string'},
+                name: {$ref: '#/definitions/Name'},
+                address: {$ref: 'definitions#/Address'}
+            },
+            definitions: {
+                Name: {
+                    type: 'string'
+                }
+            }
+        }, {
+            subSchemas: {
+                'definitions': {
+                    'Address': {
+                        'type': 'string'
+                    }
+                }
+            },
+            extendValidation: {
+                '#': Joi.object().keys({title: Joi.string().max(3)}),
+                '#/definitions/Name': Joi.string().max(8),
+                'definitions#/Address': Joi.string().max(7)
+            }
+        });
+
+        const data = {
+            title: 'mr.',
+            name: 'John Doe',
+            address: 'Earth'
+        };
+        Joi.validate(data, schema, function (error, value) {
+            t.ok(!error, 'no error.');
+        });
+
+        Joi.validate({title: 'mister'}, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+
+        Joi.validate({name: 'Jonathan Doe'}, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+
+        Joi.validate({address: 'Earth, Milky Way'}, schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+    });
+});
