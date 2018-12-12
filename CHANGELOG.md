@@ -1,3 +1,7 @@
+### v5.0.1
+
+* #66
+
 ### v5.0.0
 
 * [BREAKING] Addresses #63 : date format to follow RFC3339 as per JSON-Schema.
