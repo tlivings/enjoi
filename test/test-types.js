@@ -371,7 +371,7 @@ Test('types', function (t) {
     });
 
     t.test('string time RFC3339', function (t) {
-        t.plan(11);
+        t.plan(12);
 
         const schema = Enjoi.schema({
             'type': 'string',
@@ -423,10 +423,14 @@ Test('types', function (t) {
         Joi.validate('12:00:00-02:10', schema, function (error, value) {
             t.ok(!error, "valid time 3.");
         });
+
+        Joi.validate('12:00:00.123Z', schema, function (error, value) {
+            t.ok(!error, "valid time with second fraction");
+        });
     });
 
     t.test('string date-time RFC3339', function (t) {
-        t.plan(9);
+        t.plan(10);
 
         const schema = Enjoi.schema({
             'type': 'string',
@@ -469,6 +473,10 @@ Test('types', function (t) {
 
         Joi.validate('2018-11-16T12:00:00-02:00', schema, function (error, value) {
             t.ok(!error, "valid time 4.");
+        });
+
+        Joi.validate('2018-11-16T12:00:00.123Z', schema, function (error, value) {
+            t.ok(!error, "valid time with second fraction");
         });
     });
 
