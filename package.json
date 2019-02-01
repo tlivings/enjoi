@@ -1,6 +1,6 @@
 {
   "name": "enjoi",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "license": "Apache 2.0",
   "description": "Converts json-schema to Joi schema.",
   "main": "./index.js",
@@ -26,20 +26,36 @@
     "hapijs"
   ],
   "author": "Trevor Livingston <tlivings@gmail.com>",
+  "contributors": [
+    "maldimirov",
+    "yujunlong2000",
+    "morgs32",
+    "hpadrick",
+    "justinmchase",
+    "nevezide",
+    "iamjoeker",
+    "Nava2",
+    "djMax",
+    "jojow",
+    "pibi",
+    "normpng",
+    "bardzusny",
+    "vh"
+  ],
   "bugs": {
     "url": "https://github.com/tlivings/enjoi/issues"
   },
   "homepage": "https://github.com/tlivings/enjoi",
   "dependencies": {
-    "hoek": "^5.0.4"
+    "hoek": "^6.0.0"
   },
   "peerDependencies": {
-    "joi": "^13.6.0"
+    "joi": "^14.0.0"
   },
   "devDependencies": {
-    "joi": "^13.6.0",
-    "eslint": "^4.19.1",
-    "nyc": "^11.6.0",
+    "joi": "^14.0.0",
+    "eslint": "^5.0.0",
+    "nyc": "^13.0.0",
     "tape": "^4.9.0"
   }
 }
