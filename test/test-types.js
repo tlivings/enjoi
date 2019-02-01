@@ -331,152 +331,118 @@ Test('types', function (t) {
     });
 
     t.test('string date RFC3339', function (t) {
-        t.plan(7);
+        const validDateValues = [
+            '2018-11-16',
+            '2018-02-31'
+        ];
+        const invalidDateValues = [
+            '1akd2536',
+            '20181116',
+            '16-11-2018',
+            '16-11-2018T12:12:12Z',
+            '12:12:12Z'
+        ];
+        t.plan(validDateValues.length + invalidDateValues.length);
 
         const schema = Enjoi.schema({
             'type': 'string',
             'format': 'date'
         });
 
-        // Invalid values
-        Joi.validate('1akd2536', schema, function (error, value) {
-            t.ok(error, "wrong date format.");
-        });
-
-        Joi.validate('20181116', schema, function (error, value) {
-            t.ok(error, "date without dashes.");
-        });
-
-        Joi.validate('16-11-2018', schema, function (error, value) {
-            t.ok(error, "reverse date.");
-        });
-
-        Joi.validate('16-11-2018T12:12:12Z', schema, function (error, value) {
-            t.ok(error, "date with time.");
-        });
-
-        Joi.validate('12:12:12Z', schema, function (error, value) {
-            t.ok(error, "only time.");
-        });
-
         // Valid values
-        Joi.validate('2018-11-16', schema, function (error, value) {
-            t.ok(!error, "valid date.");
+        validDateValues.forEach((time) => {
+            Joi.validate(time, schema, function (error, value) {
+                t.ok(!error, time + ' should be valid');
+            });
         });
 
-        Joi.validate('2018-02-31', schema, function (error, value) {
-            // beware as JSON Schema does not require RFC3339 sec.5.7 restrictions
-            t.ok(!error, "valid non-existing date.");
+        // Invalid values
+        invalidDateValues.forEach((time) => {
+            Joi.validate(time, schema, function (error, value) {
+                t.ok(error, time + ' should be invalid');
+            });
         });
     });
 
     t.test('string time RFC3339', function (t) {
-        t.plan(12);
+        const validTimeValues = [
+            '12:00:00Z',
+            '12:00:00+02:10',
+            '12:00:00-02:10',
+            '12:00:00.1Z',
+            '12:00:00.123Z',
+            '12:00:00.123456789Z'
+        ];
+        const invalidTimeValues = [
+            '1akd2536',
+            '2:0:0Z',
+            '2:00:00Z',
+            '12:00:00',
+            '2018-11-16',
+            '12:00:00.Z',
+            '12:00:00+02',
+            '12:00:00+2:00',
+            '16-11-2018T12:12:12Z'
+        ];
+        t.plan(validTimeValues.length + invalidTimeValues.length);
 
         const schema = Enjoi.schema({
             'type': 'string',
             'format': 'time'
         });
 
-        // Invalid values
-        Joi.validate('1akd2536', schema, function (error, value) {
-            t.ok(error, "wrong time format.");
-        });
-
-        Joi.validate('16-11-2018T12:12:12Z', schema, function (error, value) {
-            t.ok(error, "date with time.");
-        });
-
-        Joi.validate('2018-11-16', schema, function (error, value) {
-            t.ok(error, "only date.");
-        });
-
-        Joi.validate('2:00:00Z', schema, function (error, value) {
-            t.ok(error, "short time.");
-        });
-
-        Joi.validate('2:0:0Z', schema, function (error, value) {
-            t.ok(error, "shorter time.");
-        });
-
-        Joi.validate('12:00:00', schema, function (error, value) {
-            t.ok(error, "no timezone.");
-        });
-
-        Joi.validate('12:00:00+2:00', schema, function (error, value) {
-            t.ok(error, "short timezone.");
-        });
-
-        Joi.validate('12:00:00+02', schema, function (error, value) {
-            t.ok(error, "shorter timezone.");
-        });
-
         // Valid values
-        Joi.validate('12:00:00Z', schema, function (error, value) {
-            t.ok(!error, "valid time 1.");
+        validTimeValues.forEach((time) => {
+            Joi.validate(time, schema, function (error, value) {
+                t.ok(!error, time + ' should be valid');
+            });
         });
 
-        Joi.validate('12:00:00+02:10', schema, function (error, value) {
-            t.ok(!error, "valid time 2.");
-        });
-
-        Joi.validate('12:00:00-02:10', schema, function (error, value) {
-            t.ok(!error, "valid time 3.");
-        });
-
-        Joi.validate('12:00:00.123Z', schema, function (error, value) {
-            t.ok(!error, "valid time with second fraction");
+        // Invalid values
+        invalidTimeValues.forEach((time) => {
+            Joi.validate(time, schema, function (error, value) {
+                t.ok(error, time + ' should be invalid');
+            });
         });
     });
 
     t.test('string date-time RFC3339', function (t) {
-        t.plan(10);
+        const validDateTimeValues = [
+            '2018-11-16T12:00:00Z',
+            '2018-11-16t12:00:00z',
+            '2018-11-16T12:00:00+02:00',
+            '2018-11-16T12:00:00-02:00',
+            '2018-11-16T12:00:00.1Z',
+            '2018-11-16T12:00:00.123Z',
+            '2018-11-16T12:00:00.123456789Z',
+        ];
+        const invalidDateTimeValues = [
+            '1akd2536',
+            '2018-11-16',
+            '12:12:12Z',
+            '20181116T121212Z',
+            '2018-11-16T12:00:00',
+            '2018-11-16T12:00:00.Z',
+        ];
+        t.plan(validDateTimeValues.length + invalidDateTimeValues.length);
 
         const schema = Enjoi.schema({
             'type': 'string',
             'format': 'date-time'
         });
 
-        // Invalid values
-        Joi.validate('1akd2536', schema, function (error, value) {
-            t.ok(error, "wrong time format.");
-        });
-
-        Joi.validate('2018-11-16', schema, function (error, value) {
-            t.ok(error, "only date.");
-        });
-
-        Joi.validate('12:12:12Z', schema, function (error, value) {
-            t.ok(error, "only time.");
-        });
-
-        Joi.validate('20181116T121212Z', schema, function (error, value) {
-            t.ok(error, "date-time with no dashes.");
-        });
-
-        Joi.validate('2018-11-16T12:00:00', schema, function (error, value) {
-            t.ok(error, "no timezone.");
-        });
-
         // Valid values
-        Joi.validate('2018-11-16T12:00:00Z', schema, function (error, value) {
-            t.ok(!error, "valid time 1.");
+        validDateTimeValues.forEach((time) => {
+            Joi.validate(time, schema, function (error, value) {
+                t.ok(!error, time + ' should be valid');
+            });
         });
 
-        Joi.validate('2018-11-16t12:00:00z', schema, function (error, value) {
-            t.ok(!error, "valid time 2.");
-        });
-
-        Joi.validate('2018-11-16T12:00:00+02:00', schema, function (error, value) {
-            t.ok(!error, "valid time 3.");
-        });
-
-        Joi.validate('2018-11-16T12:00:00-02:00', schema, function (error, value) {
-            t.ok(!error, "valid time 4.");
-        });
-
-        Joi.validate('2018-11-16T12:00:00.123Z', schema, function (error, value) {
-            t.ok(!error, "valid time with second fraction");
+        // Invalid values
+        invalidDateTimeValues.forEach((time) => {
+            Joi.validate(time, schema, function (error, value) {
+                t.ok(error, time + ' should be invalid');
+            });
         });
     });
 
