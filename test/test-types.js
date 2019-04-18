@@ -312,12 +312,16 @@ Test('types', function (t) {
     });
 
     t.test('string email', function (t) {
-        t.plan(2);
+        t.plan(3);
 
         const schema = Enjoi.schema({
             'type': 'string',
             'format': 'email',
             'maxLength': 20
+        });
+
+        Joi.validate('', schema, function (error, value) {
+            t.ok(error, "empty string.");
         });
 
         Joi.validate('wrongemail', schema, function (error, value) {
@@ -336,6 +340,7 @@ Test('types', function (t) {
             '2018-02-31'
         ];
         const invalidDateValues = [
+            '',
             '1akd2536',
             '20181116',
             '16-11-2018',
@@ -374,6 +379,7 @@ Test('types', function (t) {
             '12:00:00.123456789Z'
         ];
         const invalidTimeValues = [
+            '',
             '1akd2536',
             '2:0:0Z',
             '2:00:00Z',
@@ -417,6 +423,7 @@ Test('types', function (t) {
             '2018-11-16T12:00:00.123456789Z',
         ];
         const invalidDateTimeValues = [
+            '',
             '1akd2536',
             '2018-11-16',
             '12:12:12Z',
@@ -447,11 +454,15 @@ Test('types', function (t) {
     });
 
     t.test('string hostname', function (t) {
-        t.plan(2);
+        t.plan(3);
 
         const schema = Enjoi.schema({
             'type': 'string',
             'format': 'hostname'
+        });
+
+        Joi.validate('', schema, function (error, value) {
+            t.ok(error, "empty string.");
         });
 
         Joi.validate('not@host', schema, function (error, value) {
@@ -465,11 +476,15 @@ Test('types', function (t) {
     });
 
     t.test('string ipv4', function (t) {
-        t.plan(2);
+        t.plan(3);
 
         const schema = Enjoi.schema({
             'type': 'string',
             'format': 'ipv4'
+        });
+
+        Joi.validate('', schema, function (error, value) {
+            t.ok(error, "empty string.");
         });
 
         Joi.validate('asdf', schema, function (error, value) {
@@ -483,13 +498,17 @@ Test('types', function (t) {
     });
 
     t.test('string ipv6', function (t) {
-        t.plan(2);
+        t.plan(3);
 
         const schema = Enjoi.schema({
             'type': 'string',
             'format': 'ipv6'
         });
 
+        Joi.validate('', schema, function (error, value) {
+            t.ok(error, "empty string.");
+        });
+        
         Joi.validate('asdf', schema, function (error, value) {
             t.ok(error, "bad ipv6 error.");
         });
@@ -501,13 +520,17 @@ Test('types', function (t) {
     });
 
     t.test('string uri', function (t) {
-        t.plan(2);
+        t.plan(3);
 
         const schema = Enjoi.schema({
             'type': 'string',
             'format': 'uri'
         });
 
+        Joi.validate('', schema, function (error, value) {
+            t.ok(error, "empty string.");
+        });
+        
         Joi.validate('asdf', schema, function (error, value) {
             t.ok(error, "bad uri error.");
         });
@@ -576,24 +599,28 @@ Test('types', function (t) {
     });
 
     t.test('string uuid', function (t) {
-        t.plan(2);
+        t.plan(3);
 
         const schema = Enjoi.schema({
             type: 'string',
             format: 'uuid'
         });
-
+        
         Joi.validate('36c6e954-3c0a-4fbf-a4cd-6993ffe3bdd2', schema, function (error) {
             t.ok(!error, 'no error.');
         });
 
+        Joi.validate('', schema, function (error, value) {
+            t.ok(error, "empty string.");
+        });
+        
         Joi.validate('not a uuid', schema, function (error) {
             t.ok(error, 'error.');
         });
     });
 
     t.test('string guid', function (t) {
-        t.plan(2);
+        t.plan(3);
 
         const schema = Enjoi.schema({
             type: 'string',
@@ -604,6 +631,10 @@ Test('types', function (t) {
             t.ok(!error, 'no error.');
         });
 
+        Joi.validate('', schema, function (error, value) {
+            t.ok(error, "empty string.");
+        });
+        
         Joi.validate('not a uuid', schema, function (error) {
             t.ok(error, 'error.');
         });
