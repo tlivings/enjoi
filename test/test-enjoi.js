@@ -1,7 +1,7 @@
 
 const Test = require('tape');
 const Enjoi = require('../index');
-const Joi = require('joi');
+const Joi = require('@hapi/joi');
 
 Test('enjoi', function (t) {
 

@@ -1,6 +1,6 @@
 
-const Joi = require('joi');
-const Hoek = require('hoek');
+const Joi = require('@hapi/joi');
+const Hoek = require('@hapi/hoek');
 const Util = require('util');
 const SchemaResolver = require('./lib/resolver');
 
