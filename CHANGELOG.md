@@ -1,3 +1,9 @@
+
+### 6.0.0
+
+* Do not set empty string as valid for all string types
+* Updated joi and hoek to latest, drop Node 6 support
+
 ### v5.0.1
 
 * #69
