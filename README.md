@@ -77,7 +77,7 @@ const schema = Enjoi.schema({
             type: 'string'
         },
         c: {
-            $ref: '#sub/d' // #sub is 'sub' under subSchemas.
+            $ref: 'sub#/d' // sub# is 'sub' under subSchemas.
         }
     }
 }, {
@@ -117,7 +117,7 @@ const schema = enjoi.schema({
             type: 'string'
         },
         c: {
-            $ref: '#sub/d' // #sub is 'sub' under subSchemas.
+            $ref: 'sub#/d' // sub# is 'sub' under subSchemas.
         }
     }
 });
