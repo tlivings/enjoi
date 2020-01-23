@@ -1,4 +1,10 @@
 
+
+### 6.0.1
+
+* #83 differentiate between undefined and falsy
+* #73 updated fix
+
 ### 6.0.0
 
 * Do not set empty string as valid for all string types (#73)
