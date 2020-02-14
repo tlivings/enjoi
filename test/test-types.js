@@ -273,7 +273,7 @@ Test('types', function (t) {
     });
 
     t.test('string regex', function (t) {
-        t.plan(2);
+        t.plan(3);
 
         const schema = Enjoi.schema({
             'type': 'string',
@@ -284,11 +284,15 @@ Test('types', function (t) {
             t.ok(error, 'error.');
         });
 
+        Joi.validate('', schema, function (error, value) {
+            t.ok(error, 'error.');
+        });
+
         Joi.validate('foobar', schema, function (error, value) {
             t.ok(!error, 'no error.');
         });
     });
-
+    
     t.test('string length', function (t) {
         t.plan(3);
 

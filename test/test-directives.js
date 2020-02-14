@@ -191,7 +191,7 @@ Test('directives', function (t) {
     });
 
     t.test('default values', function (t) {
-        t.plan(2);
+        t.plan(4);
 
         const schema = {
             type: 'object',
@@ -203,6 +203,18 @@ Test('directives', function (t) {
                 locale: {
                     type: 'string',
                     default: 'en-US'
+                },
+                isSubscribed: {
+                    type: 'boolean',
+                    default: false
+                },
+                posts: {
+                    type: 'number',
+                    default: 0
+                },
+                empty: {
+                    type: 'string',
+                    default: ''
                 }
             },
             required: ['user']
@@ -211,6 +223,8 @@ Test('directives', function (t) {
         Enjoi.schema(schema).validate({ user: 'test@domain.tld' }, function (error, value) {
             t.ok(!error, 'error');
             t.equal(value.locale, 'en-US');
+            t.equal(value.isSubscribed, false);
+            t.equal(value.posts, 0);
         });
     });
 
