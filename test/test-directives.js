@@ -18,17 +18,19 @@ Test('directives', function (t) {
             ]
         });
 
-        Joi.validate('string', schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate(10, schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate({}, schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
+        try {
+            schema.validate('string');
+            schema.validate(10);
+            t.ok('no error');
+        } catch (e) {
+            t.fail('error');
+        }
+        try {
+            schema.validate({});
+            t.fail('no error');
+        } catch (e) {
+            t.ok('error');
+        }
     });
 
     t.test('oneOf', function (t) {
@@ -55,41 +57,49 @@ Test('directives', function (t) {
             ]
         });
 
-        Joi.validate({ a: 'string' }, schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
+        try {
+            schema.validate({ a: 'string' });
+            schema.validate({});
+            schema.validate(undefined);
+            schema.validate({ b: 10 });
+            t.ok('no error')
+        } catch (e) {
+            t.fail('error');
+        }
+        try {
+            schema.validate({ a: 'string', b: 10 });
+            t.fail('no error');
+        } catch (e) {
+            t.ok('error');
+        }
 
-        Joi.validate({}, schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
+        try {
+            schema.validate({ a: 'string', b: null });
+            t.fail('no error');
+        } catch (e) {
+            t.ok('error');
+        }
 
-        Joi.validate(undefined, schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
+        try {
+            schema.validate({ a: null, b: 10 });
+            t.fail('no error');
+        } catch (e) {
+            t.ok('error');
+        }
 
-        Joi.validate({ b: 10 }, schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
+        try {
+            schema.validate({ a: null, b: null });
+            t.fail('no error');
+        } catch (e) {
+            t.ok('error');
+        }
 
-        Joi.validate({ a: 'string', b: 10 }, schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
-
-        Joi.validate({ a: 'string', b: null }, schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
-
-        Joi.validate({ a: null, b: 10 }, schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
-
-        Joi.validate({ a: null, b: null }, schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
-
-        Joi.validate({ a: 'string', b: 'string' }, schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
+        try {
+            schema.validate({ a: 'string', b: 'string' });
+            t.fail('no error');
+        } catch (e) {
+            t.ok('error');
+        }
     });
 
     t.test('not', function (t) {
@@ -490,5 +500,5 @@ Test('allOf', function (t) {
             t.ok(error, 'error.');
         });
     });
-    
+
 });
