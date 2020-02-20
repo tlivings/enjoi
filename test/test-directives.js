@@ -49,7 +49,7 @@ Test('directives', function (t) {
 
             t.ok(schema.validate({ a: 'string' }).value, 'string');
             t.ok(schema.validate({}).value);
-            t.ok(schema.validate(undefined).value === undefined);
+            t.ok(!schema.validate(undefined).value);
             t.ok(schema.validate({ b: 10 }).value, { b: 10 });
             t.ok(schema.validate({ a: 'string', b: 10 }).error);
             t.ok(schema.validate({ a: 'string', b: null }).error);
@@ -192,9 +192,7 @@ Test('directives', function (t) {
             }
         });
 
-        schema.validate({ file: 'data', consumes: 'application/json' }, function (error, value) {
-            t.ok(!error);
-        });
+        t.ok(!schema.validate({ file: 'data', consumes: 'application/json' }).error);
     });
 
     t.test('additionalProperties true should not affect validation of properties', function (t) {
@@ -217,9 +215,7 @@ Test('directives', function (t) {
             }
         });
 
-        schema.validate({ file: 5, consumes: 'application/json' }, function (error, value) {
-            t.ok(error);
-        });
+        t.ok(schema.validate({ file: 5, consumes: 'application/json' }).error);
     });
 
     t.test('additionalProperties object should not affect validation of properties', function (t) {
@@ -244,9 +240,7 @@ Test('directives', function (t) {
             }
         });
 
-        schema.validate({ file: 'asdf', consumes: 'application/json' }, function (error, value) {
-            t.ok(!error);
-        });
+        t.ok(!schema.validate({ file: 'asdf', consumes: 'application/json' }).error);
     });
 
     t.test('additionalProperties object should add to validated properties', function (t) {
@@ -271,9 +265,7 @@ Test('directives', function (t) {
             }
         });
 
-        schema.validate({ file: 'asdf', consumes: 5 }, function (error, value) {
-            t.ok(error);
-        });
+        t.ok(schema.validate({ file: 'asdf', consumes: 5 }).error);
     });
 
     t.test('array additionalItems', function (t) {
@@ -292,18 +284,9 @@ Test('directives', function (t) {
             additionalItems: false
         });
 
-        Joi.validate(['test'], schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate(['test', 123], schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate(['test', 123, 'foo'], schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
-
+        t.ok(!schema.validate(['test']).error)
+        t.ok(!schema.validate(['test', 123]).error);
+        t.ok(schema.validate(['test', 123, 'foo']).error);
     });
 });
 
@@ -324,13 +307,8 @@ Test('allOf', function (t) {
             ]
         });
 
-        Joi.validate('abc', schema, function (error) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate('abcd', schema, function (error) {
-            t.ok(error, 'error.');
-        });
+        t.ok(!schema.validate('abc').error)
+        t.ok(schema.validate('abcd').error)
     });
 
     t.test('allOf object', function (t) {
@@ -357,14 +335,8 @@ Test('allOf', function (t) {
             ]
         });
 
-        Joi.validate({ a: 'string', b: 10 }, schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate({ a: 'string', b: 'string' }, schema, function (error, value) {
-            t.ok(error, 'error.');
-            t.equal(error.details[0].message, '\"b\" must be a number');
-        });
+        t.ok(!schema.validate({ a: 'string', b: 10 }).error);
+        t.equal(schema.validate({ a: 'string', b: 'string' }).error, '\"b\" must be a number');
     });
 
     t.test('allOf array with conflicting needs', function (t) {
