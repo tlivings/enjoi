@@ -41,25 +41,15 @@ Test('enjoi', function (t) {
         t.equal(schema._description, 'An example to test against.', 'description set.');
         t.equal(schema._inner.children.length, 4, '4 properties defined.');
 
-        Joi.validate({ firstName: 'John', lastName: 'Doe', age: 45, tags: ['man', 'human'] }, schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
+        t.ok(!schema.validate({ firstName: 'John', lastName: 'Doe', age: 45, tags: ['man', 'human'] }).error, 'no error.');
 
-        Joi.validate({ firstName: '', lastName: 'Doe', age: 45, tags: ['man', 'human'] }, schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
+        t.ok(!schema.validate({ firstName: '', lastName: 'Doe', age: 45, tags: ['man', 'human'] }).error, 'no error.');
 
-        Joi.validate({ firstName: 'John', age: 45, tags: ['man', 'human'] }, schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
+        t.ok(schema.validate({ firstName: 'John', age: 45, tags: ['man', 'human'] }).error, 'error.');
 
-        Joi.validate({ firstName: 'John', lastName: 'Doe', age: 45, tags: [1, 'human'] }, schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
+        t.ok(schema.validate({ firstName: 'John', lastName: 'Doe', age: 45, tags: [1, 'human'] }).error, 'error.');
 
-        Joi.validate({ firstName: 'John', lastName: 'Doe', age: 45, tags: ['', 'human'] }, schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
+        t.ok(schema.validate({ firstName: 'John', lastName: 'Doe', age: 45, tags: ['', 'human'] }).error, 'error.');
     });
 
     t.test('with ref', function (t) {
@@ -80,9 +70,7 @@ Test('enjoi', function (t) {
             }
         });
 
-        Joi.validate({ name: 'Joe' }, schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
+        t.ok(!schema.validate({ name: 'Joe' }).error, 'no error.');
     });
 
 });
@@ -102,9 +90,7 @@ Test('enjoi defaults', function (t) {
             type: 'test'
         });
 
-        Joi.validate('string', schema, function (error) {
-            t.ok(!error, 'no error.');
-        });
+        t.ok(!schema.validate('string').error, 'no error.');
     });
 
     t.test('overrides', function (t) {
@@ -124,9 +110,7 @@ Test('enjoi defaults', function (t) {
             }
         });
 
-        Joi.validate('string', schema, function (error) {
-            t.ok(error, 'error.');
-        });
+        t.ok(schema.validate('string').error, 'error.');
     });
 
     t.test('overrides extensions', function (t) {
@@ -178,13 +162,8 @@ Test('enjoi defaults', function (t) {
             }
         });
 
-        Joi.validate('foobar', enjoi.schema({ type: 'foo' }), function (error) {
-            t.ok(!error, 'no error.');
-        });
+        t.ok(!enjoi.schema({ type: 'foo' }).validate('foobar').error, 'no error.');
 
-        Joi.validate('foobaz', schema, function (error) {
-            t.ok(!error, 'no error.');
-        });
+        t.ok(!schema.validate('foobaz').error, 'no error.');
     });
-
 });
