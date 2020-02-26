@@ -27,11 +27,9 @@ Test('options features', function (t) {
                 binary: Joi.binary().encoding('base64')
             }
         });
-
-        Joi.validate('aGVsbG8=', schema, function (error, value) {
-            t.ok(!error, 'no error.');
-            t.equal(value.toString(), 'hello');
-        });
+        let result = schema.validate('aGVsbG8=');
+        t.ok(!result.error, 'no error');
+        t.equal(result.value.toString(), 'hello', 'no error');
     });
 
     t.test('custom type', function (t) {
@@ -45,13 +43,8 @@ Test('options features', function (t) {
                 }
             });
 
-        Joi.validate('string', schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate(10, schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
+        t.ok(!schema.validate('string').error);
+        t.ok(schema.validate(10).error);
     });
 
     t.test('type function', function (t) {
@@ -68,9 +61,7 @@ Test('options features', function (t) {
             }
         });
 
-        Joi.validate('example', schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
+        t.ok(!schema.validate('example').error);
     });
 
     t.test('custom complex type', function (t) {
@@ -95,13 +86,8 @@ Test('options features', function (t) {
             }
         });
 
-        schema.validate({ file: 'data', consumes: 'multipart/form-data' }, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-
-        schema.validate({ file: 'data', consumes: 'application/json' }, function (error, value) {
-            t.ok(error, 'error.');
-        });
+        t.ok(!schema.validate({ file: 'data', consumes: 'multipart/form-data' }).error);
+        t.ok(schema.validate({ file: 'data', consumes: 'application/json' }).error);
     });
 
     t.test('with external ref', function (t) {
@@ -125,9 +111,7 @@ Test('options features', function (t) {
             }
         });
 
-        Joi.validate({ name: 'Joe' }, schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
+        t.ok(!schema.validate({ name: 'Joe' }).error);
     });
 
     t.test('with both inline and external refs', function (t) {
@@ -159,9 +143,7 @@ Test('options features', function (t) {
             }
         });
 
-        Joi.validate({ firstname: 'Joe', surname: 'Doe' }, schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
+        t.ok(!schema.validate({ firstname: 'Joe', surname: 'Doe' }).error);
     });
 
 });
@@ -193,11 +175,6 @@ Test('extensions', function (t) {
         }
     });
 
-    Joi.validate('foobar', schema, function (error, value) {
-        t.ok(!error, 'no error.');
-    });
-
-    Joi.validate('foo', schema, function (error, value) {
-        t.ok(error, 'error.');
-    });
+    t.ok(!schema.validate('foobar').error);
+    t.ok(schema.validate('foo').error);
 });

@@ -18,9 +18,9 @@ Test('directives', function (t) {
             ]
         });
 
-            t.ok(schema.validate('string').value, 'string')
-            t.ok(schema.validate(10).value, 10);
-            t.ok(schema.validate({}).error);
+            t.ok(schema.validate('string').value, 'no error')
+            t.ok(schema.validate(10).value, 'no error');
+            t.ok(schema.validate({}).error, 'error');
     });
 
     t.test('oneOf', function (t) {
@@ -47,15 +47,15 @@ Test('directives', function (t) {
             ]
         });
 
-            t.ok(schema.validate({ a: 'string' }).value, 'string');
-            t.ok(schema.validate({}).value);
-            t.ok(!schema.validate(undefined).value);
-            t.ok(schema.validate({ b: 10 }).value, { b: 10 });
-            t.ok(schema.validate({ a: 'string', b: 10 }).error);
-            t.ok(schema.validate({ a: 'string', b: null }).error);
-            t.ok(schema.validate({ a: null, b: 10 }).error);
-            t.ok(schema.validate({ a: null, b: null }).error);
-            t.ok(schema.validate({ a: 'string', b: 'string' }).error);
+            t.ok(schema.validate({ a: 'string' }).value, 'no error');
+            t.ok(schema.validate({}).value, 'no error');
+            t.ok(!schema.validate(undefined).value, 'no error');
+            t.ok(schema.validate({ b: 10 }).value, 'no error');
+            t.ok(schema.validate({ a: 'string', b: 10 }).error, 'error');
+            t.ok(schema.validate({ a: 'string', b: null }).error, 'error');
+            t.ok(schema.validate({ a: null, b: 10 }).error, 'error');
+            t.ok(schema.validate({ a: null, b: null }).error, 'error');
+            t.ok(schema.validate({ a: 'string', b: 'string' }).error, 'error');
     });
 
     t.test('not', function (t) {
@@ -82,14 +82,14 @@ Test('directives', function (t) {
             ]
         });
 
-        t.ok(schema.validate({ a: 'string' }).error);
-        t.ok(schema.validate({}).error);
-        t.ok(schema.validate({ b: 10 }).error);
-        t.deepEqual(schema.validate({ a: 'string', b: 10 }).value, { a: 'string', b: 10 });
-        t.deepEqual(schema.validate({ a: 'string', b: null }).value, {a: 'string', b: null});
-        t.deepEqual(schema.validate({ a: null, b: 10 }).value, {a: null, b: 10});
-        t.deepEqual(schema.validate({ a: null, b: null }).value, { a: null, b: null });
-        t.deepEqual(schema.validate({ a: 'string', b: 'string' }).value, { a: 'string', b: 'string' });
+        t.ok(schema.validate({ a: 'string' }).error, 'error');
+        t.ok(schema.validate({}).error, 'error');
+        t.ok(schema.validate({ b: 10 }).error, 'error');
+        t.deepEqual(schema.validate({ a: 'string', b: 10 }).value, { a: 'string', b: 10 }, 'no error');
+        t.deepEqual(schema.validate({ a: 'string', b: null }).value, {a: 'string', b: null}, 'no error');
+        t.deepEqual(schema.validate({ a: null, b: 10 }).value, {a: null, b: 10}, 'no error');
+        t.deepEqual(schema.validate({ a: null, b: null }).value, { a: null, b: null }, 'no error');
+        t.deepEqual(schema.validate({ a: 'string', b: 'string' }).value, { a: 'string', b: 'string' }, 'no error');
     });
 
     t.test('additionalProperties boolean', function (t) {
@@ -104,12 +104,12 @@ Test('directives', function (t) {
             }
         };
 
-        t.ok(Enjoi.schema(schema).validate({ file: 'data', consumes: 'application/json' }).error);
+        t.ok(Enjoi.schema(schema).validate({ file: 'data', consumes: 'application/json' }).error, 'error');
         schema.additionalProperties = false;
-        t.ok(Enjoi.schema(schema).validate({ file: 'data', consumes: 'application/json' }).error);
+        t.ok(Enjoi.schema(schema).validate({ file: 'data', consumes: 'application/json' }).error, 'error');
         schema.additionalProperties = true;
-        t.deepEqual(Enjoi.schema(schema).validate({ file: 'data', consumes: 'application/json' }).value, { "file": "data", "consumes": "application/json"});
-        t.ok(Enjoi.schema(schema).validate({ file: 5, consumes: 'application/json' }).error);
+        t.deepEqual(Enjoi.schema(schema).validate({ file: 'data', consumes: 'application/json' }).value, { "file": "data", "consumes": "application/json"}, 'no error');
+        t.ok(Enjoi.schema(schema).validate({ file: 5, consumes: 'application/json' }).error, 'error');
     });
 
     t.test('default values', function (t) {
@@ -143,7 +143,7 @@ Test('directives', function (t) {
         };
 
         let result = Enjoi.schema(schema).validate({ user: 'test@domain.com' })
-        t.ok(!result.error)
+        t.ok(!result.error, 'no error')
         t.equal(result.value.locale, 'en-US');
         t.equal(result.value.isSubscribed, false);
         t.equal(result.value.posts, 0);
@@ -169,7 +169,7 @@ Test('directives', function (t) {
             }
         });
 
-        t.ok(schema.validate({ file: 'data', consumes: 'application/json' }).error);
+        t.ok(schema.validate({ file: 'data', consumes: 'application/json' }).error, 'error');
     });
 
     t.test('additionalProperties true should allow additional properties', function (t) {
@@ -192,7 +192,7 @@ Test('directives', function (t) {
             }
         });
 
-        t.ok(!schema.validate({ file: 'data', consumes: 'application/json' }).error);
+        t.ok(!schema.validate({ file: 'data', consumes: 'application/json' }).error, 'no error');
     });
 
     t.test('additionalProperties true should not affect validation of properties', function (t) {
@@ -215,7 +215,7 @@ Test('directives', function (t) {
             }
         });
 
-        t.ok(schema.validate({ file: 5, consumes: 'application/json' }).error);
+        t.ok(schema.validate({ file: 5, consumes: 'application/json' }).error, 'error');
     });
 
     t.test('additionalProperties object should not affect validation of properties', function (t) {
@@ -240,7 +240,7 @@ Test('directives', function (t) {
             }
         });
 
-        t.ok(!schema.validate({ file: 'asdf', consumes: 'application/json' }).error);
+        t.ok(!schema.validate({ file: 'asdf', consumes: 'application/json' }).error, 'no error');
     });
 
     t.test('additionalProperties object should add to validated properties', function (t) {
@@ -265,7 +265,7 @@ Test('directives', function (t) {
             }
         });
 
-        t.ok(schema.validate({ file: 'asdf', consumes: 5 }).error);
+        t.ok(schema.validate({ file: 'asdf', consumes: 5 }).error, 'error');
     });
 
     t.test('array additionalItems', function (t) {
@@ -284,9 +284,9 @@ Test('directives', function (t) {
             additionalItems: false
         });
 
-        t.ok(!schema.validate(['test']).error)
-        t.ok(!schema.validate(['test', 123]).error);
-        t.ok(schema.validate(['test', 123, 'foo']).error);
+        t.ok(!schema.validate(['test']).error, 'no error')
+        t.ok(!schema.validate(['test', 123]).error, 'no error');
+        t.ok(schema.validate(['test', 123, 'foo']).error, 'error');
     });
 });
 
@@ -307,8 +307,8 @@ Test('allOf', function (t) {
             ]
         });
 
-        t.ok(!schema.validate('abc').error)
-        t.ok(schema.validate('abcd').error)
+        t.ok(!schema.validate('abc').error, 'no error')
+        t.ok(schema.validate('abcd').error, 'error')
     });
 
     t.test('allOf object', function (t) {
@@ -335,8 +335,8 @@ Test('allOf', function (t) {
             ]
         });
 
-        t.ok(!schema.validate({ a: 'string', b: 10 }).error);
-        t.equal(schema.validate({ a: 'string', b: 'string' }).error, '\"b\" must be a number');
+        t.ok(!schema.validate({ a: 'string', b: 10 }).error, 'no error');
+        t.equal(schema.validate({ a: 'string', b: 'string' }).error, '"b" must be a number', 'error');
     });
 
     t.test('allOf array with conflicting needs', function (t) {
@@ -364,9 +364,7 @@ Test('allOf', function (t) {
             ]
         });
 
-        Joi.validate([ 'string', 10 ], schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
+        t.ok(schema.validate([ 'string', 10 ]).error, 'error.');
     });
 
     t.test('allOf nested', function (t) {
@@ -397,13 +395,8 @@ Test('allOf', function (t) {
             ]
         });
 
-        Joi.validate({ name: 'test', phoneCountryCode: 'US' }, schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate({ name: 'test' }, schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
+        t.ok(!schema.validate({ name: 'test', phoneCountryCode: 'US' }).error, 'no error.');
+        t.ok(schema.validate({ name: 'test' }).error, 'error.');
     });
 
 });

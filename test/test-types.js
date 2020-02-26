@@ -1,7 +1,6 @@
 
 const Test = require('tape');
 const Enjoi = require('../index');
-const Joi = require('@hapi/joi');
 
 Test('types', function (t) {
 
@@ -14,17 +13,9 @@ Test('types', function (t) {
             'minProperties': 1
         });
 
-        Joi.validate({ a: 'a', b: 'b' }, schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate({ a: 'a', b: 'b', c: 'c' }, schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
-
-        Joi.validate({}, schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
+        t.ok(!schema.validate({ a: 'a', b: 'b' }).error, 'no error');
+        t.ok(schema.validate({ a: 'a', b: 'b', c: 'c' }).error, 'error');
+        t.ok(schema.validate({}).error, 'error');
     });
 
     t.test('arrays and numbers', function (t) {
@@ -39,13 +30,8 @@ Test('types', function (t) {
             'minItems': 0
         });
 
-        Joi.validate([1, 2], schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
+        t.ok(!schema.validate([1, 2]).error, 'no error');
+        t.ok(schema.validate([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]).error, 'error');
     });
 
     t.test('arrays with specific item type assignment', function (t) {
@@ -62,33 +48,13 @@ Test('types', function (t) {
             ],
         });
 
-        Joi.validate([1, 'abc'], schema, function (error) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate([0, 1], schema, function (error) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate(['abc', 'def'], schema, function (error) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate([1], schema, function (error) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate(['abc'], schema, function (error) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate([], schema, function (error) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate([{ foo: 'bar' }], schema, function (error) {
-            t.ok(error, 'error.');
-        });
+        t.ok(!schema.validate([1, 'abc']).error, 'no error');
+        t.ok(!schema.validate([0, 1]).error, 'no error');
+        t.ok(!schema.validate(['abc', 'def']).error, 'no error');
+        t.ok(!schema.validate([1]).error, 'no error');
+        t.ok(!schema.validate(['abc']).error, 'no error');
+        t.ok(!schema.validate([]).error, 'no error');
+        t.ok(schema.validate([{ foo: 'bar' }]).error, 'error');
     });
 
     t.test('arrays with ordered item assignment', function (t) {
@@ -105,37 +71,14 @@ Test('types', function (t) {
             ],
         });
 
-        Joi.validate([1, 'abc'], schema, function (error) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate([], schema, function (error) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate([0, 1], schema, function (error) {
-            t.ok(error, 'error.');
-        });
-
-        Joi.validate(['abc', 'def'], schema, function (error) {
-            t.ok(error, 'error.');
-        });
-
-        Joi.validate([1], schema, function (error) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate(['abc'], schema, function (error) {
-            t.ok(error, 'error.');
-        });
-
-        Joi.validate([{ foo: 'bar' }], schema, function (error) {
-            t.ok(error, 'error.');
-        });
-
-        Joi.validate([1, 'abc', 'def'], schema, function (error) {
-            t.ok(error, 'error.');
-        });
+        t.ok(!schema.validate([1, 'abc']).error, 'no error');
+        t.ok(!schema.validate([]).error, 'no error');
+        t.ok(schema.validate([0, 1]).error, 'error');
+        t.ok(schema.validate(['abc', 'def']).error, 'error');
+        t.ok(!schema.validate([1]).error, 'no error');
+        t.ok(schema.validate(['abc']).error, 'error');
+        t.ok(schema.validate([{ foo: 'bar' }]).error, 'error');
+        t.ok(schema.validate([1, 'abc', 'def']).error, 'error');
     });
 
     t.test('arrays and refs', function (t) {
@@ -158,13 +101,8 @@ Test('types', function (t) {
             }
         });
 
-        Joi.validate([1, 2], schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate([1, 3], schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
+        t.ok(!schema.validate([1, 2]).error, 'no error');
+        t.ok(schema.validate([1, 3]).error, 'error');
     });
 
     t.test('number exclusiveMinimum exclusiveMaximum', function (t) {
@@ -176,17 +114,9 @@ Test('types', function (t) {
             'exclusiveMaximum': 2,
         });
 
-        Joi.validate(0, schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
-
-        Joi.validate(1, schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate(2, schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
+        t.ok(schema.validate(0).error, 'error');
+        t.ok(!schema.validate(1).error, 'no error');
+        t.ok(schema.validate(2).error, 'error');
     });
 
     t.test('number multipleOf', function (t) {
@@ -197,17 +127,9 @@ Test('types', function (t) {
             'multipleOf': 1.5,
         });
 
-        Joi.validate(4, schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
-
-        Joi.validate(4.5, schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate(0, schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
+        t.ok(schema.validate(4).error, 'error');
+        t.ok(!schema.validate(4.5).error, 'no error');
+        t.ok(!schema.validate(0).error, 'no error');
     });
 
     t.test('arrays and unique', function (t) {
@@ -221,13 +143,8 @@ Test('types', function (t) {
             'uniqueItems': true
         });
 
-        Joi.validate([1, 2], schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate([1, 1], schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
+        t.ok(!schema.validate([1, 2]).error, 'no error');
+        t.ok(schema.validate([1, 1]).error, 'error');
     });
 
     t.test('boolean', function (t) {
@@ -237,17 +154,9 @@ Test('types', function (t) {
             'type': 'boolean'
         });
 
-        Joi.validate('1', schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
-
-        Joi.validate('true', schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate(true, schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
+        t.ok(schema.validate('1').error, 'error');
+        t.ok(!schema.validate('true').error, 'no error');
+        t.ok(!schema.validate(true).error, 'no error');
     });
 
     t.test('boolean strictMode', function (t) {
@@ -259,17 +168,9 @@ Test('types', function (t) {
             strictMode: true
         });
 
-        Joi.validate('1', schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
-
-        Joi.validate('true', schema, function (error, value) {
-            t.ok(error, 'error in strictMode.');
-        });
-
-        Joi.validate(true, schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
+        t.ok(schema.validate('1').error, 'error');
+        t.ok(schema.validate('true').error, 'error in strictMode');
+        t.ok(!schema.validate(true).error, 'no error');
     });
 
     t.test('string regex', function (t) {
@@ -280,19 +181,11 @@ Test('types', function (t) {
             'pattern': /foobar/
         });
 
-        Joi.validate('foo', schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
-
-        Joi.validate('', schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
-
-        Joi.validate('foobar', schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
+        t.ok(schema.validate('foo').error, 'error');
+        t.ok(schema.validate('').error, 'error');
+        t.ok(!schema.validate('foobar').error, 'no error');
     });
-    
+
     t.test('string length', function (t) {
         t.plan(3);
 
@@ -302,17 +195,9 @@ Test('types', function (t) {
             'maxLength': 4
         });
 
-        Joi.validate('f', schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
-
-        Joi.validate('foobar', schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
-
-        Joi.validate('foo', schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
+        t.ok(schema.validate('f').error, 'error');
+        t.ok(schema.validate('foobar').error, 'error');
+        t.ok(!schema.validate('foo').error, 'no error');
     });
 
     t.test('string email', function (t) {
@@ -324,18 +209,9 @@ Test('types', function (t) {
             'maxLength': 20
         });
 
-        Joi.validate('', schema, function (error, value) {
-            t.ok(error, "empty string.");
-        });
-
-        Joi.validate('wrongemail', schema, function (error, value) {
-            t.ok(error, "wrong email error.");
-        });
-
-        Joi.validate('right@email.com', schema, function (error, value) {
-            t.ok(!error, "good email.");
-        });
-
+        t.ok(schema.validate('').error, 'empty string');
+        t.ok(schema.validate('wrongemail').error, 'wrong email error');
+        t.ok(!schema.validate('right@email.com').error, 'good email');
     });
 
     t.test('string date RFC3339', function (t) {
@@ -360,16 +236,12 @@ Test('types', function (t) {
 
         // Valid values
         validDateValues.forEach((time) => {
-            Joi.validate(time, schema, function (error, value) {
-                t.ok(!error, time + ' should be valid');
-            });
+            t.ok(!schema.validate(time).error, 'should be valid');
         });
 
         // Invalid values
         invalidDateValues.forEach((time) => {
-            Joi.validate(time, schema, function (error, value) {
-                t.ok(error, time + ' should be invalid');
-            });
+            t.ok(schema.validate(time).error, time + ' should be invalid');
         });
     });
 
@@ -403,16 +275,12 @@ Test('types', function (t) {
 
         // Valid values
         validTimeValues.forEach((time) => {
-            Joi.validate(time, schema, function (error, value) {
-                t.ok(!error, time + ' should be valid');
-            });
+            t.ok(!schema.validate(time).error, time + ' should be valid');
         });
 
         // Invalid values
         invalidTimeValues.forEach((time) => {
-            Joi.validate(time, schema, function (error, value) {
-                t.ok(error, time + ' should be invalid');
-            });
+            t.ok(schema.validate(time).error, time + ' should be invalid');
         });
     });
 
@@ -444,16 +312,12 @@ Test('types', function (t) {
 
         // Valid values
         validDateTimeValues.forEach((time) => {
-            Joi.validate(time, schema, function (error, value) {
-                t.ok(!error, time + ' should be valid');
-            });
+            t.ok(!schema.validate(time).error, time + ' should be valid');
         });
 
         // Invalid values
         invalidDateTimeValues.forEach((time) => {
-            Joi.validate(time, schema, function (error, value) {
-                t.ok(error, time + ' should be invalid');
-            });
+            t.ok(schema.validate(time).error, time + ' should be invalid');
         });
     });
 
@@ -465,18 +329,9 @@ Test('types', function (t) {
             'format': 'hostname'
         });
 
-        Joi.validate('', schema, function (error, value) {
-            t.ok(error, "empty string.");
-        });
-
-        Joi.validate('not@host', schema, function (error, value) {
-            t.ok(error, "bad host error.");
-        });
-
-        Joi.validate('isahost.com', schema, function (error, value) {
-            t.ok(!error, "good host.");
-        });
-
+        t.ok(schema.validate('').error, "empty string.");
+        t.ok(schema.validate('not@host').error, "bad host error.");
+        t.ok(!schema.validate('isahost.com').error, "good host.");
     });
 
     t.test('string ipv4', function (t) {
@@ -487,18 +342,9 @@ Test('types', function (t) {
             'format': 'ipv4'
         });
 
-        Joi.validate('', schema, function (error, value) {
-            t.ok(error, "empty string.");
-        });
-
-        Joi.validate('asdf', schema, function (error, value) {
-            t.ok(error, "bad ipv4 error.");
-        });
-
-        Joi.validate('127.0.0.1', schema, function (error, value) {
-            t.ok(!error, "good ipv4.");
-        });
-
+        t.ok(schema.validate('').error, "empty string.");
+        t.ok(schema.validate('asdf').error, "bad ipv4 error.");
+        t.ok(!schema.validate('127.0.0.1').error, "good ipv4.");
     });
 
     t.test('string ipv6', function (t) {
@@ -509,18 +355,9 @@ Test('types', function (t) {
             'format': 'ipv6'
         });
 
-        Joi.validate('', schema, function (error, value) {
-            t.ok(error, "empty string.");
-        });
-        
-        Joi.validate('asdf', schema, function (error, value) {
-            t.ok(error, "bad ipv6 error.");
-        });
-
-        Joi.validate('::1', schema, function (error, value) {
-            t.ok(!error, "good ipv6.");
-        });
-
+        t.ok(schema.validate('').error, "empty string.");
+        t.ok(schema.validate('asdf').error, "bad ipv6 error.");
+        t.ok(!schema.validate('::1').error, "good ipv6.");
     });
 
     t.test('string uri', function (t) {
@@ -531,18 +368,9 @@ Test('types', function (t) {
             'format': 'uri'
         });
 
-        Joi.validate('', schema, function (error, value) {
-            t.ok(error, "empty string.");
-        });
-        
-        Joi.validate('asdf', schema, function (error, value) {
-            t.ok(error, "bad uri error.");
-        });
-
-        Joi.validate('http://example.com', schema, function (error, value) {
-            t.ok(!error, "good uri.");
-        });
-
+        t.ok(schema.validate('').error, "empty string.");
+        t.ok(schema.validate('asdf').error, "bad uri error.");
+        t.ok(!schema.validate('http://example.com').error, "good uri.");
     });
 
     t.test('string binary', function (t) {
@@ -553,13 +381,8 @@ Test('types', function (t) {
             format: 'binary'
         });
 
-        Joi.validate(new Buffer('hello'), schema, function (error) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate([1, 2, 3, 4], schema, function (error) {
-            t.ok(error, 'error.');
-        });
+        t.ok(!schema.validate(new Buffer('hello')).error, 'no error.');
+        t.ok(schema.validate([1, 2, 3, 4]).error, 'error.');
     });
 
     t.test('string binary min/max', function (t) {
@@ -572,17 +395,9 @@ Test('types', function (t) {
             maxLength: 4
         });
 
-        Joi.validate(new Buffer('hello'), schema, function (error) {
-            t.ok(error, 'error.');
-        });
-
-        Joi.validate(new Buffer('h'), schema, function (error) {
-            t.ok(error, 'error.');
-        });
-
-        Joi.validate(new Buffer('hell'), schema, function (error) {
-            t.ok(!error, 'no error.');
-        });
+        t.ok(schema.validate(new Buffer('hello')).error, 'error.');
+        t.ok(schema.validate(new Buffer('h')).error, 'error.');
+        t.ok(!schema.validate(new Buffer('hell')).error, 'no error.');
     });
 
     t.test('string byte', function (t) {
@@ -593,13 +408,8 @@ Test('types', function (t) {
             format: 'byte'
         });
 
-        Joi.validate('U3dhZ2dlciByb2Nrcw==', schema, function (error) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate('hello', schema, function (error) {
-            t.ok(error, 'error.');
-        });
+        t.ok(!schema.validate('U3dhZ2dlciByb2Nrcw==').error, 'no error.');
+        t.ok(schema.validate('hello').error, 'error.');
     });
 
     t.test('string uuid', function (t) {
@@ -609,18 +419,10 @@ Test('types', function (t) {
             type: 'string',
             format: 'uuid'
         });
-        
-        Joi.validate('36c6e954-3c0a-4fbf-a4cd-6993ffe3bdd2', schema, function (error) {
-            t.ok(!error, 'no error.');
-        });
 
-        Joi.validate('', schema, function (error, value) {
-            t.ok(error, "empty string.");
-        });
-        
-        Joi.validate('not a uuid', schema, function (error) {
-            t.ok(error, 'error.');
-        });
+        t.ok(!schema.validate('36c6e954-3c0a-4fbf-a4cd-6993ffe3bdd2').error, 'no error.');
+        t.ok(schema.validate('').error, 'empty string.');
+        t.ok(schema.validate('not a uuid').error, 'error.');
     });
 
     t.test('string guid', function (t) {
@@ -631,17 +433,9 @@ Test('types', function (t) {
             format: 'guid'
         });
 
-        Joi.validate('36c6e954-3c0a-4fbf-a4cd-6993ffe3bdd2', schema, function (error) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate('', schema, function (error, value) {
-            t.ok(error, "empty string.");
-        });
-        
-        Joi.validate('not a uuid', schema, function (error) {
-            t.ok(error, 'error.');
-        });
+        t.ok(!schema.validate('36c6e954-3c0a-4fbf-a4cd-6993ffe3bdd2').error, 'no error.');
+        t.ok(schema.validate('').error, 'empty string.');
+        t.ok(schema.validate('not a uuid').error, 'error.');
     });
 
     t.test('no type, ref, or enum validates anything.', function (t) {
@@ -651,26 +445,16 @@ Test('types', function (t) {
             'description': 'something'
         });
 
-        Joi.validate('A', schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate({ 'A': 'a' }, schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate([1, 2, 3], schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
+        t.ok(!schema.validate('A').error, 'no error.');
+        t.ok(!schema.validate({ 'A': 'a' }).error, 'no error.');
+        t.ok(!schema.validate([1, 2, 3]).error, 'no error.');
     });
 
     t.test('shorthand type', function (t) {
         t.plan(1);
 
         const schema = Enjoi.schema('string');
-        Joi.validate('A', schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
+        t.ok(!schema.validate('A').error, 'no error.');
     });
 
 
@@ -684,9 +468,7 @@ Test('types', function (t) {
             }
         });
 
-        Joi.validate({ name: 'test' }, schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
+        t.ok(!schema.validate({ name: 'test' }).error, 'no error.');
     });
 
     t.test('enum', function (t) {
@@ -696,30 +478,17 @@ Test('types', function (t) {
             'enum': ['A', 'B']
         });
 
-        Joi.validate('A', schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate('B', schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate('C', schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
+        t.ok(!schema.validate('A').error, 'no error.');
+        t.ok(!schema.validate('B').error, 'no error.');
+        t.ok(schema.validate('C').error, 'error.');
 
         schema = Enjoi.schema({
             type: 'string',
             'enum': ['A', 'B']
         });
 
-        Joi.validate('B', schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate('C', schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
+        t.ok(!schema.validate('B').error, 'no error.');
+        t.ok(schema.validate('C').error, 'error.');
     });
 
     t.test('unknown type fails', function (t) {
@@ -739,17 +508,9 @@ Test('types', function (t) {
             'type': ['boolean', 'string']
         });
 
-        Joi.validate(10, schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
-
-        Joi.validate(true, schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate('true', schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
+        t.ok(schema.validate(10).error, 'error.');
+        t.ok(!schema.validate(true).error, 'no error.');
+        t.ok(!schema.validate('true').error, 'no error.');
     });
 
     t.test('array for type with null support', function (t) {
@@ -759,17 +520,9 @@ Test('types', function (t) {
             'type': ['string', 'null']
         });
 
-        Joi.validate('test', schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate(null, schema, function (error, value) {
-            t.ok(!error, 'no error.');
-        });
-
-        Joi.validate(false, schema, function (error, value) {
-            t.ok(error, 'error.');
-        });
+        t.ok(!schema.validate('test').error, 'no error.');
+        t.ok(!schema.validate(null).error, 'no error.');
+        t.ok(schema.validate(false).error, 'error.');
     });
 
 });

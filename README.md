@@ -55,7 +55,7 @@ const schema = Enjoi.schema({
     'required': ['firstName', 'lastName']
 });
 
-Joi.validate({firstName: 'John', lastName: 'Doe', age: 45}, schema, function (error, value) {
+schema.validate({firstName: 'John', lastName: 'Doe', age: 45}, schema, function (error, value) {
     error && console.log(error);
 });
 ```
