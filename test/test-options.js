@@ -18,6 +18,7 @@ Test('options features', function (t) {
                         if (format === 'binary') {
                             return 'binary'
                         }
+                        break;
                     }
                     default:
                         return type;
