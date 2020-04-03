@@ -15,11 +15,11 @@ const optionsSchema = Joi.object({
 });
 
 const validate = function (schema, options = {}) {
-    const validateOptions = Joi.validate(options, optionsSchema);
+    const validateOptions = optionsSchema.validate(options);
 
     Hoek.assert(!validateOptions.error, validateOptions.error);
 
-    const validateSchema = Joi.validate(schema, schemaSchema);
+    const validateSchema = schemaSchema.validate(schema);
 
     Hoek.assert(!validateSchema.error, validateSchema.error);
 

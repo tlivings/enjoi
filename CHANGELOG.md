@@ -1,5 +1,9 @@
 
 
+### 6.0.2
+
+* Correct usage of @hapi/joi `validate` function. joiSchema.validate(obj) instead of Joi.validate(obj, joiSchema).
+
 ### 6.0.1
 
 * #83 differentiate between undefined and falsy
