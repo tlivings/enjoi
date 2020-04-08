@@ -20,9 +20,9 @@ Please file issues for other unsupported features.
     - `schema` - a JSON schema or a string type representation (such as `'integer'`).
     - `options` - an (optional) object of additional options such as `subSchemas` and custom `types`.
 - `enjoi.defaults(options)` - configure defaults `options` to be used with all `enjoi.schema` calls. `enjoi.schema` options passed will always override defaults set here.
-       
+
 ### Options
-        
+
 - `subSchemas` - an (optional) object with keys representing schema ids, and values representing schemas.
 - `types` - an (optional) object  with keys representing type names and values representing a Joi type. Values can also be functions that are expected to return Joi types. These functions have a context bound to the Joi being used by Enjoi and a single argument, `schema`, which represents the current schema being evaluated.
 - `refineType(type, format)` - an (optional) function to call to apply to type based on the type and format of the JSON schema.
@@ -32,7 +32,7 @@ Please file issues for other unsupported features.
 Example:
 
 ```javascript
-const Joi = require('joi');
+const Joi = require('@hapi/joi');
 const Enjoi = require('enjoi');
 
 const schema = Enjoi.schema({
@@ -55,9 +55,7 @@ const schema = Enjoi.schema({
     'required': ['firstName', 'lastName']
 });
 
-schema.validate({firstName: 'John', lastName: 'Doe', age: 45}, schema, function (error, value) {
-    error && console.log(error);
-});
+const { error, value } = schema.validate({firstName: 'John', lastName: 'Doe', age: 45});
 ```
 
 ### Sub Schemas
