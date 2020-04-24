@@ -1,7 +1,6 @@
 
 const Test = require('tape');
 const Enjoi = require('../index');
-const Joi = require('@hapi/joi');
 
 Test('directives', function (t) {
     t.test('anyOf', function (t) {
@@ -18,9 +17,9 @@ Test('directives', function (t) {
             ]
         });
 
-            t.ok(schema.validate('string').value, 'no error')
-            t.ok(schema.validate(10).value, 'no error');
-            t.ok(schema.validate({}).error, 'error');
+        t.ok(schema.validate('string').value, 'no error')
+        t.ok(schema.validate(10).value, 'no error');
+        t.ok(schema.validate({}).error, 'error');
     });
 
     t.test('oneOf', function (t) {
@@ -47,15 +46,15 @@ Test('directives', function (t) {
             ]
         });
 
-            t.ok(schema.validate({ a: 'string' }).value, 'no error');
-            t.ok(schema.validate({}).value, 'no error');
-            t.ok(!schema.validate(undefined).value, 'no error');
-            t.ok(schema.validate({ b: 10 }).value, 'no error');
-            t.ok(schema.validate({ a: 'string', b: 10 }).error, 'error');
-            t.ok(schema.validate({ a: 'string', b: null }).error, 'error');
-            t.ok(schema.validate({ a: null, b: 10 }).error, 'error');
-            t.ok(schema.validate({ a: null, b: null }).error, 'error');
-            t.ok(schema.validate({ a: 'string', b: 'string' }).error, 'error');
+        t.ok(schema.validate({ a: 'string' }).value, 'no error');
+        t.ok(schema.validate({}).value, 'no error');
+        t.ok(!schema.validate(undefined).value, 'no error');
+        t.ok(schema.validate({ b: 10 }).value, 'no error');
+        t.ok(schema.validate({ a: 'string', b: 10 }).error, 'error');
+        t.ok(schema.validate({ a: 'string', b: null }).error, 'error');
+        t.ok(schema.validate({ a: null, b: 10 }).error, 'error');
+        t.ok(schema.validate({ a: null, b: null }).error, 'error');
+        t.ok(schema.validate({ a: 'string', b: 'string' }).error, 'error');
     });
 
     t.test('not', function (t) {
@@ -86,8 +85,8 @@ Test('directives', function (t) {
         t.ok(schema.validate({}).error, 'error');
         t.ok(schema.validate({ b: 10 }).error, 'error');
         t.deepEqual(schema.validate({ a: 'string', b: 10 }).value, { a: 'string', b: 10 }, 'no error');
-        t.deepEqual(schema.validate({ a: 'string', b: null }).value, {a: 'string', b: null}, 'no error');
-        t.deepEqual(schema.validate({ a: null, b: 10 }).value, {a: null, b: 10}, 'no error');
+        t.deepEqual(schema.validate({ a: 'string', b: null }).value, { a: 'string', b: null }, 'no error');
+        t.deepEqual(schema.validate({ a: null, b: 10 }).value, { a: null, b: 10 }, 'no error');
         t.deepEqual(schema.validate({ a: null, b: null }).value, { a: null, b: null }, 'no error');
         t.deepEqual(schema.validate({ a: 'string', b: 'string' }).value, { a: 'string', b: 'string' }, 'no error');
     });
@@ -108,7 +107,7 @@ Test('directives', function (t) {
         schema.additionalProperties = false;
         t.ok(Enjoi.schema(schema).validate({ file: 'data', consumes: 'application/json' }).error, 'error');
         schema.additionalProperties = true;
-        t.deepEqual(Enjoi.schema(schema).validate({ file: 'data', consumes: 'application/json' }).value, { "file": "data", "consumes": "application/json"}, 'no error');
+        t.deepEqual(Enjoi.schema(schema).validate({ file: 'data', consumes: 'application/json' }).value, { "file": "data", "consumes": "application/json" }, 'no error');
         t.ok(Enjoi.schema(schema).validate({ file: 5, consumes: 'application/json' }).error, 'error');
     });
 
@@ -336,13 +335,16 @@ Test('allOf', function (t) {
         });
 
         t.ok(!schema.validate({ a: 'string', b: 10 }).error, 'no error');
-        t.equal(schema.validate({ a: 'string', b: 'string' }).error, '"b" must be a number', 'error');
+        const validation = schema.validate({ a: 'string', b: 'string' });
+        t.equal(validation.error.name, 'ValidationError', 'error');
+        t.equal(validation.error.message, '"b" must be a number', 'error');
     });
 
-    t.test('allOf array with conflicting needs', function (t) {
+    t.test('allOf array with different types', function (t) {
         t.plan(1);
 
-        //This should never validate due to all criteria being required to pass
+        // This validates because array elements can be of different types and similar
+        // to an object where schemas are additive schemas are additive here too
         const schema = Enjoi.schema({
             'allOf': [
                 {
@@ -364,7 +366,33 @@ Test('allOf', function (t) {
             ]
         });
 
-        t.ok(schema.validate([ 'string', 10 ]).error, 'error.');
+        t.ok(!schema.validate(['string', 10]).error, 'error');
+    });
+
+    t.test('allOf object with conflicting requirements', function (t) {
+        t.plan(1);
+
+        // This does not resolve because of conflicting requirements
+        t.throws(() => Enjoi.schema({
+            'allOf': [
+                {
+                    type: 'object',
+                    properties: {
+                        a: {
+                            type: 'string'
+                        }
+                    }
+                },
+                {
+                    type: 'object',
+                    properties: {
+                        a: {
+                            type: 'number'
+                        }
+                    }
+                }
+            ]
+        }), 'exception');
     });
 
     t.test('allOf nested', function (t) {
@@ -395,9 +423,7 @@ Test('allOf', function (t) {
             ]
         });
 
-        t.ok(!schema.validate({ name: 'test', phoneCountryCode: 'US' }).error, 'no error.');
-        t.ok(schema.validate({ name: 'test' }).error, 'error.');
+        t.ok(!schema.validate({ name: 'test', phoneCountryCode: 'US' }).error, 'no error');
+        t.ok(schema.validate({ name: 'test' }).error, 'error');
     });
-
-    
 });
