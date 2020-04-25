@@ -154,8 +154,9 @@ Test('directives', function (t) {
             type: 'file'
         },
             {
-                types: {
-                    file: Enjoi.schema({
+                extensions: [{
+                    type: 'file',
+                    base: Enjoi.schema({
                         type: 'object',
                         additionalProperties: false,
                         properties: {
@@ -164,7 +165,7 @@ Test('directives', function (t) {
                             }
                         }
                     })
-                }
+                }]
             });
 
         t.ok(schema.validate({ file: 'data', consumes: 'application/json' }).error, 'error');
@@ -177,8 +178,9 @@ Test('directives', function (t) {
             type: 'file'
         },
             {
-                types: {
-                    file: Enjoi.schema({
+                extensions: [{
+                    type: 'file',
+                    base: Enjoi.schema({
                         type: 'object',
                         additionalProperties: true,
                         properties: {
@@ -187,7 +189,7 @@ Test('directives', function (t) {
                             }
                         }
                     })
-                }
+                }]
             });
 
         t.ok(!schema.validate({ file: 'data', consumes: 'application/json' }).error, 'no error');
@@ -200,8 +202,9 @@ Test('directives', function (t) {
             type: 'file'
         },
             {
-                types: {
-                    file: Enjoi.schema({
+                extensions: [{
+                    type: 'file',
+                    base: Enjoi.schema({
                         type: 'object',
                         additionalProperties: true,
                         properties: {
@@ -210,7 +213,7 @@ Test('directives', function (t) {
                             }
                         }
                     })
-                }
+                }]
             });
 
         t.ok(schema.validate({ file: 5, consumes: 'application/json' }).error, 'error');
@@ -223,8 +226,9 @@ Test('directives', function (t) {
             type: 'file'
         },
             {
-                types: {
-                    file: Enjoi.schema({
+                extensions: [{
+                    type: 'file',
+                    base: Enjoi.schema({
                         type: 'object',
                         additionalProperties: {
                             type: 'string'
@@ -235,7 +239,7 @@ Test('directives', function (t) {
                             }
                         }
                     })
-                }
+                }]
             });
 
         t.ok(!schema.validate({ file: 'asdf', consumes: 'application/json' }).error, 'no error');
@@ -248,8 +252,9 @@ Test('directives', function (t) {
             type: 'file'
         },
             {
-                types: {
-                    file: Enjoi.schema({
+                extensions: [{
+                    type: 'file',
+                    base: Enjoi.schema({
                         type: 'object',
                         additionalProperties: {
                             type: 'string'
@@ -260,7 +265,7 @@ Test('directives', function (t) {
                             }
                         }
                     })
-                }
+                }]
             });
 
         t.ok(schema.validate({ file: 'asdf', consumes: 5 }).error, 'error');

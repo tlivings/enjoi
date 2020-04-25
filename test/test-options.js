@@ -24,9 +24,10 @@ Test('options features', function (t) {
                         return type;
                 }
             },
-            types: {
-                binary: Joi.binary().encoding('base64')
-            }
+            extensions: [{
+                type: 'binary',
+                base: Joi.binary().encoding('base64')
+            }]
         });
         let result = schema.validate('aGVsbG8=');
         t.ok(!result.error, 'no error');
@@ -37,31 +38,39 @@ Test('options features', function (t) {
         t.plan(2);
 
         const schema = Enjoi.schema({
-            type: 'custom'
+            type: 'test'
         }, {
-                types: {
-                    custom: Joi.string()
-                }
-            });
+            extensions: [{
+                type: 'test',
+                base: Joi.string()
+            }]
+        });
 
         t.ok(!schema.validate('string').error);
         t.ok(schema.validate(10).error);
     });
 
     t.test('type function', function (t) {
-        t.plan(1);
+        t.plan(3);
 
-        const schema = Enjoi.schema({
+        const schemaDesc = {
             type: 'test',
             'x-value': 'example'
-        }, {
-            types: {
-                test(schema) {
-                    return this.string().allow(schema['x-value']);
+        };
+        const schema = Enjoi.schema(schemaDesc, {
+            extensions: [{
+                type: 'test',
+                validate(value, helpers) {
+                    const validation = Joi.string().max(3).allow(schemaDesc['x-value']).validate(value);
+                    if (validation.error) {
+                        return { value, errors: validation.error };
+                    }
                 }
-            }
+            }]
         });
 
+        t.ok(schema.validate('test').error);
+        t.ok(!schema.validate('abc').error);
         t.ok(!schema.validate('example').error);
     });
 
@@ -70,22 +79,24 @@ Test('options features', function (t) {
 
         const schema = Enjoi.schema({
             type: 'file'
-        }, {
-            types: {
-                file: Enjoi.schema({
-                    type: 'object',
-                    properties: {
-                        file: {
-                            type: 'string'
-                        },
-                        consumes: {
-                            type: 'string',
-                            pattern: /multipart\/form-data/
+        },
+            {
+                extensions: [{
+                    type: 'file',
+                    base: Enjoi.schema({
+                        type: 'object',
+                        properties: {
+                            file: {
+                                type: 'string'
+                            },
+                            consumes: {
+                                type: 'string',
+                                pattern: /multipart\/form-data/
+                            }
                         }
-                    }
-                })
-            }
-        });
+                    })
+                }]
+            });
 
         t.ok(!schema.validate({ file: 'data', consumes: 'multipart/form-data' }).error);
         t.ok(schema.validate({ file: 'data', consumes: 'application/json' }).error);
@@ -157,25 +168,19 @@ Test('extensions', function (t) {
     }, {
         extensions: [
             {
-                name: 'string',
-                language: {
-                    foo: 'needs to be \'foobar\''
-                },
-                rules: [{
-                    name: 'foo',
-                    validate(params, value, state, options) {
-                        return value === 'foobar' || this.createError('string.foo', null, state, options);
+                type: 'foo',
+                validate(value, helpers) {
+                    if (value !== 'foobar') {
+                        return { value, errors: helpers.error('foo.bar') };
                     }
-                }]
+                },
+                messages: {
+                    'foo.bar': '{#label} needs to be \'foobar\''
+                }
             }
-        ],
-        types: {
-            foo() {
-                return this.string().foo();
-            }
-        }
+        ]
     });
 
-    t.ok(!schema.validate('foobar').error);
     t.ok(schema.validate('foo').error);
+    t.ok(!schema.validate('foobar').error);
 });

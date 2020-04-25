@@ -77,9 +77,10 @@ Test('enjoi defaults', function (t) {
         t.plan(1);
 
         const enjoi = Enjoi.defaults({
-            types: {
-                test: Joi.string()
-            }
+            extensions: [{
+                    type: 'test',
+                    base: Joi.string()
+                }]
         });
 
         const schema = enjoi.schema({
@@ -93,24 +94,26 @@ Test('enjoi defaults', function (t) {
         t.plan(1);
 
         const enjoi = Enjoi.defaults({
-            types: {
-                test: Joi.string()
-            }
+            extensions: [{
+                type: 'test',
+                base: Joi.string()
+            }]
         });
 
         const schema = enjoi.schema({
             type: 'test'
         }, {
-            types: {
-                test: Joi.number()
-            }
+            extensions: [{
+                type: 'test',
+                base: Joi.number()
+            }]
         });
 
         t.ok(schema.validate('string').error, 'error');
     });
 });
 
-Test.only('enjoi extensions', function (t) {
+Test('enjoi extensions', function (t) {
     t.test('overrides extensions', function (t) {
         t.plan(5);
 
