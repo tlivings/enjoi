@@ -1,4 +1,3 @@
-
 const Test = require('tape');
 const Enjoi = require('../index');
 

@@ -108,58 +108,63 @@ Test('enjoi defaults', function (t) {
 
         t.ok(schema.validate('string').error, 'error');
     });
+});
 
+Test.only('enjoi extensions', function (t) {
     t.test('overrides extensions', function (t) {
-        t.plan(2);
+        t.plan(5);
 
         const enjoi = Enjoi.defaults({
             extensions: [
                 {
-                    name: 'string',
-                    language: {
-                        foo: 'needs to be \'foobar\''
-                    },
-                    rules: [{
-                        name: 'foo',
-                        validate(params, value, state, options) {
-                            return value === 'foobar' || this.createError('string.foo', null, state, options);
+                    type: 'special',
+                    base: Joi.string(),
+                    rules: {
+                        hello: {
+                            validate(value, helpers, args, options) {
+
+                                if (value === 'hello') {
+                                    return value;
+                                }
+
+                                return helpers.error('special.hello');
+                            }
                         }
-                    }]
+                    },
+                    messages: {
+                        'special.hello': '{{#label}} must say hello'
+                    }
                 }
-            ],
-            types: {
-                foo() {
-                    return this.string().foo();
-                }
-            }
+            ]
         });
 
-        const schema = enjoi.schema({
-            type: 'baz'
-        }, {
-            extensions: [
-                {
-                    name: 'string',
-                    language: {
-                        baz: 'needs to be \'foobaz\''
-                    },
-                    rules: [{
-                        name: 'baz',
-                        validate(params, value, state, options) {
-                            return value === 'foobaz' || this.createError('string.baz', null, state, options);
+        const options = {
+            extensions: [{
+                type: 'foobar',
+                rules: {
+                    foo: {
+                        validate(value, helpers, args, options) {
+                            return null;
                         }
-                    }]
+                    },
+                    bar: {
+                        validate(value, helpers, args, options) {
+                            return helpers.error('special.bar');
+                        }
+                    }
+                },
+                messages: {
+                    'special.bar': '{#label} oh no bar !'
                 }
-            ],
-            types: {
-                baz() {
-                    return this.string().baz();
-                }
-            }
-        });
+            }]
+        };
 
-        t.ok(!enjoi.schema({ type: 'foo' }).validate('foobar').error, 'no error');
-        t.ok(!schema.validate('foobaz').error, 'no error');
+        t.ok(!enjoi.schema({ type: 'special' }, options).hello().validate('hello').error, 'no error');
+        t.ok(enjoi.schema({ type: 'special' }, options).hello().validate('greetings').error, 'error');
+        t.throws(() => enjoi.schema({ type: 'foo' }, options), 'exception');
+
+        t.ok(!enjoi.schema({ type: 'foobar' }, options).foo().validate('hello').error, 'no error');
+        t.ok(enjoi.schema({ type: 'foobar' }, options).bar().validate('greetings').error, 'error');
     });
 
 });
