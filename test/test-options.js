@@ -161,26 +161,95 @@ Test('options features', function (t) {
 });
 
 Test('extensions', function (t) {
-    t.plan(2);
+    t.test('base', function (t) {
+        t.plan(2);
 
-    const schema = Enjoi.schema({
-        'type': 'foo'
-    }, {
-        extensions: [
-            {
-                type: 'foo',
+        const schema = Enjoi.schema({
+            type: 'thing'
+        }, {
+            extensions: [{
+                type: 'thing',
+                base: Joi.any()
+            }]
+        });
+
+        t.ok(!schema.validate('foo').error);
+        t.ok(!schema.validate('foobar').error);
+    });
+
+    t.test('function', function (t) {
+        t.plan(2);
+
+        const schema = Enjoi.schema({
+            type: 'thing'
+        }, {
+            extensions: [{
+                type: 'thing',
                 validate(value, helpers) {
                     if (value !== 'foobar') {
-                        return { value, errors: helpers.error('foo.bar') };
+                        return { value, errors: helpers.error('thing.foobar') };
                     }
                 },
                 messages: {
-                    'foo.bar': '{#label} needs to be \'foobar\''
+                    'thing.foobar': '{#label} must be \'foobar\''
                 }
-            }
-        ]
+            }]
+        });
+
+        t.ok(schema.validate('foo').error);
+        t.ok(!schema.validate('foobar').error);
     });
 
-    t.ok(schema.validate('foo').error);
-    t.ok(!schema.validate('foobar').error);
+    t.test('refineType', function (t) {
+        t.plan(2);
+
+        const schema = Enjoi.schema({
+            type: 'string',
+            format: 'email'
+        }, {
+            extensions: [{
+                type: 'email',
+                base: Joi.string().email()
+            }],
+            refineType(type, format) {
+                if (type === 'string' && format === 'email') {
+                    return 'email';
+                }
+            }
+        });
+
+        t.ok(!schema.validate('root@example.org').error);
+        t.ok(schema.validate('foobar').error);
+    })  
+    
+    t.test('function and refineType', function (t) {
+        t.plan(3);
+
+        const schemaDesc = {
+            type: 'string',
+            format: 'email',
+            'x-test': true
+        }
+        const schema = Enjoi.schema(schemaDesc, {
+            extensions: [{
+                type: 'email',
+                validate(value, helpers) {
+                    const validator = schemaDesc['x-test'] ? Joi.string().email().equal('test@example.com') : Joi.string().email();
+                    const validation = validator.validate(value);
+                    if (validation.error) {
+                        return { value, errors: validation.error };
+                    }
+                }
+            }],
+            refineType(type, format) {
+                if (type === 'string' && format === 'email') {
+                    return 'email';
+                }
+            }
+        });
+
+        t.ok(schema.validate('root@example.org').error);
+        t.ok(!schema.validate('test@example.com').error);
+        t.ok(schema.validate('foobar').error);
+    })   
 });
