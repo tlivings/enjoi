@@ -13,11 +13,9 @@ Test('types', function (t) {
             'minProperties': 1
         });
 
-        t.ok(!schema.validate({ a: 'a', b: 'b' }).error, 'no error.');
-
-        t.ok(schema.validate({ a: 'a', b: 'b', c: 'c' }).error, 'error.');
-
-        t.ok(schema.validate({}).error, 'error.');
+        t.ok(!schema.validate({ a: 'a', b: 'b' }).error, 'no error');
+        t.ok(schema.validate({ a: 'a', b: 'b', c: 'c' }).error, 'error');
+        t.ok(schema.validate({}).error, 'error');
     });
 
     t.test('arrays and numbers', function (t) {
@@ -32,9 +30,8 @@ Test('types', function (t) {
             'minItems': 0
         });
 
-        t.ok(!schema.validate([1, 2]).error, 'no error.');
-
-        t.ok(schema.validate([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]).error, 'error.');
+        t.ok(!schema.validate([1, 2]).error, 'no error');
+        t.ok(schema.validate([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]).error, 'error');
     });
 
     t.test('arrays with specific item type assignment', function (t) {
@@ -51,19 +48,13 @@ Test('types', function (t) {
             ],
         });
 
-        t.ok(!schema.validate([1, 'abc']).error, 'no error.');
-
-        t.ok(!schema.validate([0, 1]).error, 'no error.');
-
-        t.ok(!schema.validate(['abc', 'def']).error, 'no error.');
-
-        t.ok(!schema.validate([1]).error, 'no error.');
-
-        t.ok(!schema.validate(['abc']).error, 'no error.');
-
-        t.ok(!schema.validate([]).error, 'no error.');
-
-        t.ok(schema.validate([{ foo: 'bar' }]).error, 'error.');
+        t.ok(!schema.validate([1, 'abc']).error, 'no error');
+        t.ok(!schema.validate([0, 1]).error, 'no error');
+        t.ok(!schema.validate(['abc', 'def']).error, 'no error');
+        t.ok(!schema.validate([1]).error, 'no error');
+        t.ok(!schema.validate(['abc']).error, 'no error');
+        t.ok(!schema.validate([]).error, 'no error');
+        t.ok(schema.validate([{ foo: 'bar' }]).error, 'error');
     });
 
     t.test('arrays with ordered item assignment', function (t) {
@@ -80,21 +71,14 @@ Test('types', function (t) {
             ],
         });
 
-        t.ok(!schema.validate([1, 'abc']).error, 'no error.');
-
-        t.ok(!schema.validate([]).error, 'no error.');
-
-        t.ok(schema.validate([0, 1]).error, 'error.');
-
-        t.ok(schema.validate(['abc', 'def']).error, 'error.');
-
-        t.ok(!schema.validate([1]).error, 'no error.');
-
-        t.ok(schema.validate(['abc']).error, 'error.');
-
-        t.ok(schema.validate([{ foo: 'bar' }]).error, 'error.');
-
-        t.ok(schema.validate([1, 'abc', 'def']).error, 'error.');
+        t.ok(!schema.validate([1, 'abc']).error, 'no error');
+        t.ok(!schema.validate([]).error, 'no error');
+        t.ok(schema.validate([0, 1]).error, 'error');
+        t.ok(schema.validate(['abc', 'def']).error, 'error');
+        t.ok(!schema.validate([1]).error, 'no error');
+        t.ok(schema.validate(['abc']).error, 'error');
+        t.ok(schema.validate([{ foo: 'bar' }]).error, 'error');
+        t.ok(schema.validate([1, 'abc', 'def']).error, 'error');
     });
 
     t.test('arrays and refs', function (t) {
@@ -117,9 +101,8 @@ Test('types', function (t) {
             }
         });
 
-        t.ok(!schema.validate([1, 2]).error, 'no error.');
-
-        t.ok(schema.validate([1, 3]).error, 'error.');
+        t.ok(!schema.validate([1, 2]).error, 'no error');
+        t.ok(schema.validate([1, 3]).error, 'error');
     });
 
     t.test('number exclusiveMinimum exclusiveMaximum', function (t) {
@@ -131,11 +114,9 @@ Test('types', function (t) {
             'exclusiveMaximum': 2,
         });
 
-        t.ok(schema.validate(0).error, 'error.');
-
-        t.ok(!schema.validate(1).error, 'no error.');
-
-        t.ok(schema.validate(2).error, 'error.');
+        t.ok(schema.validate(0).error, 'error');
+        t.ok(!schema.validate(1).error, 'no error');
+        t.ok(schema.validate(2).error, 'error');
     });
 
     t.test('number multipleOf', function (t) {
@@ -146,11 +127,9 @@ Test('types', function (t) {
             'multipleOf': 1.5,
         });
 
-        t.ok(schema.validate(4).error, 'error.');
-
-        t.ok(!schema.validate(4.5).error, 'no error.');
-
-        t.ok(!schema.validate(0).error, 'no error.');
+        t.ok(schema.validate(4).error, 'error');
+        t.ok(!schema.validate(4.5).error, 'no error');
+        t.ok(!schema.validate(0).error, 'no error');
     });
 
     t.test('arrays and unique', function (t) {
@@ -164,9 +143,8 @@ Test('types', function (t) {
             'uniqueItems': true
         });
 
-        t.ok(!schema.validate([1, 2]).error, 'no error.');
-
-        t.ok(schema.validate([1, 1]).error, 'error.');
+        t.ok(!schema.validate([1, 2]).error, 'no error');
+        t.ok(schema.validate([1, 1]).error, 'error');
     });
 
     t.test('boolean', function (t) {
@@ -176,11 +154,9 @@ Test('types', function (t) {
             'type': 'boolean'
         });
 
-        t.ok(schema.validate('1').error, 'error.');
-
-        t.ok(!schema.validate('true').error, 'no error.');
-
-        t.ok(!schema.validate(true).error, 'no error.');
+        t.ok(schema.validate('1').error, 'error');
+        t.ok(!schema.validate('true').error, 'no error');
+        t.ok(!schema.validate(true).error, 'no error');
     });
 
     t.test('boolean strictMode', function (t) {
@@ -192,11 +168,9 @@ Test('types', function (t) {
             strictMode: true
         });
 
-        t.ok(schema.validate('1').error, 'error.');
-
-        t.ok(schema.validate('true').error, 'error in strictMode.');
-
-        t.ok(!schema.validate(true).error, 'no error.');
+        t.ok(schema.validate('1').error, 'error');
+        t.ok(schema.validate('true').error, 'error in strictMode');
+        t.ok(!schema.validate(true).error, 'no error');
     });
 
     t.test('string regex', function (t) {
@@ -207,11 +181,9 @@ Test('types', function (t) {
             'pattern': /foobar/
         });
 
-        t.ok(schema.validate('foo').error, 'error.');
-
-        t.ok(schema.validate('').error, 'error.');
-
-        t.ok(!schema.validate('foobar').error, 'no error.');
+        t.ok(schema.validate('foo').error, 'error');
+        t.ok(schema.validate('').error, 'error');
+        t.ok(!schema.validate('foobar').error, 'no error');
     });
 
     t.test('string length', function (t) {
@@ -223,11 +195,9 @@ Test('types', function (t) {
             'maxLength': 4
         });
 
-        t.ok(schema.validate('f').error, 'error.');
-
-        t.ok(schema.validate('foobar').error, 'error.');
-
-        t.ok(!schema.validate('foo').error, 'no error.');
+        t.ok(schema.validate('f').error, 'error');
+        t.ok(schema.validate('foobar').error, 'error');
+        t.ok(!schema.validate('foo').error, 'no error');
     });
 
     t.test('string email', function (t) {
@@ -239,12 +209,9 @@ Test('types', function (t) {
             'maxLength': 20
         });
 
-        t.ok(schema.validate('').error, "empty string.");
-
-        t.ok(schema.validate('wrongemail').error, "wrong email error.");
-
-        t.ok(!schema.validate('right@email.com').error, "good email.");
-
+        t.ok(schema.validate('').error, 'empty string');
+        t.ok(schema.validate('wrongemail').error, 'wrong email error');
+        t.ok(!schema.validate('right@email.com').error, 'good email');
     });
 
     t.test('string date RFC3339', function (t) {
@@ -269,7 +236,7 @@ Test('types', function (t) {
 
         // Valid values
         validDateValues.forEach((time) => {
-            t.ok(!schema.validate(time).error, time + ' should be valid');
+            t.ok(!schema.validate(time).error, 'should be valid');
         });
 
         // Invalid values
@@ -363,11 +330,8 @@ Test('types', function (t) {
         });
 
         t.ok(schema.validate('').error, "empty string.");
-
         t.ok(schema.validate('not@host').error, "bad host error.");
-
         t.ok(!schema.validate('isahost.com').error, "good host.");
-
     });
 
     t.test('string ipv4', function (t) {
@@ -379,9 +343,7 @@ Test('types', function (t) {
         });
 
         t.ok(schema.validate('').error, "empty string.");
-
         t.ok(schema.validate('asdf').error, "bad ipv4 error.");
-
         t.ok(!schema.validate('127.0.0.1').error, "good ipv4.");
     });
 
@@ -394,11 +356,8 @@ Test('types', function (t) {
         });
 
         t.ok(schema.validate('').error, "empty string.");
-
         t.ok(schema.validate('asdf').error, "bad ipv6 error.");
-
         t.ok(!schema.validate('::1').error, "good ipv6.");
-
     });
 
     t.test('string uri', function (t) {
@@ -410,11 +369,8 @@ Test('types', function (t) {
         });
 
         t.ok(schema.validate('').error, "empty string.");
-
         t.ok(schema.validate('asdf').error, "bad uri error.");
-
         t.ok(!schema.validate('http://example.com').error, "good uri.");
-
     });
 
     t.test('string binary', function (t) {
@@ -426,7 +382,6 @@ Test('types', function (t) {
         });
 
         t.ok(!schema.validate(new Buffer('hello')).error, 'no error.');
-
         t.ok(schema.validate([1, 2, 3, 4]).error, 'error.');
     });
 
@@ -441,9 +396,7 @@ Test('types', function (t) {
         });
 
         t.ok(schema.validate(new Buffer('hello')).error, 'error.');
-
         t.ok(schema.validate(new Buffer('h')).error, 'error.');
-
         t.ok(!schema.validate(new Buffer('hell')).error, 'no error.');
     });
 
@@ -456,7 +409,6 @@ Test('types', function (t) {
         });
 
         t.ok(!schema.validate('U3dhZ2dlciByb2Nrcw==').error, 'no error.');
-
         t.ok(schema.validate('hello').error, 'error.');
     });
 
@@ -469,9 +421,7 @@ Test('types', function (t) {
         });
 
         t.ok(!schema.validate('36c6e954-3c0a-4fbf-a4cd-6993ffe3bdd2').error, 'no error.');
-
-        t.ok(schema.validate('').error, "empty string.");
-
+        t.ok(schema.validate('').error, 'empty string.');
         t.ok(schema.validate('not a uuid').error, 'error.');
     });
 
@@ -484,9 +434,7 @@ Test('types', function (t) {
         });
 
         t.ok(!schema.validate('36c6e954-3c0a-4fbf-a4cd-6993ffe3bdd2').error, 'no error.');
-
-        t.ok(schema.validate('').error, "empty string.");
-
+        t.ok(schema.validate('').error, 'empty string.');
         t.ok(schema.validate('not a uuid').error, 'error.');
     });
 
@@ -498,9 +446,7 @@ Test('types', function (t) {
         });
 
         t.ok(!schema.validate('A').error, 'no error.');
-
         t.ok(!schema.validate({ 'A': 'a' }).error, 'no error.');
-
         t.ok(!schema.validate([1, 2, 3]).error, 'no error.');
     });
 
@@ -533,9 +479,7 @@ Test('types', function (t) {
         });
 
         t.ok(!schema.validate('A').error, 'no error.');
-
         t.ok(!schema.validate('B').error, 'no error.');
-
         t.ok(schema.validate('C').error, 'error.');
 
         schema = Enjoi.schema({
@@ -544,7 +488,6 @@ Test('types', function (t) {
         });
 
         t.ok(!schema.validate('B').error, 'no error.');
-
         t.ok(schema.validate('C').error, 'error.');
     });
 
@@ -566,9 +509,7 @@ Test('types', function (t) {
         });
 
         t.ok(schema.validate(10).error, 'error.');
-
         t.ok(!schema.validate(true).error, 'no error.');
-
         t.ok(!schema.validate('true').error, 'no error.');
     });
 
@@ -580,9 +521,7 @@ Test('types', function (t) {
         });
 
         t.ok(!schema.validate('test').error, 'no error.');
-
         t.ok(!schema.validate(null).error, 'no error.');
-
         t.ok(schema.validate(false).error, 'error.');
     });
 

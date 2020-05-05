@@ -51,15 +51,16 @@
   },
   "homepage": "https://github.com/tlivings/enjoi",
   "dependencies": {
-    "@hapi/hoek": "^6.0.0"
+    "@hapi/bourne": "^2.0.0",
+    "@hapi/hoek": "^9.0.3"
   },
   "peerDependencies": {
-    "@hapi/joi": "^14.0.0"
+    "@hapi/joi": "^17.1.0"
   },
   "devDependencies": {
-    "@hapi/joi": "^14.0.0",
-    "eslint": "^5.0.0",
+    "@hapi/joi": "^17.1.0",
+    "eslint": "^6.8.0",
     "nyc": "^15.0.0",
-    "tape": "^4.9.0"
+    "tape": "^5.0.0"
   }
 }

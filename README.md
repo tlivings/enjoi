@@ -24,7 +24,6 @@ Please file issues for other unsupported features.
 ### Options
 
 - `subSchemas` - an (optional) object with keys representing schema ids, and values representing schemas.
-- `types` - an (optional) object  with keys representing type names and values representing a Joi type. Values can also be functions that are expected to return Joi types. These functions have a context bound to the Joi being used by Enjoi and a single argument, `schema`, which represents the current schema being evaluated.
 - `refineType(type, format)` - an (optional) function to call to apply to type based on the type and format of the JSON schema.
 - `extensions` - an array of extensions to pass [joi.extend](https://github.com/hapijs/joi/blob/master/API.md#extendextension).
 - `strictMode` - make schemas `strict(value)` with a default value of `false`.
@@ -123,15 +122,16 @@ const schema = enjoi.schema({
 
 ### Custom Types
 
-Custom types can be provided through the `types` option.
+Custom types can be provided through the `extensions` option.
 
 ```javascript
 const schema = Enjoi.schema({
     type: 'thing'
 }, {
-    types: {
-        thing: Joi.any()
-    }
+    extensions: [{
+        type: 'thing',
+        base: Joi.any()
+    }]
 });
 ```
 
@@ -141,26 +141,33 @@ Also with functions.
 const schema = Enjoi.schema({
     type: 'thing'
 }, {
-    types: {
-        thing(/* schema */) {
-            return this.any();
+    extensions: [{
+        type: 'thing',
+        validate(value, helpers) {
+            if (value !== 'foobar') {
+                return { value, errors: helpers.error('thing.foobar') };
+            }
+        },
+        messages: {
+            'thing.foobar': '{#label} must be \'foobar\''
         }
-    }
+    }]
 });
 ```
 
 ### Refine Type
 
-You can use the refine type function to help refine types based on `type` and `format`. This will allow transforming a type for lookup against the custom `types`.
+You can use the refine type function to help refine types based on `type` and `format`. This will allow transforming a type for lookup. 
 
 ```javascript
 const schema = Enjoi.schema({
     type: 'string',
     format: 'email'
 }, {
-    types: {
-        email: Joi.string().email()
-    },
+    extensions: [{
+        type: 'email',
+        base: Joi.string().email()
+    }],
     refineType(type, format) {
         if (type === 'string' && format === 'email') {
             return 'email';
@@ -169,19 +176,25 @@ const schema = Enjoi.schema({
 });
 ```
 
-This can be used in conjunction with function based `type` definitions for additional logic:
+This can be used in conjunction with function based `extensions` for additional logic:
 
 ```javascript
-const schema = Enjoi.schema({
+const schemaDesc = {
     type: 'string',
     format: 'email',
     'x-test': true
-}, {
-    types: {
-        email(schema) {
-            return schema['x-test'] ? : Joi.string().email().allow('test@example.com') : Joi.string().email()
+}
+const schema = Enjoi.schema(schemaDesc, {
+    extensions: [{
+        type: 'email',
+        validate(value, helpers) {
+            const validator = schemaDesc['x-test'] ? Joi.string().email().equal('test@example.com') : Joi.string().email();
+            const validation = validator.validate(value);
+            if (validation.error) {
+                return { value, errors: validation.error };
+            }
         }
-    },
+    }],
     refineType(type, format) {
         if (type === 'string' && format === 'email') {
             return 'email';
@@ -192,25 +205,4 @@ const schema = Enjoi.schema({
 
 ### Extensions
 
-Example:
-
-```javascript
-const schema = Enjoi.schema({
-    type: 'foo'
-}, {
-    extensions: [
-        {
-            name: 'string',
-            language: {
-                foobar: 'needs to be \'foobar\''
-            },
-            rules: [{
-                name: 'foobar',
-                validate(params, value, state, options) {
-                    return value === 'foobar' || this.createError('string.foobar', null, state, options);
-                }
-            }]
-        }
-    ]
-});
-```
+Refer to Joi documentation on extensions: https://hapi.dev/module/joi/api/?v=17#extensions

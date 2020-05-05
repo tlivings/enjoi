@@ -39,6 +39,7 @@ xunit.xml
 .iml
 *.sublime-workspace
 *.sublime-project
+.vscode
 
 ehthumbs.db
 Icon?

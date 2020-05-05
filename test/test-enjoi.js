@@ -36,20 +36,16 @@ Test('enjoi', function (t) {
             'required': ['firstName', 'lastName']
         });
 
-        t.equal(schema._type, 'object', 'defined object.');
+        t.equal(schema.type, 'object', 'defined object.');
         t.equal(schema._flags.label, 'Example Schema');
-        t.equal(schema._description, 'An example to test against.', 'description set.');
-        t.equal(schema._inner.children.length, 4, '4 properties defined.');
+        t.equal(schema._flags.description, 'An example to test against.', 'description set.');
+        t.equal(schema._ids._byKey.size, 4, '4 properties defined.');
 
-        t.ok(!schema.validate({ firstName: 'John', lastName: 'Doe', age: 45, tags: ['man', 'human'] }).error, 'no error.');
-
-        t.ok(!schema.validate({ firstName: '', lastName: 'Doe', age: 45, tags: ['man', 'human'] }).error, 'no error.');
-
-        t.ok(schema.validate({ firstName: 'John', age: 45, tags: ['man', 'human'] }).error, 'error.');
-
-        t.ok(schema.validate({ firstName: 'John', lastName: 'Doe', age: 45, tags: [1, 'human'] }).error, 'error.');
-
-        t.ok(schema.validate({ firstName: 'John', lastName: 'Doe', age: 45, tags: ['', 'human'] }).error, 'error.');
+        t.ok(!schema.validate({ firstName: 'John', lastName: 'Doe', age: 45, tags: ['man', 'human'] }).error, 'no error');
+        t.ok(!schema.validate({ firstName: '', lastName: 'Doe', age: 45, tags: ['man', 'human'] }).error, 'no error');
+        t.ok(schema.validate({ firstName: 'John', age: 45, tags: ['man', 'human'] }).error, 'error');
+        t.ok(schema.validate({ firstName: 'John', lastName: 'Doe', age: 45, tags: [1, 'human'] }).error, 'error');
+        t.ok(schema.validate({ firstName: 'John', lastName: 'Doe', age: 45, tags: ['', 'human'] }).error, 'error');
     });
 
     t.test('with ref', function (t) {
@@ -70,7 +66,7 @@ Test('enjoi', function (t) {
             }
         });
 
-        t.ok(!schema.validate({ name: 'Joe' }).error, 'no error.');
+        t.ok(!schema.validate({ name: 'Joe' }).error, 'no error');
     });
 
 });
@@ -81,89 +77,97 @@ Test('enjoi defaults', function (t) {
         t.plan(1);
 
         const enjoi = Enjoi.defaults({
-            types: {
-                test: Joi.string()
-            }
+            extensions: [{
+                    type: 'test',
+                    base: Joi.string()
+                }]
         });
 
         const schema = enjoi.schema({
             type: 'test'
         });
 
-        t.ok(!schema.validate('string').error, 'no error.');
+        t.ok(!schema.validate('string').error, 'no error');
     });
 
     t.test('overrides', function (t) {
         t.plan(1);
 
         const enjoi = Enjoi.defaults({
-            types: {
-                test: Joi.string()
-            }
+            extensions: [{
+                type: 'test',
+                base: Joi.string()
+            }]
         });
 
         const schema = enjoi.schema({
             type: 'test'
         }, {
-            types: {
-                test: Joi.number()
-            }
+            extensions: [{
+                type: 'test',
+                base: Joi.number()
+            }]
         });
 
-        t.ok(schema.validate('string').error, 'error.');
+        t.ok(schema.validate('string').error, 'error');
     });
+});
 
+Test('enjoi extensions', function (t) {
     t.test('overrides extensions', function (t) {
-        t.plan(2);
+        t.plan(5);
 
         const enjoi = Enjoi.defaults({
             extensions: [
                 {
-                    name: 'string',
-                    language: {
-                        foo: 'needs to be \'foobar\''
-                    },
-                    rules: [{
-                        name: 'foo',
-                        validate(params, value, state, options) {
-                            return value === 'foobar' || this.createError('string.foo', null, state, options);
+                    type: 'special',
+                    base: Joi.string(),
+                    rules: {
+                        hello: {
+                            validate(value, helpers, args, options) {
+
+                                if (value === 'hello') {
+                                    return value;
+                                }
+
+                                return helpers.error('special.hello');
+                            }
                         }
-                    }]
+                    },
+                    messages: {
+                        'special.hello': '{{#label}} must say hello'
+                    }
                 }
-            ],
-            types: {
-                foo() {
-                    return this.string().foo();
-                }
-            }
+            ]
         });
 
-        const schema = enjoi.schema({
-            type: 'baz'
-        }, {
-            extensions: [
-                {
-                    name: 'string',
-                    language: {
-                        baz: 'needs to be \'foobaz\''
-                    },
-                    rules: [{
-                        name: 'baz',
-                        validate(params, value, state, options) {
-                            return value === 'foobaz' || this.createError('string.baz', null, state, options);
+        const options = {
+            extensions: [{
+                type: 'foobar',
+                rules: {
+                    foo: {
+                        validate(value, helpers, args, options) {
+                            return null;
                         }
-                    }]
+                    },
+                    bar: {
+                        validate(value, helpers, args, options) {
+                            return helpers.error('special.bar');
+                        }
+                    }
+                },
+                messages: {
+                    'special.bar': '{#label} oh no bar !'
                 }
-            ],
-            types: {
-                baz() {
-                    return this.string().baz();
-                }
-            }
-        });
+            }]
+        };
 
-        t.ok(!enjoi.schema({ type: 'foo' }).validate('foobar').error, 'no error.');
+        t.ok(!enjoi.schema({ type: 'special' }, options).hello().validate('hello').error, 'no error');
+        t.ok(enjoi.schema({ type: 'special' }, options).hello().validate('greetings').error, 'error');
+        t.throws(() => enjoi.schema({ type: 'foo' }, options), 'exception');
 
-        t.ok(!schema.validate('foobaz').error, 'no error.');
+        t.ok(!enjoi.schema({ type: 'foobar' }, options).foo().validate('hello').error, 'no error');
+        t.ok(enjoi.schema({ type: 'foobar' }, options).bar().validate('greetings').error, 'error');
     });
+
 });
