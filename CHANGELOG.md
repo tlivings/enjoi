@@ -1,4 +1,9 @@
 
+### 7.0.0
+
+* [BREAKING] Updated to Joi@17
+* [BREAKING] Custom types moved to being defined under `extensions`
+* [BREAKING] Extensions definitions to follow Joi@17
 
 ### 6.0.2
 

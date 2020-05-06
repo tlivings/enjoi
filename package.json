@@ -1,6 +1,6 @@
 {
   "name": "enjoi",
-  "version": "6.0.2",
+  "version": "7.0.0",
   "license": "Apache 2.0",
   "description": "Converts json-schema to Joi schema.",
   "main": "./index.js",
@@ -44,7 +44,9 @@
     "nfstein",
     "dimichgh",
     "yosheeck",
-    "joescho"
+    "joescho",
+    "rmothilal",
+    "sprootshift"
   ],
   "bugs": {
     "url": "https://github.com/tlivings/enjoi/issues"
