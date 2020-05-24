@@ -261,7 +261,7 @@ Test('extensions', function (t) {
             properties: {
                 x: {
                     type: 'string',
-                    nullability: 'true'
+                    nullable: 'true'
                 }
             }
         }, {
@@ -270,7 +270,7 @@ Test('extensions', function (t) {
                 base: Joi.string().email()
             }],
             refineSchema(joiSchema, jsonSchema) {
-                if (jsonSchema.nullability) {
+                if (jsonSchema.nullable) {
                     return joiSchema.allow(null);
                 }
                 return joiSchema;
