@@ -251,5 +251,34 @@ Test('extensions', function (t) {
         t.ok(schema.validate('root@example.org').error);
         t.ok(!schema.validate('test@example.com').error);
         t.ok(schema.validate('foobar').error);
-    })   
+    })
+    
+    t.test('refineSchema', function (t) {
+        t.plan(3);
+
+        const schema = Enjoi.schema({
+            type: 'object',
+            properties: {
+                x: {
+                    type: 'string',
+                    nullability: 'true'
+                }
+            }
+        }, {
+            extensions: [{
+                type: 'email',
+                base: Joi.string().email()
+            }],
+            refineSchema(joiSchema, jsonSchema) {
+                if (jsonSchema.nullability) {
+                    return joiSchema.allow(null);
+                }
+                return joiSchema;
+            }
+        });
+
+        t.ok(!schema.validate({x: null}).error);
+        t.ok(!schema.validate({x: 'foobar'}).error);
+        t.ok(schema.validate({x: 123}).error);
+    }) 
 });

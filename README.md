@@ -25,6 +25,7 @@ Please file issues for other unsupported features.
 
 - `subSchemas` - an (optional) object with keys representing schema ids, and values representing schemas.
 - `refineType(type, format)` - an (optional) function to call to apply to type based on the type and format of the JSON schema.
+- `refineSchema(joiSchema, jsonSchema)` - an (optional) function to call to apply to adjust Joi schema base on the original JSON schema. Primary use case is handling `nullability` flag in OpenAPI 3.0
 - `extensions` - an array of extensions to pass [joi.extend](https://github.com/hapijs/joi/blob/master/API.md#extendextension).
 - `strictMode` - make schemas `strict(value)` with a default value of `false`.
 
