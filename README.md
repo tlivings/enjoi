@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/tlivings/enjoi.png)](https://travis-ci.org/tlivings/enjoi) [![NPM version](https://badge.fury.io/js/enjoi.png)](http://badge.fury.io/js/enjoi)
+![Build](https://github.com/tlivings/enjoi/workflows/Node.js%20CI/badge.svg) [![NPM version](https://badge.fury.io/js/enjoi.png)](http://badge.fury.io/js/enjoi)
 
 # enjoi
 
