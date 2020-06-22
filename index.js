@@ -9,6 +9,7 @@ const optionsSchema = Joi.object({
     subSchemas: Joi.object().unknown(true).allow(null),
     extensions: Joi.array().items(Joi.object().unknown(true)).allow(null),
     refineType: Joi.func().allow(null),
+    refineSchema: Joi.func().allow(null),
     strictMode: Joi.boolean().default(false),
 });
 
@@ -31,6 +32,7 @@ exports.defaults = function (defaults = {}) {
                 subSchemas: Object.assign({}, defaults.subSchemas, options.subSchemas),
                 extensions: defaults.extensions || [],
                 refineType: options.refineType || defaults.refineType,
+                refineSchema: options.refineSchema || defaults.refineSchema,
                 strictMode: options.strictMode || defaults.strictMode
             };
             if (Util.isArray(options.extensions)) {

@@ -381,7 +381,7 @@ Test('types', function (t) {
             format: 'binary'
         });
 
-        t.ok(!schema.validate(new Buffer('hello')).error, 'no error.');
+        t.ok(!schema.validate(new Buffer.from('hello')).error, 'no error.');
         t.ok(schema.validate([1, 2, 3, 4]).error, 'error.');
     });
 
@@ -395,9 +395,9 @@ Test('types', function (t) {
             maxLength: 4
         });
 
-        t.ok(schema.validate(new Buffer('hello')).error, 'error.');
-        t.ok(schema.validate(new Buffer('h')).error, 'error.');
-        t.ok(!schema.validate(new Buffer('hell')).error, 'no error.');
+        t.ok(schema.validate(new Buffer.from('hello')).error, 'error.');
+        t.ok(schema.validate(new Buffer.from('h')).error, 'error.');
+        t.ok(!schema.validate(new Buffer.from('hell')).error, 'no error.');
     });
 
     t.test('string byte', function (t) {
@@ -436,6 +436,17 @@ Test('types', function (t) {
         t.ok(!schema.validate('36c6e954-3c0a-4fbf-a4cd-6993ffe3bdd2').error, 'no error.');
         t.ok(schema.validate('').error, 'empty string.');
         t.ok(schema.validate('not a uuid').error, 'error.');
+    });
+
+    t.test('empty string', function (t) {
+        t.plan(2);
+
+        const schema = Enjoi.schema({
+            type: 'string'
+        });
+
+        t.ok(!schema.validate('foobar').error, 'no error.');
+        t.ok(!schema.validate('').error, 'no error');
     });
 
     t.test('no type, ref, or enum validates anything.', function (t) {
