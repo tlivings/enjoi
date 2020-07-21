@@ -57,10 +57,10 @@
     "@hapi/hoek": "^9.0.3"
   },
   "peerDependencies": {
-    "@hapi/joi": "^17.1.0"
+    "joi": "^17.1.0"
   },
   "devDependencies": {
-    "@hapi/joi": "^17.1.0",
+    "joi": "^17.1.0",
     "eslint": "^6.8.0",
     "nyc": "^15.0.0",
     "tape": "^5.0.0"
