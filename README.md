@@ -32,7 +32,7 @@ Please file issues for other unsupported features.
 Example:
 
 ```javascript
-const Joi = require('@hapi/joi');
+const Joi = require('joi');
 const Enjoi = require('enjoi');
 
 const schema = Enjoi.schema({

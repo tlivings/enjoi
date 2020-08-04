@@ -1,7 +1,7 @@
 
 const Test = require('tape');
 const Enjoi = require('../index');
-const Joi = require('@hapi/joi');
+const Joi = require('joi');
 
 Test('options features', function (t) {
 
@@ -220,8 +220,8 @@ Test('extensions', function (t) {
 
         t.ok(!schema.validate('root@example.org').error);
         t.ok(schema.validate('foobar').error);
-    })  
-    
+    })
+
     t.test('function and refineType', function (t) {
         t.plan(3);
 
@@ -252,7 +252,7 @@ Test('extensions', function (t) {
         t.ok(!schema.validate('test@example.com').error);
         t.ok(schema.validate('foobar').error);
     })
-    
+
     t.test('refineSchema', function (t) {
         t.plan(3);
 
@@ -280,5 +280,5 @@ Test('extensions', function (t) {
         t.ok(!schema.validate({x: null}).error);
         t.ok(!schema.validate({x: 'foobar'}).error);
         t.ok(schema.validate({x: 123}).error);
-    }) 
+    })
 });
