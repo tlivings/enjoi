@@ -1,4 +1,9 @@
 
+### 8.0.0
+
+* [BREAKING] Switched from @hapi/joi to joi (#94)
+* Added refineSchema function (#92)
+
 ### 7.0.0
 
 * [BREAKING] Updated to Joi@17
