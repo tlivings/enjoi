@@ -30,10 +30,10 @@
   "homepage": "https://github.com/tlivings/enjoi",
   "dependencies": {
     "core-util-is": "^1.0.1",
-    "joi": "^6.4.3"
+    "joi": "^8.4.2"
   },
   "devDependencies": {
-    "hammertime": "^0.1.2",
+    "hammertime": "^1.0.0",
     "is-my-json-valid": "^2.7.0",
     "istanbul": "^0.3.2",
     "jshint": "^2.5.5",
