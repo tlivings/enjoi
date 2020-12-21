@@ -28,27 +28,31 @@ Test('directives', function (t) {
             'oneOf': [
                 {
                     type: 'object',
+                    required: [ 'a' ],
                     properties: {
                         a: {
                             type: 'string'
                         }
-                    }
+                    },
+                    additionalProperties: false
                 },
                 {
                     type: 'object',
+                    required: [ 'b' ],
                     properties: {
                         b: {
                             type: 'number'
                         }
-                    }
+                    },
+                    additionalProperties: false
                 }
             ]
         });
 
         t.ok(schema.validate({ a: 'string' }).value, 'no error');
-        t.ok(schema.validate({}).value, 'no error');
         t.ok(!schema.validate(undefined).value, 'no error');
         t.ok(schema.validate({ b: 10 }).value, 'no error');
+        t.ok(schema.validate({}).error, 'error');
         t.ok(schema.validate({ a: 'string', b: 10 }).error, 'error');
         t.ok(schema.validate({ a: 'string', b: null }).error, 'error');
         t.ok(schema.validate({ a: null, b: 10 }).error, 'error');
@@ -102,7 +106,7 @@ Test('directives', function (t) {
             }
         };
 
-        t.ok(Enjoi.schema(schema).validate({ file: 'data', consumes: 'application/json' }).error, 'error');
+        t.ok(!Enjoi.schema(schema).validate({ file: 'data', consumes: 'application/json' }).error, 'no error');
         schema.additionalProperties = false;
         t.ok(Enjoi.schema(schema).validate({ file: 'data', consumes: 'application/json' }).error, 'error');
         schema.additionalProperties = true;
@@ -322,17 +326,13 @@ Test('allOf', function (t) {
                 {
                     type: 'object',
                     properties: {
-                        a: {
-                            type: 'string'
-                        }
+                        a: { type: 'string' }
                     }
                 },
                 {
                     type: 'object',
                     properties: {
-                        b: {
-                            type: 'number'
-                        }
+                        b: { type: 'number' }
                     }
                 }
             ]
@@ -341,62 +341,56 @@ Test('allOf', function (t) {
         t.ok(!schema.validate({ a: 'string', b: 10 }).error, 'no error');
         const validation = schema.validate({ a: 'string', b: 'string' });
         t.equal(validation.error.name, 'ValidationError', 'error');
-        t.equal(validation.error.message, '"b" must be a number', 'error');
+        t.equal(validation.error.details[0].type, 'alternatives.all', 'error');
     });
 
-    t.test('allOf array with different types', function (t) {
+    t.test('oneOf array with different types', function (t) {
         t.plan(1);
 
-        // This validates because array elements can be of different types and similar
-        // to an object where schemas are additive schemas are additive here too
         const schema = Enjoi.schema({
-            'allOf': [
+            type: 'array',
+            items: {
+                oneOf: [
+                    { type: 'string' },
+                    { type: 'number' }
+                ]
+            }
+        });
+
+        t.ok(!schema.validate(['string', 10]).error, 'no error');
+    });
+
+    t.test('oneOf can be combined with a base type', function (t) {
+        t.plan(4);
+
+        const schema = Enjoi.schema({
+            type: "object",
+            required: ['foo'],
+            properties: {
+                "foo": { type: "string" }
+            },
+            oneOf: [
                 {
-                    type: 'array',
-                    items: [
-                        {
-                            type: 'string'
-                        }
-                    ]
+                    type: "object",
+                    required: ['bar'],
+                    properties: {
+                        "bar": { type: "string" }
+                    }
                 },
                 {
-                    type: 'array',
-                    items: [
-                        {
-                            type: 'number'
-                        }
-                    ]
+                    type: "object",
+                    required: ['baz'],
+                    properties: {
+                        "baz": { type: "string" }
+                    }
                 }
             ]
         });
 
-        t.ok(!schema.validate(['string', 10]).error, 'error');
-    });
-
-    t.test('allOf object with conflicting requirements', function (t) {
-        t.plan(1);
-
-        // This does not resolve because of conflicting requirements
-        t.throws(() => Enjoi.schema({
-            'allOf': [
-                {
-                    type: 'object',
-                    properties: {
-                        a: {
-                            type: 'string'
-                        }
-                    }
-                },
-                {
-                    type: 'object',
-                    properties: {
-                        a: {
-                            type: 'number'
-                        }
-                    }
-                }
-            ]
-        }), 'exception');
+        t.ok(schema.validate({ foo: 'a' }).error, 'error - matches too few');
+        t.ok(schema.validate({ bar: 'b' }).error, 'error - matches too few');
+        t.ok(schema.validate({ foo: 'a', bar: 'b', baz: 'c' }).error, 'error - matches too many');
+        t.ok(!schema.validate({ foo: 'a', bar: 'b' }).error, 'no error');
     });
 
     t.test('allOf nested', function (t) {
