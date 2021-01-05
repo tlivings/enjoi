@@ -60,15 +60,13 @@ Test('directives', function (t) {
         t.plan(8);
 
         const schema = Enjoi.schema({
+            type: 'object',
+            properties: {
+                a: {
+                    type: 'string'
+                }
+            },
             'not': [
-                {
-                    type: 'object',
-                    properties: {
-                        a: {
-                            type: 'string'
-                        }
-                    }
-                },
                 {
                     type: 'object',
                     properties: {
@@ -80,8 +78,8 @@ Test('directives', function (t) {
             ]
         });
 
-        t.ok(schema.validate({ a: 'string' }).error, 'error');
-        t.ok(schema.validate({}).error, 'error');
+        t.ok(!schema.validate({ a: 'string' }).error, 'no error');
+        t.ok(!schema.validate({}).error, 'no error');
         t.ok(schema.validate({ b: 10 }).error, 'error');
         t.deepEqual(schema.validate({ a: 'string', b: 10 }).value, { a: 'string', b: 10 }, 'no error');
         t.deepEqual(schema.validate({ a: 'string', b: null }).value, { a: 'string', b: null }, 'no error');
