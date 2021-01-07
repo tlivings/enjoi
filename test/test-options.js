@@ -281,4 +281,33 @@ Test('extensions', function (t) {
         t.ok(!schema.validate({x: 'foobar'}).error);
         t.ok(schema.validate({x: 123}).error);
     })
+
+    t.test('useDefaults', function (t) {
+        t.plan(5);
+
+        const schema = Enjoi.schema(
+          {
+              type: 'object',
+              properties: {
+                  x: {
+                      type: 'string',
+                      default: 'foo'
+                  }
+              }
+          },
+          {
+            useDefaults: true
+          }
+        );
+
+        const { value: value0, error: error0 } = schema.validate({x: 'blah'})
+        t.ok(!error0);
+        t.ok(value0.x === 'blah');
+
+        const { value: value1, error: error1 } = schema.validate({})
+        t.ok(!error1);
+        t.ok(value1.x === 'foo');
+
+        t.ok(schema.validate({x: 123}).error);
+    })
 });

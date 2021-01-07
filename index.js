@@ -11,6 +11,7 @@ const optionsSchema = Joi.object({
     refineType: Joi.func().allow(null),
     refineSchema: Joi.func().allow(null),
     strictMode: Joi.boolean().default(false),
+    useDefaults: Joi.boolean(). default(false)
 });
 
 const validate = function (schema, options = {}) {
