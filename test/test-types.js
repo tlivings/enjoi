@@ -544,5 +544,37 @@ Test('types', function (t) {
         t.ok(schema.validate(false).error, 'error.');
     });
 
+    t.test('recursive type', function (t) {
+        t.plan(2);
+
+        const jsonSchema = {
+            type: "object",
+            properties: {
+                value: { type: "string" },
+                next: { $ref: '#' }
+            }
+        }
+        const schema = Enjoi.schema(jsonSchema);
+
+        t.ok(!schema.validate({
+            value: "foo",
+            next: {
+                value: "bar",
+                next: {
+                    value: "baz"
+                }
+            }
+        }).error, 'no error');
+        t.ok(schema.validate({
+            value: "foo",
+            next: {
+                value: "bar",
+                next: {
+                    value: 0
+                }
+            }
+        }).error, 'error');
+    });
+
 });
 
