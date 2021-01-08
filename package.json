@@ -1,6 +1,6 @@
 {
   "name": "enjoi",
-  "version": "999999999.0.0",
+  "version": "9.0.0",
   "license": "Apache 2.0",
   "description": "Converts json-schema to Joi schema.",
   "main": "./index.js",
