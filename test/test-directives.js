@@ -57,36 +57,31 @@ Test('directives', function (t) {
     });
 
     t.test('not', function (t) {
-        t.plan(8);
+        t.plan(6);
 
         const schema = Enjoi.schema({
-            'not': [
-                {
-                    type: 'object',
-                    properties: {
-                        a: {
-                            type: 'string'
-                        }
-                    }
-                },
-                {
-                    type: 'object',
-                    properties: {
-                        b: {
-                            type: 'number'
-                        }
+            type: 'object',
+            properties: {
+                a: {
+                    type: 'string'
+                }
+            },
+            not: {
+                type: 'object',
+                required: ['b'],
+                properties: {
+                    b: {
+                        type: 'number'
                     }
                 }
-            ]
+            }
         });
 
-        t.ok(schema.validate({ a: 'string' }).error, 'error');
-        t.ok(schema.validate({}).error, 'error');
+        t.ok(!schema.validate({ a: 'string' }).error, 'no error');
+        t.ok(!schema.validate({}).error, 'no error');
         t.ok(schema.validate({ b: 10 }).error, 'error');
-        t.deepEqual(schema.validate({ a: 'string', b: 10 }).value, { a: 'string', b: 10 }, 'no error');
+        t.deepEqual(schema.validate({ a: 'string' }).value, { a: 'string' }, 'no error');
         t.deepEqual(schema.validate({ a: 'string', b: null }).value, { a: 'string', b: null }, 'no error');
-        t.deepEqual(schema.validate({ a: null, b: 10 }).value, { a: null, b: 10 }, 'no error');
-        t.deepEqual(schema.validate({ a: null, b: null }).value, { a: null, b: null }, 'no error');
         t.deepEqual(schema.validate({ a: 'string', b: 'string' }).value, { a: 'string', b: 'string' }, 'no error');
     });
 
