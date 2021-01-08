@@ -119,9 +119,9 @@ Test('enjoi extensions', function (t) {
 
         const enjoi = Enjoi.defaults({
             extensions: [
-                {
+                (joi) => ({
                     type: 'special',
-                    base: Joi.string(),
+                    base: joi.string(),
                     rules: {
                         hello: {
                             validate(value, helpers, args, options) {
@@ -137,7 +137,7 @@ Test('enjoi extensions', function (t) {
                     messages: {
                         'special.hello': '{{#label}} must say hello'
                     }
-                }
+                })
             ]
         });
 
