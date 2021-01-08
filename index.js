@@ -4,13 +4,15 @@ const Util = require('util');
 const SchemaResolver = require('./lib/resolver');
 
 const schemaSchema = Joi.alternatives(Joi.object().unknown(true), Joi.string()).required();
+const extensionSchema = Joi.alternatives().try(Joi.object().unknown(true), Joi.function())
 
 const optionsSchema = Joi.object({
     subSchemas: Joi.object().unknown(true).allow(null),
-    extensions: Joi.array().items(Joi.object().unknown(true)).allow(null),
+    extensions: Joi.array().items(extensionSchema).allow(null),
     refineType: Joi.func().allow(null),
     refineSchema: Joi.func().allow(null),
     strictMode: Joi.boolean().default(false),
+    useDefaults: Joi.boolean(). default(false)
 });
 
 const validate = function (schema, options = {}) {

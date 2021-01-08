@@ -483,7 +483,7 @@ Test('types', function (t) {
     });
 
     t.test('enum', function (t) {
-        t.plan(5);
+        t.plan(7);
 
         let schema = Enjoi.schema({
             'enum': ['A', 'B']
@@ -500,6 +500,14 @@ Test('types', function (t) {
 
         t.ok(!schema.validate('B').error, 'no error.');
         t.ok(schema.validate('C').error, 'error.');
+
+        schema = Enjoi.schema({
+            type: 'string',
+            enum: ['A', 'B']
+        }).insensitive()
+
+        t.ok(!schema.validate('b').error, 'no error.');
+        t.ok(schema.validate('c').error, 'error.');
     });
 
     t.test('unknown type fails', function (t) {
