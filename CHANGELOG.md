@@ -1,4 +1,13 @@
 
+### 9.0.0
+
+* #100 Allow extension constructors
+* #101 Keep string enum type
+* #104 Allow allOf, anyOf, oneOf to be combined with base schema
+* #107 Cycles in schema refs (fixed #106)
+* #108 Handle `not` properly
+* #109 Defaults options
+
 ### 8.0.0
 
 * [BREAKING] Switched from @hapi/joi to joi (#94)
