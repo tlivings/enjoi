@@ -283,7 +283,7 @@ Test('extensions', function (t) {
     })
 
     t.test('useDefaults', function (t) {
-        t.plan(5);
+        t.plan(9);
 
         const schema = Enjoi.schema(
           {
@@ -307,6 +307,15 @@ Test('extensions', function (t) {
         const { value: value1, error: error1 } = schema.validate({})
         t.ok(!error1);
         t.ok(value1.x === 'foo');
+
+        const { value: value2, error: error2 } = schema.validate({x: null})
+        console.log(error2)
+        t.ok(!error2);
+        t.ok(value2.x === 'foo');
+
+        const { value: value3, error: error3 } = schema.validate({x: ""})
+        t.ok(!error3);
+        t.ok(value3.x === 'foo');
 
         t.ok(schema.validate({x: 123}).error);
     })
