@@ -576,5 +576,44 @@ Test('types', function (t) {
         }).error, 'error');
     });
 
+    t.test('ref to uncle doesn\'t cause joi error', function (t) {
+        t.plan(1);
+
+        const jsonSchema = {
+            type: "object",
+            properties: {
+                product: {
+                    type: "object",
+                    properties: {
+                        id: {
+                            type: 'integer'
+                        }
+                    }
+                },
+                suggestions: {
+                    type: "array",
+                    items: {
+                        type: "object",
+                        properties: {
+                            product: {
+                                $ref: '#/properties/product'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        const schema = Enjoi.schema(jsonSchema);
+
+        t.ok(!schema.validate({
+            product: {
+                id: 5
+            },
+            suggestions: [{
+                product: { id: 6 }
+            }]
+        }).error, 'no error');
+    });
+
 });
 
