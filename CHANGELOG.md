@@ -1,3 +1,6 @@
+### 9.0.1
+
+* #112 Use joi.link to only resolve strictly recursive self-references
 
 ### 9.0.0
 
