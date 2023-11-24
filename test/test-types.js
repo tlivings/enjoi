@@ -449,6 +449,23 @@ Test('types', function (t) {
         t.ok(!schema.validate('').error, 'no error');
     });
 
+    t.test('empty string on a required prop', function (t) {
+        t.plan(2);
+
+        const schema = Enjoi.schema({
+            type: 'object',
+            properties: {
+                foo: {
+                    type: 'string'
+                }
+            },
+            required: ['foo']
+        });
+
+        t.ok(!schema.validate({ foo: 'bar' }).error, 'no error.');
+        t.ok(schema.validate({ foo: '' }).error, 'error.');
+    });
+
     t.test('no type, ref, or enum validates anything.', function (t) {
         t.plan(3);
 
