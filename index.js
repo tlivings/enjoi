@@ -1,6 +1,5 @@
 const Joi = require('joi');
 const Hoek = require('@hapi/hoek');
-const Util = require('util');
 const SchemaResolver = require('./lib/resolver');
 
 const schemaSchema = Joi.alternatives(Joi.object().unknown(true), Joi.string()).required();
@@ -37,7 +36,7 @@ exports.defaults = function (defaults = {}) {
                 refineSchema: options.refineSchema || defaults.refineSchema,
                 strictMode: options.strictMode || defaults.strictMode
             };
-            if (Util.isArray(options.extensions)) {
+            if (Array.isArray(options.extensions)) {
                 merged.extensions = merged.extensions.concat(options.extensions);
             }
             options = validate(schema, merged);
