@@ -4,6 +4,15 @@
   "license": "Apache 2.0",
   "description": "Converts json-schema to Joi schema.",
   "main": "./index.js",
+  "files": [
+    "CHANGELOG.md",
+    "index.js",
+    "lib/"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "scripts": {
     "test": "tape test/*.js",
     "cover": "nyc --reporter=lcov --lines 100 npm test && nyc report",
