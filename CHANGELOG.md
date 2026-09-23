@@ -1,3 +1,7 @@
+### 9.0.2
+
+* #119 Replace removed util.is* helpers to restore Node 23+ support
+
 ### 9.0.1
 
 * #112 Use joi.link to only resolve strictly recursive self-references
